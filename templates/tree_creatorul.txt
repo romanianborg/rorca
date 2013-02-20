@@ -1,0 +1,85 @@
+creatorul
+{
+	pages
+	{
+		index=Normal
+		cron=Cron
+		ipn=IPN
+		xml=XML
+		images=Image/Docs
+	}
+	views
+	{
+		other=Other
+	}
+}
+defaults
+{
+	pages-xml
+	{
+		normal {value=savefile type=filename}
+		normal {value=savedesc type=description}
+		notype {value=actions news=pages-xml-actions}
+	}
+	pages-xml-actions
+	{
+		views {value=view}
+	}
+	pages-ipn
+	pages-cron-calls
+	{
+		normal {value=action type=control}
+	}
+	pages-cron
+	{
+		notype
+		{
+			value=cals
+			news=pages-cron-calls
+			childs{
+				normal {value=action type=control}
+			}
+		}
+	}
+	pages-index-emailcals
+	{
+		normal {value=action type=control}
+	}
+	pages-index
+	{
+		notype {value=emailcalls news=pages-index-emailcals}
+		normal {value=template type=fileid}
+		rights {value=rights type=login_usertype news=pages-index-rights}
+		normal {value=anonymous type=yes}
+		normal {value=logout type=index childs{
+				normal {value=id type=login_id}
+				normal {value=user type=login_user}
+				normal {value=usertype type=login_usertype}
+			}}
+		notype {value=slots news=pages-index-slots}
+		notype {value=disable news=pages-index-disable}
+	}
+	pages-index-rights
+	{
+		normal {value=user type=page}
+	}
+	pages-index-disable
+	{
+		notype {value=slot}
+	}
+	pages-index-slots
+	{
+		normal {value=name type=control}
+	}	
+	pages-images
+	{
+		normal {value=noimage type=images/docs.jpg}
+	}
+	views-other
+	{
+		normal {value=control type=controlname}
+		normal {value=action type=controlaction}
+		normal {value=quickaction type=controlaction}
+		normal {value=break type=yes}
+	}
+}

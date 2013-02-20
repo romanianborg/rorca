@@ -1,0 +1,8 @@
+Site:
+
+folders:
+extern/HTMLArea/
+extern/jscalendar/
+extern/fpdf/
+extern/fckeditor/
+
