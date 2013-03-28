@@ -12,11 +12,11 @@
 	<a id="datavalabilitate_sel" name="datavalabilitate_sel" onclick="global_cal.select(document.forms['work'].datavalabilitate,'datavalabilitate_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
 </div></div>
 
-<div class="workstep"><div class="worklabel">Numar de zile</div><div class=workfields><input type="number" name="nrzile" value="" size=2 class="validated" validate="adddays.panalavalabilitate.datavalabilitate~required.yes">
-</div></div>
-
 <div class="workstep"><div class="worklabel">Pana la</div><div class=workfields><input class="validated" validators="change" validate="call.calculeazaNrZile~required.date" type=text name="panalavalabilitate" id="panalavalabilitate" size="9" value="">
 	<a id="panalavalabilitate_sel" name="panalavalabilitate_sel" onclick="global_cal.select(document.forms['work'].panalavalabilitate,'panalavalabilitate_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
+</div></div>
+
+<div class="workstep"><div class="worklabel">Numar de zile</div><div class=workfields><input type="number" name="nrzile" value="" size=4 class="validated" validate="adddays.panalavalabilitate.datavalabilitate~required.yes">
 </div></div>
 
 <div class="workstep"><div class="worklabel">Unde pleci?:</div><div class=workfields><input size=14 type="text" name="taridest" class="autocompletefield validated"  mustmatch="yes" validate="required.yes" value="" lk="coduri/code.php?soc=tari&grupa=tari&valoare=&lookupfor=taridest">

@@ -222,7 +222,7 @@
 <div class="workstep"><div class="worklabel">CNP:</div><div class="workfields"><input type="number" validate="extract.varsta.varsta~required.cnp" validators="change.keyup" class="validated validateatention" value="" size="15" name="pf_cnp"><input type="hidden" value="" name="varsta">
 </div></div>
 
-<div class="workstep"><div class="worklabel">Judet:</div><div class="workfields"><select name="pf_judet" type="text" class="validated" validate="notfor.bucuresti.show.id.pf_locspan~for.bucuresti.show.id.pf_sectspan~call.pregatesteAutocomplete.pf_judet.pf_localitate.pf_sector~required.yes">
+<div class="workstep"><div class="worklabel">Judet:</div><div class="workfields"><select name="pf_judet" type="text" class="validated" validate="notfor.bucuresti.show.id.pf_locspan~for.bucuresti.show.id.pf_sectspan~call.pregatesteAutocomplete.pf_judet.pf_localitate.pf_sector~required.yes" title="Conform talon">
 	<option value="">--Selectati--</option>
 	<option value="bucuresti">BUCURESTI</option>
 <option value="ilfov">Ilfov</option>
@@ -270,12 +270,12 @@
 </div></div>
 
 <div id=pf_locspan>
-<div class="workstep"><div class="worklabel">Localitate:</div><div class="workfields"><input name="pf_localitate" id="pf_localitate" type=text value="" lk="coduri/code.php?soc=allianz&grupa=localitati&valoare=&lookupfor=pf_localitate&lkjudet=[pf_judet]" class="autocompletefield validated" mustmatch=yes validate="required.yes" size=18>
+<div class="workstep"><div class="worklabel">Localitate:</div><div class="workfields"><input name="pf_localitate" id="pf_localitate" type=text value="" lk="coduri/code.php?soc=allianz&grupa=localitati&valoare=&lookupfor=pf_localitate&lkjudet=[pf_judet]" class="autocompletefield validated" mustmatch=yes validate="required.yes" size=18 title="Conform talon">
 </div></div>
 </div>
 
 <div id=pf_sectspan>
-<div class="workstep"><div class="worklabel">Sector:</div><div class="workfields"><select id="pf_sector" name="pf_sector" class="validated pf_adresa_implode" validators="change" validate="required.yes" label="sector" onchange="javascript:textareaImplode('pf_adresa');"><option value=""> Sector...</option>
+<div class="workstep"><div class="worklabel">Sector:</div><div class="workfields"><select id="pf_sector" name="pf_sector" class="validated pf_adresa_implode" validators="change" validate="required.yes" label="sector" onchange="javascript:textareaImplode('pf_adresa');" title="Conform talon"><option value=""> Sector...</option>
 	<option value="1">Sector 1</option><option value="2">Sector 2</option><option value="3">Sector 3</option>
 	<option value="4">Sector 4</option><option value="5">Sector 5</option><option value="6">Sector 6</option>
 	</select>
@@ -351,7 +351,7 @@
 <div class="workstep"><div class="worklabel">CUI (fara RO):</div><div class="workfields"><input type="text" validate="required.cui" validators="change.keyup" class="validated validateatention" value="" size="12" name="pj_cui">
 </div></div>
 
-<div class="workstep"><div class="worklabel">Judet:</div><div class="workfields"><select name="pj_judet"  class="validated" validate="notfor.bucuresti.show.id.pj_locspan~for.bucuresti.show.id.pj_sectspan~call.pregatesteAutocomplete.pj_judet.pj_localitate.pj_sector~required.yes">
+<div class="workstep"><div class="worklabel">Judet:</div><div class="workfields"><select name="pj_judet"  class="validated" validate="notfor.bucuresti.show.id.pj_locspan~for.bucuresti.show.id.pj_sectspan~call.pregatesteAutocomplete.pj_judet.pj_localitate.pj_sector~required.yes" title="Conform talon">
 	<option value="">--Selectati--</option>
 	<option value="bucuresti">BUCURESTI</option>
 <option value="ilfov">Ilfov</option>
@@ -399,12 +399,12 @@
 </div></div>
 
 <div id="pj_locspan" style="display:none;">
-<div class="workstep"><div class="worklabel">Localitate: </div><div class="workfields"><input name="pj_localitate"  type="text" id="pj_localitate" value="" lk="coduri/code.php?soc=allianz&grupa=localitati&valoare=&lookupfor=pj_localitate&lkjudet=[pj_judet]" class="autocompletefield validated " mustmatch=yes validate="required.yes">
+<div class="workstep"><div class="worklabel">Localitate: </div><div class="workfields"><input name="pj_localitate"  type="text" id="pj_localitate" value="" lk="coduri/code.php?soc=allianz&grupa=localitati&valoare=&lookupfor=pj_localitate&lkjudet=[pj_judet]" class="autocompletefield validated " mustmatch=yes validate="required.yes" title="Conform talon">
 </div></div>
 </div>
 
 <div  id="pj_sectspan" style="display:none;">
-<div class="workstep"><div class="worklabel">Sector: </div><div class="workfields"><select id="pj_sector" name="pj_sector" class="validated pj_adresa_implode" validators="change" validate="required.yes" label="sector" onchange="javascript:textareaImplode('pj_adresa');"><option value="">Sector...</option>
+<div class="workstep"><div class="worklabel">Sector: </div><div class="workfields"><select id="pj_sector" name="pj_sector" class="validated pj_adresa_implode" validators="change" validate="required.yes" label="sector" onchange="javascript:textareaImplode('pj_adresa');" title="Conform talon"><option value="">Sector...</option>
 	<option value="1">Sector 1</option><option value="2">Sector 2</option><option value="3">Sector 3</option>
 	<option value="4">Sector 4</option><option value="5">Sector 5</option><option value="6">Sector 6</option>
 	</select></span>

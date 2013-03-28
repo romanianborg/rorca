@@ -22,7 +22,7 @@ function textareaImplode(name)
 }
 </script>
 <?php
-cache_addvalue("head",ob_get_contents());ob_end_clean();
+cache_addvalue("beginhead",ob_get_contents());ob_end_clean();
 function jQueryPluginRequired($plugin)
 {
 	//protect against double inclusions

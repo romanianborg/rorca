@@ -1,5 +1,5 @@
 <?php 
-require_once("jquery.php");
+require_once("config/jquery.php");
 ob_start();?>
 <script type="text/javascript" src="extern/niceditor/nicEdit.js"></script>
 <?php

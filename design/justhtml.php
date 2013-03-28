@@ -13,7 +13,7 @@
 <meta name="keywords" content="<?php echo cache_getvalue("keywords");cache_setvalue("keywords","");?>">
 <meta name="description" content="<?php echo cache_getvalue("description");cache_setvalue("description","");?>" />
 <META name="verify-v1" content="<?php echo cache_getvalue("verify-v1");cache_setvalue("verify-v1","");?>" />
-<meta name="viewport" content="width=device-width, initial-scale=1.7"/>
+<meta id="testViewport" name="viewport" content="width=device-width,initial-scale=1"/>
 
 <script type="text/javascript">
 var tinyMCE;tinyMCE=false;var myNicEditor;myNicEditor=false;var currentPageProtection;currentPageProtection=<?php echo 0+intval(session_getvalue("protection_page"));?>;

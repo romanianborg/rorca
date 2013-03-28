@@ -40,6 +40,7 @@ $_CONFIG['mesaj_eroare']='Multumim pentru comanda, un operator va prelua comanda
 $_CONFIG['nume_broker']='asiguram.ro';
 $_CONFIG['tarifarcomplet']='yes';
 $_CONFIG['datepicker']='yes';
+$_CONFIG['mobilewidth']='1024';
 
 $_CONFIG['theme_color1']='#E7FFCF';
 $_CONFIG['theme_color2']='#EEFFFF';

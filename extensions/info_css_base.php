@@ -1,5 +1,11 @@
 <style>
 .backbody {background-color:white;}
+#work form {}
+del {color:red;}
+#worksteps td label,#worksteps td
+{
+font-size: 12px;
+}
 #workinsider
 {
 position:absolute;
@@ -82,6 +88,10 @@ div.workfields td
 	text-align: right;
 	padding-right:2px;
 }
+span.tarifjos
+{
+font-size: 8px;
+}
 
 #work input[type="text"],
 #work input[type="number"],
@@ -132,8 +142,8 @@ top:80px;
 clear:both;
 display:block;
 padding:1px;
-background-color:<?php echo $_CONFIG['tarifar_bg']; ?>;
-border-top: solid 1px <?php echo $_CONFIG['tarifar_border']; ?>;
+border-top: solid 1px #eee;
+float:left;
 }
 
 #worksteps
@@ -141,6 +151,7 @@ border-top: solid 1px <?php echo $_CONFIG['tarifar_border']; ?>;
 border:solid 1px <?php echo $_CONFIG['tarifar_border']; ?>;
 background-color:<?php echo $_CONFIG['tarifar_bg']; ?>;
 width:600px;
+float:left;
 }
 #workstep
 {
@@ -180,7 +191,7 @@ padding-left:5px;
 background-color:<?php echo $_CONFIG['tarifar_bg']; ?>;
 text-align:left;
 vertical-align:middle;
-font-size:12px;
+font-size:11px;
 }
 div.workfields
 {
@@ -208,7 +219,6 @@ div.biglabel
 	font-weight:bold;
 	background-color:<?php echo $_CONFIG['tarifar_border']; ?>;
 	height:28px;
-	font-size: 1.2em;
 	padding-top:6px;
 	display:inline-block;
 }
@@ -217,11 +227,57 @@ div.workstep a.biglink
 	display:block;
 	padding:4px;
 	font-size: 1.2em;
+	color:black;
+	height:32px;
 }
-div.workstep a.biglink:hover
+div.workstep a.alegebroker
+{
+	display:block;
+	padding:4px;
+	padding-top:12px;
+	height:25px;
+	width:140px;
+	margin-left: 20px;
+	font-size: 16px;
+	color:black;
+	text-align:center;
+	background-color:<?php echo $_CONFIG['tarifar_border']; ?>;
+	border: solid 1px red;
+}
+div.workstep div.bigbrokers
+{
+	display:block;
+	padding:4px;
+	font-size: 1.2em;
+	color:black;
+	min-height:150px;
+}
+div.workstep div.bigbrokers:hover
 {
 	background-color:<?php echo $_CONFIG['tarifar_border']; ?>;
 }
+div.listdescription h1
+{
+	padding:0px;
+	margin:0px;
+}
+div.bigbrokers .listicon
+{
+	float:left;
+	width:82px;
+}
+div.bigbrokers .listdescription
+{
+	float:left;
+	width:85%;
+	color:black;
+	display:inline-block;
+}
+div.bigbrokers .listdescription i
+{
+	color:blue;
+}
+
 
 #worknext
 {
@@ -266,6 +322,7 @@ div.biglabel,div.workstep
 {
 width: 100%;
 }
+
 </style>
 
 <style media="(max-device-width: 599px)">
@@ -346,6 +403,10 @@ display:block;
 {
 width:1200px;
 }
+#sidebarload
+{
+display:none;
+}
 div.workfields
 {
 width: 370px;
@@ -358,3 +419,11 @@ width: 200px;
 
 </style>
 
+<?php if(getUserConfig("nosidebar")=="yes"){?>
+<style>
+#sidebarload
+{
+display:none;
+}
+</style>
+<?php } ?>

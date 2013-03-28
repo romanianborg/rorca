@@ -27,7 +27,7 @@ function reloadSteperTarife()
 	$("#work td.worktarif a").unbind('click').click(function(){
 		$("#work td.worktarif").css("background-color","white");
 		$(this).parent().css("background-color","<?php echo getUserConfig("active_color");?>");
-		$("input[name=tarif]").val($(this).text());
+		$("input[name=tarif]").val($(this).attr("tarif"));
 		$("input[name=p_soc]").val($(this).attr("socid"));
 		$("input[name=p_per]").val($(this).attr("per"));
 		return false;
@@ -98,7 +98,14 @@ var formularecomplete=<?php echo (getUserConfig("tarifarcomplet")=="yes")?'true'
 
 function loadOneStep(buttonclick)
 {
+<?php
+if(file_exists("extensions/info_tarifar_rca.php") && $_GET['t']=="rca" && $_GET['nd']=="yes")
+{
+	?>return true;<?php
+}
+?>
 	var ret=true;
+	var allvalid=true;
 	var nextstep;
 	var foundone=false;
 
@@ -113,9 +120,9 @@ function loadOneStep(buttonclick)
 			//ignore
 			return true;
 		}
-		if(!isElementVisible($(this)))
+		if(!isElementVisible($(this)) && $(this).css("display")!="block")
 		{
-			nextstep=$(this);
+			nextstep=this;
 			foundone=true;
 			return false;
 		}
@@ -126,6 +133,7 @@ function loadOneStep(buttonclick)
 				$(this).css("background-color", "<?php echo getUserConfig("alert_color");?>");
 				ret=false;
 				valid=false;
+				allvalid=false;
 			}
 			else
 			{
@@ -140,13 +148,14 @@ function loadOneStep(buttonclick)
 			if(typeof(Storage)!=="undefined")
 			{
 				$(this).find("input[type!=hidden]").add("select",this).each(function(){
+					if($(this).attr("name")=="tarif") return true;
 					localStorage['t_'+$(this).attr("name")]=$(this).val();
 				});
 			}
 		}
 		if(!valid && !formularecomplete)
 		{
-			nextstep=$(this);
+			nextstep=this;
 			foundone=true;
 			return false;
 		}
@@ -164,26 +173,26 @@ function loadOneStep(buttonclick)
 				return false;
 			}
 		}
+		else
+		{
+			if(buttonclick=="button")
+			{
+				alert("Va rugam sa verificati toate campurile. Cele marcate au probleme de completare.");
+				return false;
+			}
+		}
 	}
 
-	//var rem=$("#workinsider tr:visible>th").length;
-//	var rem=$(".workfields:visible[chvalid!=yes]").length;
-//	var used=$(".workfields:visible").length;
-	//var rem=1;
-	//var used=1;
-	//var proc=(used+1)/(rem+used)*100;
-	//if(proc<20) proc=20;
-	//if(proc>100) proc=100;
-	//$("#workprogress_step").stop().animate({width:""+proc+"%"});
 	if(nextstep)
 	{
 		var mustreload=false;
-		if(!isElementVisible(nextstep))
+		if(!isElementVisible($(nextstep)))
 		{
-			nextstep.show().each(function(){
+			$(nextstep).show().each(function(){
 				if(typeof(Storage)!=="undefined")
 				{
 					$(this).add("input[type!=hidden]",this).add("select",this).each(function(){
+						if($(this).attr("name")=="tarif") return true;
 						if(localStorage['t_'+$(this).attr("name")]!="")
 						{
 							$(this).val(localStorage['t_'+$(this).attr("name")]);
@@ -195,11 +204,11 @@ function loadOneStep(buttonclick)
 				if($(this).is(":visible"))
 				{
 					$(this).find("input").focus().unbind("change").bind("change",function(){
-						nextstep.attr("chvalid","");
+						$(nextstep).attr("chvalid","");
 						loadOneStep();
 					});
 					$(this).find("select").focus().unbind("change").bind("change",function(){
-						nextstep.attr("chvalid","");
+						$(nextstep).attr("chvalid","");
 						loadOneStep();
 					});
 				}
@@ -217,6 +226,8 @@ function loadOneStep(buttonclick)
 	{
 		$("#worknext").show();
 		$("#worknext a").html($("input[name=textbutton]").val());
+		if(allvalid && $("#worknext").length) $.scrollTo($("#worknext")[0],1000);
+		$("#myremedy").remove();//solves a weird chrome bug
 
 		if($("input[name=action]").val()=="PlataOk")
 		{
@@ -228,7 +239,7 @@ function loadOneStep(buttonclick)
 }
 function reloadTips()
 {
-	$("[title]").tipsy({gravity:'s',opacity:0.5});
+	$("[title]").tipsy({gravity:'n',opacity:0.8});
 }
 function slotLoadingCreateWindow(slot){
 	$("#loading").show();
@@ -261,6 +272,7 @@ function slotLoadedUpdateWindow(slot){
 	reloadTips();
 	reloadSideLinks();
 }
+
 document.globalSlotLoading="slotLoadingCreateWindow";
 document.globalSlotReloaded="slotLoadedUpdateWindow";
 document.ajaxifyDefaultSlot="work";
@@ -274,10 +286,7 @@ $(document).ready(function(){
 	reloadTips();
 	reloadSideLinks();
 
-	if($(window).width()<600)
-	{
-		formularecomplete=false;
-	}
+
 
 $.fn.extend({ 
 	showAndScroll: function() { 

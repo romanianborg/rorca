@@ -13,6 +13,8 @@
 	require_once("config/dateutils.php");
 ?>
 <div class="work_col1">
+<div class="workstep"><div class="biglabel"><img src="images/masina.png" border=0> DATE AUTOVEHICUL</div>
+</div>
 
 <div class="workstep"><div class="worklabel">Vehiculul este:</div><div class=workfields>
 			<select validate="for.inmatriculate|inregistrate.show.id.spanciv~required.yes" class="validated" name="inmatriculare">
@@ -132,6 +134,8 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 
 </div>
 <div class="work_col2">
+<div class="workstep"><div class="biglabel"><img src="images/masina.png" border=0> DATE ASIGURARE</div>
+</div>
 
 <div class="workstep"><div class="worklabel">Km la bord:</div><div class=workfields><input type="number" name="kmparcursi" size=5 value="" class="validated" validate="required.yes">
 </div></div>
@@ -183,7 +187,7 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 <div class="workstep"><div class="worklabel">Mod achizitie</div><div class=workfields><select name="modachizitie"><option value="dealerromania">Dealer din Romania</option><option value="dealerstrainatate">Dealer din strainatate</option><option value="tertapersoana">Terta persoana</option></select>
 </div></div>
 
-<div class="workstep"><div class="worklabel">Valoare Factura:</div><div class=workfields><input type="number" name="valfactura" size=6 value="" class="validated" validate="required.number"> EURO 
+<div class="workstep"><div class="worklabel">Valoare Factura:</div><div class=workfields><input type="number" name="valfactura" size=6 value="" class="validated" validate="required.number" style="width:100px;"> EURO 
 </div></div>
 
 <div class="workstep"><div class="worklabel">Dotari optionale din fabrica</div><div class=workfields><select name="dotarifabrica" class="validated" validate="for.da.show.id.pooptionalevaloare"><option value="">Fara</option><option value="da">Da</option></select>
@@ -251,6 +255,8 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 
 </div>
 
+<div class="workstep"><div class="biglabel"><img src="images/ok.png" border=0> CE ASIGURI</div>
+</div>
 
 <div class="workstep"><div class="worklabel">Dotari suplimentare</div><div class=workfields style="width:450px;"><select name="dotari" class="validated" validate="for.da.show.id.dotari"><option value="">Fara</option><option value="da">Da</option></select>
 </div></div>
@@ -378,17 +384,19 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 	</select>
 </div></div>
 
-<div class="workstep"><div class="worklabel">Franciza pe eveniment</div><div class=workfields style="width:450px;">
-	<select name="franciza_01"><option value="">Nu</option><option value="">Da</option></select> max <input type="number" name="francizae" value="0" size=4> EURO
+<div class="workstep"><div class="worklabel">Fransiza pe eveniment</div><div class=workfields style="width:450px;">
+	<select name="franciza_01"><option value="">Nu</option><option value="">Da</option></select>
 </div></div>
 
-<div class="workstep"><div class="worklabel">Franciza furt total</div><div class=workfields style="width:450px;">
+<div class="workstep"><div class="worklabel">Fransiza furt total</div><div class=workfields style="width:450px;">
 	<select name="franciza_04"><option value="">Nu</option><option value="">Da</option></select>
 </div></div>
 
-<div class="workstep"><div class="worklabel">Franciza dauna totala</div><div class=workfields style="width:450px;">
+<div class="workstep"><div class="worklabel">Fransiza dauna totala</div><div class=workfields style="width:450px;">
 	<select name="franciza_05"><option value="">Nu</option><option value="">Da</option></select>
 </div></div>
+
+<div class="workstep"><div class="biglabel"><img src="images/individ.png" border=0> DATE PROPRIETAR</div></div>
 
 <div class="workstep"><div class="worklabel">Proprietar Vehicul</div><div class=workfields><select name="tipproprietar" class="validated validateundo" validators="change" validate="for.pj.show.class.aratadoarpj~for.pf.show.class.aratadoarpf~for.pf.show.id.tarifarofertapf~for.pj.show.id.tarifarofertapj~revalidate.dotarifabrica~revalidate.dotari~revalidate.siguranta~required.yes">
 	<option class="option0" value="">--Selectati--</option>
@@ -399,7 +407,6 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 
 
 <!-- tarifarofertapf --><div id=tarifarofertapf>
-
 <div class="workstep"><div class="worklabel">Tip persoana:</div><div class="workfields"><select name=pf_tippersoana>
 	<option value="pf">PF</option>
 	<option value="pf,bugetar">Bugetar</option>
@@ -473,6 +480,7 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 </div></div>
 </div>
 
+
 <div class="workstep"><div class="worklabel">Permis din anul:</div><div class="workfields">
 <select name="pf_permisan">
 <option value="">Nespecificat</option>
@@ -525,6 +533,7 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 
 <div class="workstep"><div class="worklabel">Amenzi (3 ani): </div><div class="workfields"><select name="pf_amenzi"><option value="nu">Nu</option><option value="da">Da</option></select>
 </div></div>
+
 <!-- tarifarofertapf --></div>
 
 <!-- tarifarofertapj --><div id=tarifarofertapj>
@@ -641,7 +650,6 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 
 <div class="workstep"><div class="worklabel">Parc auto:</div><div class="workfields"><input type="number" class="validated" value="" size="4" name="parcauto"><input type=hidden name="pj_rate" value="1">
 </div></div>
-
 <!-- tarifarofertapj --></div>
 
 

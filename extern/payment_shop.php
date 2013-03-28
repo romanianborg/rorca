@@ -101,7 +101,7 @@ class Payment {
 			case "pay_auth":
 				$this->updateVars();
 				$this->form = '
-		<form id="PaymentForm" name="PaymentForm" method="post" action="'. $this->postAction .'" class="freeform autosubmitform">
+		<form id="PaymentForm" name="PaymentForm" method="post" action="'. $this->postAction .'" class="freeform autosubmitform" target="_top">
 		<input type="hidden" name="AMOUNT" value="'. $this->amount .'" />
 		<input type="hidden" name="CURRENCY" value="'. $this->currency .'" />
 		<input type="hidden" name="ORDER" value="'. $this->order .'" />

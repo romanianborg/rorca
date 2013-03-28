@@ -276,6 +276,10 @@ function validateRule(el,ev,rule,start,rev)
 					}
 				}
 			}
+			if(el && /chrome/.test(navigator.userAgent.toLowerCase()))
+			{
+				$('<div></div>').appendTo(el.parent()).remove();
+			}
 		break;
 		case 'extract':
 			switch(rule[start+1])
@@ -844,13 +848,48 @@ function pregatesteAutocomplete(el,nume,lknume,lksector)
 	}
 }
 
+function reloadViewport()
+{
+<?php if(getUserConfig("mobilewidth")!=""){?>
+		var mvp = document.getElementById('testViewport');
+		mvp.setAttribute('content','width=<?php echo getUserConfig("mobilewidth");?>,initial-scale='+$(window).width()/<?php echo getUserConfig("mobilewidth");?>);
+<?php } else { ?>
+
+		if($(window).width()<600)
+		{
+			//alert($(window).width());
+			var mvp = document.getElementById('testViewport');
+			mvp.setAttribute('content','width=189,initial-scale='+$(window).width()/189);
+		}
+		else
+		{
+			var mvp = document.getElementById('testViewport');
+			mvp.setAttribute('content','width=598,initial-scale='+$(window).width()/598);
+		}
+
+<?php }?>
+
+}
 
 $(document).bind('slotReloaded',function(event,data){
 	reloadValidators("#"+data);
 });
+
 $(document).ready(function(){
+
+	setTimeout("reloadViewport()",500);
+<?php if(getUserConfig("mobilewidth")==""){?>
+	if($(window).width()<600)
+	{
+		formularecomplete=false;
+		$("#sidebarload").hide();
+	}
+<?php }?>
+
 	$("#savebutton").removeAttr("disabled");
 	reloadValidators("#work");
+
+
 });
 
 function updateCells()

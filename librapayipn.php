@@ -1,6 +1,5 @@
 <?php
 
-
 // Copyright AI Software Ltd Bucharest, Romania 2001-2011
 require_once("config/rights.php");
 require_once("config/language.php");
@@ -12,7 +11,8 @@ global $conn;
 global $_CONFIG;
 
 
-	$_GET['librapayipn']=true;
-	include("extensions/process_siteoffer.php");
+$_GET['librapayipn']=true;
+$_GET['librapayipn_post']=false;
+include("extensions/process_siteoffer.php");
 
 ?>

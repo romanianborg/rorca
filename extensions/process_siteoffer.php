@@ -18,6 +18,10 @@ if(isset($_GET['librapayipn']) && $_GET['librapayipn'])
 	$payment = new Payment;
 
 	$data = $_GET;
+	if($_GET['librapayipn_post'])
+		$data = $_POST;
+	else
+		$data = $_GET;
 
 	$payment->terminal = $data["TERMINAL"];
 	$payment->trtype = $data["TRTYPE"];
@@ -44,9 +48,16 @@ if(isset($_GET['librapayipn']) && $_GET['librapayipn'])
 //	echo $data["P_SIGN"];echo "<br>";
 //	echo $payment->psign;echo "<br>";
 
-	if($data["P_SIGN"] != $payment->psign) {
-		// mesajul vine din alta parte
-		echo "Nu am putut calcula ultima zecimala a lui PI.";
+	if($data["P_SIGN"] != $payment->psign)
+	{
+		if($_GET['librapayipn_post'])
+		{
+			echo "0";
+		}
+		else
+		{
+			echo "Nu am putut calcula ultima zecimala a lui PI.";
+		}
 	}
 	else
 	{
@@ -67,17 +78,31 @@ if(isset($_GET['librapayipn']) && $_GET['librapayipn'])
 			$off=ws_process('DateOferta');
 			if($off===false)
 			{
-				echo "O eroare neastepta nu permite inreg platii. Va rugam sa incercati mai tarziu sau sa ne contactati. Un operator va face verificarile necesare.";
-			}
-			else
-			{
-				if($_GET['MESSAGE']=="Approved")
+				if($_GET['librapayipn_post'])
 				{
-					header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=thankyou&offid=".$offid);
+					echo "0";
 				}
 				else
 				{
-					header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=error&offid=".$offid."&error=".$_GET['MESSAGE']);
+					echo "O eroare neastepta nu permite inreg platii. Va rugam sa incercati mai tarziu sau sa ne contactati. Un operator va face verificarile necesare.";
+				}
+			}
+			else
+			{
+				if($_GET['librapayipn_post'])
+				{
+					echo "1";
+				}
+				else
+				{
+					if($_GET['MESSAGE']=="Approved")
+					{
+						header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=thankyou&offid=".$offid);
+					}
+					else
+					{
+						header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=error&offid=".$offid."&error=".$_GET['MESSAGE']);
+					}
 				}
 			}
 		}
@@ -285,7 +310,7 @@ if($_GET['t']=="polita")
 	die();
 }
 
-require_once("config/textarea.php");
+//require_once("config/textarea.php");
 require_once("config/ajaxify.php");
 jQueryPluginRequired("jquery.autocomplete");
 
@@ -296,6 +321,7 @@ require_once("extensions/info_css.php");
 ?>
 	<script src="js/jquery.tipsy.js"></script>
 	<link rel="stylesheet" href="js/jquery.tipsy.css" type="text/css" />
+	<script src="js/jquery.scrollTo.js"></script>
 <?php
 cache_addvalue("finalhead",ob_get_contents());ob_end_clean();
 
@@ -323,9 +349,19 @@ switch($_GET['t'])
 {
 case 'rca':
 	if(isset($_GET['offid']) && intval($_GET['offid'])>0)
-		include("extensions/info_tarifar_rca3_tarife.php");
+	{
+		if(file_exists("extensions/info_tarifar_rca_tarife.php") && $_GET['nd']=="yes")
+			include("extensions/info_tarifar_rca_tarife.php");
+		else
+			include("extensions/info_tarifar_rca3_tarife.php");
+	}
 	else
-		include("extensions/info_tarifar_rca3.php");
+	{
+		if(file_exists("extensions/info_tarifar_rca.php") && $_GET['nd']=="yes")
+			include("extensions/info_tarifar_rca.php");
+		else
+			include("extensions/info_tarifar_rca3.php");
+	}
 break;
 case 'medicale':
 	if(isset($_GET['offid']) && intval($_GET['offid'])>0)

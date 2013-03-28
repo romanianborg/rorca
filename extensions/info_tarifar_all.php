@@ -1,5 +1,5 @@
 <div id="worksteps">
-
+<div class="work_col1">
 <div class="workstep"><div class="biglabel"><img src="images/ok.png" border=0> Asigurari Online</div>
 </div>
 
@@ -18,10 +18,15 @@
 <div class="workstep">
 	<a href="site.php?t=medicale" class="biglink"><img src="images/globe.png" border=0> Medicale de calatorie</a>
 </div>
-
-<div class="workstep">
-	<a href="site.php?t=decont" class="biglink"><img src="images/ok.png" border=0> Expirari polite</a>
+</div>
+<div class="work_col2">
+<div class="workstep"><div class="biglabel"><img src="images/x.png" border=0> Alte polite</div>
 </div>
 
+<div class="workstep">
+	<a href="site.php?t=decont" class="biglink"><img src="images/x.png" border=0> Expirari polite</a>
+</div>
+
+</div>
 </div>
 

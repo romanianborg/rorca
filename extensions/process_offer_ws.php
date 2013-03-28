@@ -371,6 +371,8 @@
 						$_LANG_['euroins']='<img src="images/euroins.png" alt="'.getLT('euroins').'">';
 						$_LANG_['asirom']='<img src="images/asirom.png" alt="'.getLT('asirom').'">';
 						$_LANG_['crediteurope']='<img src="images/asirom.png" alt="'.getLT('crediteurope').'">';
+						$_LANG_['platinum']='<img src="images/gothaer.png" alt="Gothaer">';
+						$_LANG_['mondial']='<img src="images/mondial.png" alt="Mondial">';
 
 						switch($tipoferta)
 						{
@@ -385,7 +387,7 @@
 								{
 									if($v['12']<2) continue;
 									?>
-									<tr><td align=center><?php echo getLT($v['soc']);?><td align=right class="worktarif"><a href="#" per="12" socid="<?php echo $v['soc'];?>"><?php $tt=showNumber($v['12'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';?></a>
+									<tr><td align=center><?php echo getLT($v['soc']);?><td align=right class="worktarif"><a href="#" per="12" socid="<?php echo $v['soc'];?>" tarif="<?php echo showNumber($v['12'],2);?>"><?php $tt=showNumber($v['12'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';?></a>
 									<?php
 								}
 								?></table>
@@ -407,8 +409,21 @@
 								{
 									if($v['6']<2) continue;
 									if($v['12']<2) continue;
+
+									$oldtarif6='';
+									$oldtarif12='';
+									if(getUserConfig("reduceretarife")!="")
+									{
+										$oldv6=floatval($v[6]);
+										$oldv12=floatval($v[12]);
+										$v[6]=floatval($v[6])*(100-floatval(getUserConfig("reduceretarife")))/100;
+										$v[12]=floatval($v[12])*(100-floatval(getUserConfig("reduceretarife")))/100;
+										$oldtarif6='<del><span class="tarifjos">'.showNumber($oldv6,2).'</span></del><br>';
+										$oldtarif12='<del><span class="tarifjos">'.showNumber($oldv12,2).'</span></del><br>';
+									}
+
 									?>
-									<tr><td align=center style="text-align:center;"><?php echo getLT($v['soc']);?><td align=right class="worktarif"><a href="#" socid="<?php echo $v['soc'];?>" per="6"><?php $tt=showNumber($v['6'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';?></a><td align=right class="worktarif"><a href="#" per="12"><?php $tt=showNumber($v['12'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';?></a>
+									<tr><td align=center style="text-align:center;"><?php echo getLT($v['soc']);?><td align=right class="worktarif"><a href="#" socid="<?php echo $v['soc'];?>" per="6" tarif="<?php echo showNumber($v['6'],2);?>"><?php echo$oldtarif6; $tt=showNumber($v['6'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';?></a><td align=right class="worktarif"><a href="#" per="12" tarif="<?php echo showNumber($v['12'],2);?>"><?php echo $oldtarif12;$tt=showNumber($v['12'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';?></a>
 									<?php
 								}
 								?></table>
@@ -419,7 +434,6 @@
 									<a class="incarcatarife" href="site.php?TarifeOferta=<?php echo intval($_GET['TarifeOferta']);?>"></a>
 									<?php
 								}
-
 							break;
 						}
 					}

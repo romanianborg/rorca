@@ -27,12 +27,6 @@
 </div></div>
 
 
-<div class="workstep"><div class="worklabel">Alta asigurare?</div><div class=workfields><input type="text" name="numealta2" value="" size=20>
-</div></div>
-
-<div class="workstep"><div class="worklabel">In ce data?</div><div class=workfields><input type=text name="dataalta2" id="dataalta2" size="9" value=""> <a id="dataalta2_sel" name="dataalta2_sel" onclick="global_cal.select(document.forms['work'].dataalta2,'dataalta2_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
-</div></div>
-
 </div><div class="work_col2">
 <div class="workstep"><div class="biglabel"><img src="images/individ.png" border=0> DATE PROPRIETAR</div></div>
 
