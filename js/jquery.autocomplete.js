@@ -20,7 +20,7 @@ $.fn.extend({
 			url: isUrl ? urlOrData : null,
 			data: isUrl ? null : urlOrData,
 			delay: isUrl ? $.Autocompleter.defaults.delay : 10,
-			max: options && !options.scroll ? 10 : 150
+			max: options && !options.scroll ? 50 : 150
 		}, options);
 			// if highlight is set to false, replace it with a do-nothing function
 		options.highlight = options.highlight || function(value) { return value; };
@@ -49,6 +49,8 @@ $.Autocompleter = function(input, options) {
 	var KEY = {
 		UP: 38,
 		DOWN: 40,
+		LEFT: 39,
+		RIGHT: 41,
 		DEL: 46,
 		TAB: 9,
 		RETURN: 13,
@@ -131,6 +133,9 @@ $.Autocompleter = function(input, options) {
 				break;
 						case KEY.ESC:
 				select.hide();
+				break;
+				case KEY.LEFT:
+				case KEY.RIGHT:
 				break;
 						default:
 				clearTimeout(timeout);
@@ -317,7 +322,27 @@ $.Autocompleter = function(input, options) {
 			$.each(options.extraParams, function(key, param) {
 				extraParams[key] = typeof param == "function" ? param() : param;
 			});
-			$.getJSON($input.attr("lk")+'&lkvalue='+term+'&jsoncallback=?', function(data){
+			if(options.takeparas && options.takeparas!="")
+			{
+				var newurl;
+				if(!$input.attr("lkold"))
+				{
+					newurl=$input.attr("lk");
+					$input.attr("lkold",$input.attr("lk"));
+				}
+				else
+				{
+					newurl=$input.attr("lkold");
+				}
+				var tp=options.takeparas.split(",");
+				var myi;
+				for(myi in tp)
+				{
+					newurl=newurl.replace("["+tp[myi]+"]",""+$("[name="+tp[myi]+"]").val());
+				}
+				$input.attr("lk",newurl);
+			}
+			$.getJSON($input.attr("lk")+'&lkvalue='+escape(term)+'&jsoncallback=?', function(data){
 				success(term, data.items);
 			});
 		} else {

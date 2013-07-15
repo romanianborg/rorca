@@ -209,6 +209,7 @@ div.datepicker
 position:absolute;
 top:30px;
 left:0px;
+z-index: 999;
 }
 
 div.biglabel
@@ -427,3 +428,4 @@ display:none;
 }
 </style>
 <?php } ?>
+

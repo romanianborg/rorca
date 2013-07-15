@@ -1,3 +1,4 @@
+<div id="worksteps">
 
 <input type="hidden" name="action" value="TarifeOferta">
 <input type="hidden" name="textbutton" value="Plateste online">
@@ -38,7 +39,7 @@
 <div class="workstep"><div class="worklabel">Telefon:</div><div class=workfields><input name="telclient" value="" class="validated" validate="if.emailclient..required.phone" size="20" type="tel">
 </div></div>
 
-<div class="workstep"><div class="worklabel"><?php if($date['tipproprietar']['VALUE']=="pj" || $date['tipproprietar']['VALUE']=="leasing" && $date['tiputilizator']['VALUE']=="pj") echo "Denumire firma"; else echo "Nume";?>:</div><div class=workfields><input name="client" value="" class="validated" validate="required.yes" size="20" type="text">
+<div class="workstep"><div class="worklabel"><?php if($date['tipproprietar']['VALUE']=="pj" || $date['tipproprietar']['VALUE']=="leasing" && $date['tiputilizator']['VALUE']=="pj") echo "Denumire firma"; else echo "Nume si Prenume";?>:</div><div class=workfields><input name="client" value="" class="validated" validate="required.yes" size="20" type="text">
 </div></div>
 
 
@@ -52,12 +53,49 @@
 <?php
 	}
 ?>
+<?php
+	if(getUserConfig("unicredit")=="yes"){
+?>
+	<option value="unicredit">Plata online cu cardul</option>
+<?php
+	}
+?>
+<?php
+	if(getUserConfig("euplatesc")=="yes"){
+?>
+	<option value="euplatesc">Plata online cu cardul</option>
+<?php
+	}
+?>
 	<option value="op">Plata cu OP</option>
 	<option value="ramburs">Plata ramburs</option>
 </select>
 </div></div>
 
-
+<?php
+	if(getUserConfig("unicredit")=="yes"){
+?>
+<div id="infounicredit" style="display:none;">
+<div class="workstep"><div class=workfields style="width:295px;">
+	<img src="images/unicreditcl.jpeg" border="0">
+	<br>Dupa ce introduceti si emailul veti fi redirect pe site-ul bancii pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.
+</div></div>
+</div>
+<?php
+	}
+?>
+<?php
+	if(getUserConfig("euplatesc")=="yes"){
+?>
+<div id="infoeuplatesc" style="display:none;">
+<div class="workstep"><div class=workfields style="width:295px;">
+	<img src="images/euplatesc.gif" border="0">
+	<br>Dupa ce introduceti si emailul veti fi redirect pe site-ul bancii pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.
+</div></div>
+</div>
+<?php
+	}
+?>
 <?php
 	if(getUserConfig("platalibra")=="yes"){
 ?>
@@ -109,4 +147,6 @@ cod postal&nbsp;<input type="text" onchange="javascript:textareaImplode('prop_ad
 </div>
 
 </div><!-- col2-->
+
+</div>
 

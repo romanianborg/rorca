@@ -1,3 +1,5 @@
+<div id="worksteps">
+
 <input type="hidden" name="action" value="AdaugaOferta">
 <input type="hidden" name="textbutton" value="Vezi tarife">
 <input type="hidden" name="automaticsubmit" value="false">
@@ -138,6 +140,8 @@
 	</select>
 </div></div>
 
+
+</div>
 
 </div>
 

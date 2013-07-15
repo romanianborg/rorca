@@ -1,3 +1,4 @@
+<div id="worksteps">
 <input type="hidden" name="action" value="AdaugaOferta">
 <input type="hidden" name="textbutton" value="Vezi tarife">
 <input type="hidden" name="automaticsubmit" value="false">
@@ -378,4 +379,6 @@ ap&nbsp;<input type="text" onchange="javascript:textareaImplode('pj_adresa');" l
 <input type=hidden name="p_per" value="12" class="validated" validate="addmonths.panalavalabilitate.datavalabilitate">
 <input type=hidden name="panalavalabilitate" id="panalavalabilitate" value="">
 <input type=hidden name="emite"  value="bonus">
+
+</div>
 

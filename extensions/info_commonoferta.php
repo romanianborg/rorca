@@ -634,29 +634,48 @@ function getcotafromstring(s)
 	if(isNaN(ret)) ret=0;
 	return Math.round(ret);
 }
-function valideazaDoarForma(f)
+function valideazaDoarForma(f,valideaza)
 {
 	var slot="#workstep";
 	var ret=true;
 	$(slot).find(".validated").each(function(){
-		if(!$(this).hasClass("doaremitere") && isElementVisible($(this)) && !validateFieldRule($(this),{},$(this).attr("validate")))
+		if(!$(this).hasClass("doaremitere") && isElementVisible($(this)))
 		{
-			ret=false;
-			$(this).css("background-color","<?php echo getUserConfig("alert_color");?>");
+			if(!validateFieldRule($(this),{},$(this).attr("validate")))
+			{
+				ret=false;
+				if(valideaza)
+					valideaza(this,false);
+				else
+					$(this).css("background-color","<?php echo getUserConfig("alert_color");?>");
+			}
+			else
+			{
+				valideaza(this,true);
+			}
 		}
 	});
 	return ret;
 }
-function valideazaFormaPentruSalvare(f)
+function valideazaFormaPentruSalvare(f,valideaza)
 {
 	var slot="#work";
 	var ret=true;
 	$(slot).find(".validated").each(function(){
-		if(!isElementVisible($(this)) && !validateFieldRule($(this),{},$(this).attr("validate")))
+		if(isElementVisible($(this)))
 		{
-			$(this).css("background-color","<?php echo getUserConfig("alert_color");?>");
-			//alert($(this).attr("name"));
-			ret=false;
+			if(!validateFieldRule($(this),{},$(this).attr("validate")))
+			{
+				if(valideaza)
+					valideaza(this,false);
+				else
+					$(this).css("background-color","<?php echo getUserConfig("alert_color");?>");
+				ret=false;
+			}
+			else
+			{
+				if(valideaza) valideaza(this,true);
+			}
 		}
 	});
 	var allok=true;
@@ -690,12 +709,24 @@ function valideazaFormaPentruSalvare(f)
 	}
 	else
 	{
-		$("#savebutton").attr("disabled","yes");
+		//$("#savebutton").attr("disabled","yes");
 	}
 	return ret;
 }
+var punemarcaje;
 function reloadValidators(slot)
 {
+	if(typeof(Storage)!=="undefined")
+	{
+		$("input[type!=hidden]").add("select").each(function(){
+			if($(this).attr("name")=="tarif") return true;
+			if(localStorage['t_'+$(this).attr("name")]!="")
+			{
+				$(this).val(localStorage['t_'+$(this).attr("name")]);
+			}
+		});
+	}
+
 	var one=false;
 	$(slot).find(".validated").each(function(){
 		var arr;
@@ -710,6 +741,7 @@ function reloadValidators(slot)
 			{
 				$(this).unbind(arr[i]).bind(arr[i],function(ev){
 					ret=validateFieldRule($(this),ev,$(this).attr("validate"));
+					if(punemarcaje) punemarcaje(this,ret);
 					return ret;
 				});
 			}
@@ -718,10 +750,15 @@ function reloadValidators(slot)
 				$(this).unbind(arr[i]).bind(arr[i],function(ev){
 					//sterge tarife
 					var ret=validateFieldRule($(this),ev,$(this).attr("validate"));
+					if(punemarcaje) punemarcaje(this,ret);
 					return ret;
 				});
 			}
-			validateFieldRule($(this),{},$(this).attr("validate"));
+		}
+		var ret=validateFieldRule($(this),{},$(this).attr("validate"));
+		if(punemarcaje)
+		{
+			punemarcaje(this,ret);
 		}
 		one=true;
 	});
@@ -852,19 +889,19 @@ function reloadViewport()
 {
 <?php if(getUserConfig("mobilewidth")!=""){?>
 		var mvp = document.getElementById('testViewport');
-		mvp.setAttribute('content','width=<?php echo getUserConfig("mobilewidth");?>,initial-scale='+$(window).width()/<?php echo getUserConfig("mobilewidth");?>);
+		if(mvp) mvp.setAttribute('content','width=<?php echo getUserConfig("mobilewidth");?>,initial-scale='+$(window).width()/<?php echo getUserConfig("mobilewidth");?>);
 <?php } else { ?>
 
 		if($(window).width()<600)
 		{
 			//alert($(window).width());
 			var mvp = document.getElementById('testViewport');
-			mvp.setAttribute('content','width=189,initial-scale='+$(window).width()/189);
+			if(mvp) mvp.setAttribute('content','width=189,initial-scale='+$(window).width()/189);
 		}
 		else
 		{
 			var mvp = document.getElementById('testViewport');
-			mvp.setAttribute('content','width=598,initial-scale='+$(window).width()/598);
+			if(mvp) mvp.setAttribute('content','width=598,initial-scale='+$(window).width()/598);
 		}
 
 <?php }?>

@@ -1,3 +1,5 @@
+<div id="worksteps">
+
 <input type="hidden" name="action" value="AdaugaOferta">
 <input type="hidden" name="textbutton" value="Trimite Expirari">
 <input type="hidden" name="automaticsubmit" value="false">
@@ -40,6 +42,8 @@
 
 <div class="workstep"><div class="worklabel">Nume</div><div class=workfields><input name="client" value="" class="validated" validate="required.yes" size="20" type="text">
 </div></div>
+
+</div>
 
 </div>
 

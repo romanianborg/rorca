@@ -1,3 +1,5 @@
+<div id="worksteps">
+
 <input type="hidden" name="action" value="AdaugaOferta">
 <input type="hidden" name="textbutton" value="Trimite cerere">
 <input type="hidden" name="automaticsubmit" value="false">
@@ -653,4 +655,5 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 <!-- tarifarofertapj --></div>
 
 
+<!-- worksteps --></div>
 

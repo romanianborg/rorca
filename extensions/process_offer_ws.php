@@ -10,6 +10,7 @@
 		$header [] = 'Connection: close';
 		$header [] = 'Cache-Control: no-cache';
 		$header [] = 'User-agent: asiguram/tarifar 1.0';
+		$header [] = 'Expect:';
 
 		// Set the POST options.
 		$session=curl_init();
@@ -316,6 +317,7 @@
 	  </soap:Body>
 	</soap:Envelope>';
 			$data=ws_request(getUserConfig("ws_brokerurl"),$xml,'TarifeOferta');
+			//print_r($data);die();
 			$r=$data['soap:Envelope']['soap:Body'];
 			if(isset($r['soap:Fault']))
 			{
@@ -412,16 +414,20 @@
 
 									$oldtarif6='';
 									$oldtarif12='';
-									if(getUserConfig("reduceretarife")!="")
+									if(getUserConfig("reduceretarife")!="" || getUserConfig("reduceretarife_".$v['soc'])!="")
 									{
+										$red=getUserConfig("reduceretarife");
+										if(getUserConfig("reduceretarife_".$v['soc'])!="")
+										{
+											$red=getUserConfig("reduceretarife_".$v['soc']);
+										}
 										$oldv6=floatval($v[6]);
 										$oldv12=floatval($v[12]);
-										$v[6]=floatval($v[6])*(100-floatval(getUserConfig("reduceretarife")))/100;
-										$v[12]=floatval($v[12])*(100-floatval(getUserConfig("reduceretarife")))/100;
+										$v[6]=floatval($v[6])*(100-floatval($red))/100;
+										$v[12]=floatval($v[12])*(100-floatval($red))/100;
 										$oldtarif6='<del><span class="tarifjos">'.showNumber($oldv6,2).'</span></del><br>';
 										$oldtarif12='<del><span class="tarifjos">'.showNumber($oldv12,2).'</span></del><br>';
 									}
-
 									?>
 									<tr><td align=center style="text-align:center;"><?php echo getLT($v['soc']);?><td align=right class="worktarif"><a href="#" socid="<?php echo $v['soc'];?>" per="6" tarif="<?php echo showNumber($v['6'],2);?>"><?php echo$oldtarif6; $tt=showNumber($v['6'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';?></a><td align=right class="worktarif"><a href="#" per="12" tarif="<?php echo showNumber($v['12'],2);?>"><?php echo $oldtarif12;$tt=showNumber($v['12'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';?></a>
 									<?php
@@ -455,6 +461,7 @@
 					}
 					if($action=="PDFOferta")
 					{
+						header('Content-Disposition: attachment; filename="Polita-'.intval($_GET['offid']).'.pdf";');
 						return base64_decode($r['TarifeOfertaResponse']['politaPDF']['VALUE']);
 					}
 				}

@@ -26,12 +26,23 @@ function reloadSteperTarife()
 	}
 	$("#work td.worktarif a").unbind('click').click(function(){
 		$("#work td.worktarif").css("background-color","white");
-		$(this).parent().css("background-color","<?php echo getUserConfig("active_color");?>");
-		$("input[name=tarif]").val($(this).attr("tarif"));
+		$(this).parent().css("background-color","<?php echo getUserConfig("current_color");?>");
+		$("input[name=tarif]").val($(this).attr("tarif")).change();
 		$("input[name=p_soc]").val($(this).attr("socid"));
 		$("input[name=p_per]").val($(this).attr("per"));
 		return false;
-	});
+	})
+	<?php
+	if(getUserConfig("color_design")=="2")
+	{
+		?>
+		.each(function(){
+			$(this).prepend('<button class="btn btn-success" style="position:relative;left:-30px;top:+10px;">Alege Tarif '+$(this).attr("tarif")+'</button>');
+		})
+		<?php
+	}
+	?>
+	;
 }
 function reloadSteperPolita()
 {
@@ -98,12 +109,6 @@ var formularecomplete=<?php echo (getUserConfig("tarifarcomplet")=="yes")?'true'
 
 function loadOneStep(buttonclick)
 {
-<?php
-if(file_exists("extensions/info_tarifar_rca.php") && $_GET['t']=="rca" && $_GET['nd']=="yes")
-{
-	?>return true;<?php
-}
-?>
 	var ret=true;
 	var allvalid=true;
 	var nextstep;
@@ -189,17 +194,6 @@ if(file_exists("extensions/info_tarifar_rca.php") && $_GET['t']=="rca" && $_GET[
 		if(!isElementVisible($(nextstep)))
 		{
 			$(nextstep).show().each(function(){
-				if(typeof(Storage)!=="undefined")
-				{
-					$(this).add("input[type!=hidden]",this).add("select",this).each(function(){
-						if($(this).attr("name")=="tarif") return true;
-						if(localStorage['t_'+$(this).attr("name")]!="")
-						{
-							$(this).val(localStorage['t_'+$(this).attr("name")]);
-							mustreload=true;
-						}
-					});
-				}
 
 				if($(this).is(":visible"))
 				{
@@ -239,7 +233,7 @@ if(file_exists("extensions/info_tarifar_rca.php") && $_GET['t']=="rca" && $_GET[
 }
 function reloadTips()
 {
-	$("[title]").tipsy({gravity:'n',opacity:0.8});
+	$("[title]").tipsy({gravity:'sw',opacity:0.8});
 }
 function slotLoadingCreateWindow(slot){
 	$("#loading").show();
@@ -268,7 +262,6 @@ function slotLoadedUpdateWindow(slot){
 	$(document).trigger('slotReloaded',slot);
 	reloadCalendar();
 	reloadAutocomplete();
-	reloadSteper(true);
 	reloadTips();
 	reloadSideLinks();
 }
@@ -277,16 +270,14 @@ document.globalSlotLoading="slotLoadingCreateWindow";
 document.globalSlotReloaded="slotLoadedUpdateWindow";
 document.ajaxifyDefaultSlot="work";
 $(document).ready(function(){
+
 	reloadLinks("");
 	$("a.option").unbind("click");
 	initAjaxifyHistory();
 	reloadCalendar();
 	reloadAutocomplete();
-	reloadSteper(true);
 	reloadTips();
 	reloadSideLinks();
-
-
 
 $.fn.extend({ 
 	showAndScroll: function() { 

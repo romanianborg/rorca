@@ -183,7 +183,7 @@ function doKeyboardRemapEvents(event)
 		{
 			NexttimerID=setTimeout("focusNextHandler()",1);
 		}
-		if($ && (activeElement || activeElement.type))
+		if(typeof jQuery != 'undefined' && (activeElement || activeElement.type))
 		{
 			$(activeElement).change();
 		}

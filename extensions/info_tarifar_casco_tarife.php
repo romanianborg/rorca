@@ -1,3 +1,4 @@
+<div id="worksteps">
 
 <input type="hidden" name="action" value="TarifeOferta">
 <input type="hidden" name="textbutton" value="Cerere oferta">
@@ -20,4 +21,6 @@
 
 <div class="workstep"><div class="worklabel"><?php if($date['tipproprietar']['VALUE']=="pj" || $date['tipproprietar']['VALUE']=="leasing" && $date['tiputilizator']['VALUE']=="pj") echo "Denumire firma"; else echo "Nume";?>:</div><div class=workfields><input name="client" value="" class="validated" validate="required.yes" size="20" type="text">
 </div></div>
+
+</div>
 

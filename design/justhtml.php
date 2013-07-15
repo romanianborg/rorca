@@ -1,4 +1,5 @@
 <?php ob_start();if(file_exists(cache_getvalue('temp_default'))) include cache_getvalue('temp_default');$context=ob_get_contents();ob_end_clean();?>
+<!DOCTYPE html>
 <html>
 <HEAD>
 <?php if(cache_getvalue("title")!=""){?><TITLE><?php echo cache_getvalue("title");cache_setvalue("title","");?></TITLE><?php }?>
