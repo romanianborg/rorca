@@ -124,7 +124,8 @@ $.Autocompleter = function(input, options) {
 			case options.multiple && $.trim(options.multipleSeparator) == "," && KEY.COMMA:
 			case KEY.TAB:
 			case KEY.RETURN:
-				if( selectCurrent() ) {
+				if(selectCurrent())
+				{
 					// stop default to prevent a form submit, Opera needs special handling
 					event.preventDefault();
 					blockSubmit = true;
@@ -147,6 +148,7 @@ $.Autocompleter = function(input, options) {
 		// results if the field no longer has focus
 		hasFocus++;
 	}).blur(function() {
+		selectCurrent();
 		hasFocus = 0;
 		if (!config.mouseDownOnSelect) {
 			hideResults();
@@ -344,6 +346,15 @@ $.Autocompleter = function(input, options) {
 			}
 			$.getJSON($input.attr("lk")+'&lkvalue='+escape(term)+'&jsoncallback=?', function(data){
 				success(term, data.items);
+				if( data.items.length)
+				{
+					select.next();
+				}
+				else
+				{
+					select.emptyList();
+					failure(term);
+				}
 			});
 		} else {
 			// if we have a failure, we need to empty the list -- this prevents the the [TAB] key from selecting the last successful match

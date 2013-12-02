@@ -23,10 +23,11 @@
 		curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($session, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($session, CURLOPT_TIMEOUT, ( int ) 60 );
+		curl_setopt($session, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
 
 		// Do the POST and then close the session
 		$response = curl_exec($session);
-		//echo $response;die();
+		//echo $response;
 		if (curl_errno($session)) {
 			//echo curl_errno($session);die();
 			return false;
@@ -429,7 +430,7 @@
 										$oldtarif12='<del><span class="tarifjos">'.showNumber($oldv12,2).'</span></del><br>';
 									}
 									?>
-									<tr><td align=center style="text-align:center;"><?php echo getLT($v['soc']);?><td align=right class="worktarif"><a href="#" socid="<?php echo $v['soc'];?>" per="6" tarif="<?php echo showNumber($v['6'],2);?>"><?php echo$oldtarif6; $tt=showNumber($v['6'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';?></a><td align=right class="worktarif"><a href="#" per="12" tarif="<?php echo showNumber($v['12'],2);?>"><?php echo $oldtarif12;$tt=showNumber($v['12'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';?></a>
+									<tr><td align=center style="text-align:center;"><?php echo getLT($v['soc']);?><td align=right class="worktarif"><a href="#" socid="<?php echo $v['soc'];?>" per="6" tarif="<?php echo showNumber($v['6'],2);?>"><?php echo$oldtarif6; $tt=showNumber($v['6'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';?></a><td align=right class="worktarif"><a href="#"  socid="<?php echo $v['soc'];?>" per="12" tarif="<?php echo showNumber($v['12'],2);?>"><?php echo $oldtarif12;$tt=showNumber($v['12'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';?></a>
 									<?php
 								}
 								?></table>
@@ -532,6 +533,64 @@ $xml.='<'.$k.'>'.$v.'</'.$k.'>';
 				return false;
 			}
 			return true;
+		break;
+		case 'ContulNou':
+		case 'ParolaUitata':
+		case 'ContulTau':
+		case 'Reincarca':
+			$xml='<?xml version="1.0" encoding="utf-8"?>
+	<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	  xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	  <soap:Header>
+		 <CredentialHeader xmlns="http://asiguram.ro/ws">
+		   <Username>'.getUserConfig("ws_username").'</Username>
+		   <Password>'.getUserConfig("ws_parola").'</Password>
+		 </CredentialHeader>
+	  </soap:Header>
+	  <soap:Body>
+		<'.$action.' xmlns="http://asiguram.ro/ws">
+			<clientid>'.session_getvalue("login_clientid").'</clientid>
+			';
+			foreach($_POST as $k=>$v)
+			{
+				if($k=="frandom") continue;
+				if($k=="action") continue;
+				if($k=="textbutton") continue;
+				if($k=="automaticsubmit") continue;
+				$xml.='<'.$k.'>'.$v.'</'.$k.'>';
+			}
+		$xml.='
+		</'.$action.'>
+	  </soap:Body>
+	</soap:Envelope>';
+			$data=ws_request(getUserConfig("ws_brokerurl"),$xml,$action);
+			$r=$data['soap:Envelope']['soap:Body'];
+			global $_local_error;
+			$_local_error='';
+			if(isset($r['soap:Fault']))
+			{
+				$_local_error=$r['soap:Fault']['faultstring']['VALUE'];
+				return false;
+			}
+			if(isset($r['Client']['id']['VALUE']))
+			{
+				if(intval($r['Client']['id']['VALUE']))
+				{
+					session_setvalue("login_clientid",intval($r['Client']['id']['VALUE']));
+				}
+			}
+			if(isset($r['Redirect']['screen']['VALUE']))
+			{
+				?>
+<textarea><?php if(isset($r['Redirect']['message']['VALUE'])) {?>alert("<?php echo $r['Redirect']['message']['VALUE'];?>");<?php } ?>location.href='site.php?t=<?php echo $r['Redirect']['screen']['VALUE'];?>';</textarea>
+				<?php
+				die();
+			}
+			return true;
+		break;
+		case 'Portofoliu':
+			include("extensions/process_offer_ws_client.php");
 		break;
 		}
 	}

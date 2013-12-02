@@ -114,11 +114,11 @@ $_LANG_['grupama']="GROUPAMA";
 $_LANG_['allianz']="ALLIANZ";
 $_LANG_['asirom']="ASIROM";
 $_LANG_['omniasig']="OMNIASIG";
-$_LANG_['platinum']="PLATINUM";
+$_LANG_['platinum']="GOTHAER";
 $_LANG_['mondial']="MONDIAL";
-$_LANG_['bcrasig']="BCR ASIGURARI";
+$_LANG_['bcrasig']="OMNIASIG BCR";
 $_LANG_['generali']="GENERALI";
-$_LANG_['ardaf']="ARDAF";
+$_LANG_['ardaf']="GENERALI ARDAF";
 $_LANG_['abc']="ABC ASIGURARI";
 $_LANG_['city']="CITY INSURANCE";
 

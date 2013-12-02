@@ -27,6 +27,18 @@
 	<a href="site.php?t=decont" class="biglink"><img src="images/x.png" border=0> Expirari polite</a>
 </div>
 
+<div class="workstep">
+	<a href="site.php?t=client" class="biglink"><img src="images/ochelari.png" border=0> Contul meu</a>
+</div>
+
+<div class="workstep">
+	<a href="site.php?t=clientnou" class="biglink"><img src="images/casa.png" border=0> Creaza-ti cont</a>
+</div>
+
+<div class="workstep">
+	<a href="site.php?t=clientforgot" class="biglink"><img src="images/x.png" border=0> Am uitat parola</a>
+</div>
+
 </div>
 </div>
 

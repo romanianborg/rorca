@@ -312,6 +312,41 @@ if(isset($_GET['PolitaOferta']) && intval($_GET['PolitaOferta'])>0)
 
 	die();
 }
+if($_GET['view']=="pdf" || $_GET['view']=="decont")
+{
+	require_once("extensions/process_offer_ws.php");
+	$off=ws_process('Portofoliu');
+	die();
+}
+if(isset($_POST['action']) && ($_POST['action']=="ContulNou" || $_POST['action']=="ParolaUitata" || $_POST['action']=="ContulTau"  || $_POST['action']=="Reincarca"))
+{
+	require_once("extensions/process_offer_ws.php");
+	$off=ws_process($_POST['action']);
+	if($off===false)
+	{
+	?><textarea>
+$("#worksteps").show();
+$("#workloading").hide();
+	<?php
+		if($_local_error!="Voi implementa")
+		{
+		?>
+alert('Info: <?php global $_local_error;echo $_local_error;?>');
+		<?php
+		}
+	?>
+</textarea>
+	<?php
+	}
+	else
+	{
+	?>
+<textarea>location.href='site.php?t=client';</textarea>
+	<?php
+	}
+
+	die();
+}
 if(isset($_POST['action']) && $_POST['action']=="TarifeOferta")
 {
 	//call ws
@@ -320,9 +355,9 @@ if(isset($_POST['action']) && $_POST['action']=="TarifeOferta")
 	if($off===false)
 	{
 	?><textarea>
-alert('O eroare neastepta nu permite salvarea. Va rugam sa incercati mai tarziu sau sa ne contactati.');
 $("#worksteps").show();
 $("#workloading").hide();
+alert('O eroare neastepta nu permite salvarea. Va rugam sa incercati mai tarziu sau sa ne contactati.');
 </textarea>
 	<?php
 	}
@@ -345,12 +380,19 @@ $("#workloading").hide();
 <textarea>location.href='site.php?t=librapay&offid=<?php echo intval($_POST['offid']);?>&pret=<?php echo floatval(number_format(getNumberFromPost($_POST['tarif'],2),2,'.',''));?>';</textarea>
 	<?php
 			break;
-			case 'ramburs':
+			case 'mobilpay':
+	?>
+<textarea>location.href='site.php?t=mobilpay&offid=<?php echo intval($_POST['offid']);?>&pret=<?php echo floatval(number_format(getNumberFromPost($_POST['tarif'],2),2,'.',''));?>';</textarea>
+	<?php
+			break;
+			case 'contact':
 	?>
 <textarea>location.href='site.php?t=thankyou&offid=<?php echo intval($_POST['offid']);?>&pret=<?php echo floatval(number_format(getNumberFromPost($_POST['tarif'],2),2,'.',''));?>';</textarea>
 	<?php
 			break;
-			case 'contact':
+			case 'ramburs':
+			case 'op':
+			default:
 	?>
 <textarea>location.href='site.php?t=thankyou&offid=<?php echo intval($_POST['offid']);?>&pret=<?php echo floatval(number_format(getNumberFromPost($_POST['tarif'],2),2,'.',''));?>';</textarea>
 	<?php
@@ -369,9 +411,9 @@ if(isset($_POST['action']) && $_POST['action']=="AdaugaOferta")
 	if($off===false)
 	{
 	?><textarea>
-alert('O eroare neastepta nu permite tarifarea. Va rugam sa incercati mai tarziu sau sa ne contactati.');
 $("#worksteps").show();
 $("#workloading").hide();
+alert('O eroare neastepta nu permite tarifarea. Va rugam sa incercati mai tarziu sau sa ne contactati.');
 </textarea>
 	<?php
 	}
@@ -410,7 +452,7 @@ if($_GET['t']=="unicredit")
 		'AMOUNT'      => number_format(getNumberFromPost($_GET['pret'],2),2,'.',''),
 		'CURRENCY'        => 'RON',
 		'ORDER'  => str_pad(intval($_GET['offid']),6,'0',STR_PAD_LEFT),
-		'DESC'  => 'Plata oferta '. intval($_GET['offid']),
+		'DESC'  => 'Plata decont prima conform oferta '. intval($_GET['offid']),
 		'MERCH_NAME'    => getUserConfig("ws_merch_name"),
 		'MERCH_URL'    => getUserConfig("ws_merch_url"),
 		'MERCHANT'    => getUserConfig("ws_merchant"),
@@ -489,7 +531,7 @@ if($_GET['t']=="euplatesc")
 		'amount'      => number_format(getNumberFromPost($_GET['pret'],2),2,'.',''),                                                   //suma de plata
 		'curr'        => 'RON',                                                   // moneda de plata
 		'invoice_id'  => intval($_GET['offid']),
-		'order_desc'  => 'Plata decont '. intval($_GET['offid']),                                            //descrierea comenzii
+		'order_desc'  => 'Plata decont prima conform oferta '. intval($_GET['offid']),                                            //descrierea comenzii
 		'merch_id'    => $mid,                                                    // nu modificati
 		'timestamp'   => gmdate("YmdHis"),                                        // nu modificati
 		'nonce'       => md5(microtime() . mt_rand()),                            //nu modificati
@@ -559,6 +601,8 @@ if($_GET['t']=="euplatesc")
 <input TYPE="hidden" NAME="nonce" SIZE="35" VALUE="<?php echo  $dataAll['nonce'] ?>" />
 <input TYPE="hidden" NAME="fp_hash" SIZE="40" VALUE="<?php echo  $dataAll['fp_hash'] ?>" />
 
+<input type="hidden" name="ExtraData[rate]" value="<?php echo $off['optrate']?>">
+
 <input type=submit value="Plateste">
 </form></body></html>
 <?php
@@ -588,7 +632,7 @@ if($_GET['t']=="librapay")
 	}
 	$builorder=$buildcount.$builorder;
 	$payment->order = $builorder.rand(100,999);
-	$payment->desc = "Decont de prima";
+	$payment->desc = "Plata decont de prima conform oferta nr. ".intval($_GET['offid']);
 
 	//get offer info
 	require_once("extensions/process_offer_ws.php");
@@ -654,6 +698,73 @@ if($_GET['t']=="librapay")
 	//echo $payment->string;
 	//echo '<pre>';print_r($data_custom);echo '</pre>';
 	?></body></html><?php
+	die();
+}
+if($_GET['t']=="mobilpay")
+{
+	?><html><body onload="document.forms[0].submit();"><?php
+	require_once 'extern/Mobilpay/Payment/Request/Abstract.php';
+	require_once 'extern/Mobilpay/Payment/Request/Card.php';
+	require_once 'extern/Mobilpay/Payment/Invoice.php';
+	require_once 'extern/Mobilpay/Payment/Address.php';
+
+	#for testing purposes, all payment requests will be sent to the sandbox server. Once your account will be active you must switch back to the live server https://secure.mobilpay.ro
+	#in order to display the payment form in a different language, simply add the language identifier to the end of the paymentUrl, i.e https://secure.mobilpay.ro/en for English
+	$paymentUrl = 'http://sandboxsecure.mobilpay.ro';
+	//$paymentUrl = 'https://secure.mobilpay.ro';
+	// this is the path on your server to the public certificate. You may download this from Admin -> Conturi de comerciant -> Detalii -> Setari securitate
+	$x509FilePath 	= getUserConfig('mobilpay_cert');
+	try
+	{
+		srand((double) microtime() * 1000000);
+		$objPmReqCard 						= new Mobilpay_Payment_Request_Card();
+		#merchant account signature - generated by mobilpay.ro for every merchant account
+		#semnatura contului de comerciant - mergi pe www.mobilpay.ro Admin -> Conturi de comerciant -> Detalii -> Setari securitate
+		$objPmReqCard->signature 			= getUserConfig("mobilpay_mid");
+		$objPmReqCard->orderId 				= intval($_GET['offid']);
+		$objPmReqCard->confirmUrl 			= getUserConfig("mobilpay_confirmUrl"); 
+		$objPmReqCard->returnUrl 			= getUserConfig('mobilpay_returnUrl'); 
+	
+		#detalii cu privire la plata: moneda, suma, descrierea
+		#payment details: currency, amount, description
+		$objPmReqCard->invoice = new Mobilpay_Payment_Invoice();
+		#payment currency in ISO Code format; permitted values are RON, EUR, USD, MDL; please note that unless you have mobilPay permission to 
+		#process a currency different from RON, a currency exchange will occur from your currency to RON, using the official BNR exchange rate from that moment
+		#and the customer will be presented with the payment amount in a dual currency in the payment page, i.e N.NN RON (e.ee EUR)
+		$objPmReqCard->invoice->currency	= 'RON';
+		$objPmReqCard->invoice->amount		= getNumberFromPost($_GET['pret'],2);
+		#available installments number; if this parameter is present, only its value(s) will be available
+		//$objPmReqCard->invoice->installments= '2,3';
+		#selected installments number; its value should be within the available installments defined above
+		//$objPmReqCard->invoice->selectedInstallments= '3';
+		$objPmReqCard->invoice->details		=  "Plata decont de prima conform oferta nr. ".intval($_GET['offid']);
+
+		#detalii cu privire la adresa posesorului cardului
+		#details on the cardholder address (optional)
+		$billingAddress 				= new Mobilpay_Payment_Address();
+		$billingAddress->type			= 'person'; //should be "person"
+		$billingAddress->firstName		= $off['nume']['VALUE'];
+		$billingAddress->lastName		= $off['prenume']['VALUE'];
+		$billingAddress->address		= $off['adresa']['VALUE'].', '.$off['localitate']['VALUE'].', jud. '.$off['judet']['VALUE'];
+		$billingAddress->email			= $off['emailclient']['VALUE'];
+		$billingAddress->mobilePhone		= $off['telclient']['VALUE'];
+		
+		$objPmReqCard->invoice->setBillingAddress($billingAddress);
+		$objPmReqCard->invoice->setShippingAddress($billingAddress);
+
+		#uncomment the line below in order to see the content of the request
+		//echo "<pre>";print_r($objPmReqCard);echo "</pre>";
+		$objPmReqCard->encrypt($x509FilePath);
+	}
+	catch(Exception $e)
+	{
+	}
+	?>
+	<form name="frmPaymentRedirect" method="post" action="<?php echo $paymentUrl;?>">
+	<input type="hidden" name="env_key" value="<?php echo $objPmReqCard->getEnvKey();?>"/>
+	<input type="hidden" name="data" value="<?php echo $objPmReqCard->getEncData();?>"/>
+	</form>
+	</body></html><?php
 	die();
 }
 if($_GET['t']=="polita")
@@ -760,17 +871,26 @@ case 'decont':
 		include("extensions/info_tarifar_decont.php");
 break;
 case 'thankyou':
-		if(getUserConfig("color_design")=="2" && file_exists("extensions/info_tarifar_rca2_thanks.php"))
-		{
-			include("extensions/info_tarifar_rca2_thanks.php");
-		}
-		else
-		{
-			include("extensions/info_tarifar_rca1_thanks.php");
-		}
+	if(getUserConfig("color_design")=="2" && file_exists("extensions/info_tarifar_rca2_thanks.php"))
+	{
+		include("extensions/info_tarifar_rca2_thanks.php");
+	}
+	else
+	{
+		include("extensions/info_tarifar_rca1_thanks.php");
+	}
 break;
 case 'error':
-		include("extensions/info_tarifar_rca1_error.php");
+	include("extensions/info_tarifar_rca1_error.php");
+break;
+case 'client':
+	include("extensions/info_client.php");
+break;
+case 'clientnou':
+	include("extensions/info_client_register.php");
+break;
+case 'clientforgot':
+	include("extensions/info_client_forgot.php");
 break;
 }
 
@@ -781,7 +901,7 @@ $(document).ready(function(){reloadSteper(true);});
 </script><?php
 cache_addvalue("afterbody",ob_get_contents());ob_end_clean();
 
-	if(getUserConfig("color_design")=="" || getUserConfig("color_design")=="1") {
+	if($loadsteper) {
 	?>
 	<div id="worknext"><a href="#workstep" onclick="return loadOneStep('button')"><img src="images/creion.png" border=0>   Urmatorul&nbsp;pas</a></div>
 	<?php } ?>
@@ -794,6 +914,7 @@ cache_addvalue("afterbody",ob_get_contents());ob_end_clean();
 <div class="sidebarbutton sidebarbutton_pad"><a href="site.php?t=pad" class="sidebarlink">LOCUINTE</a></div>
 <div class="sidebarbutton sidebarbutton_medicale"><a href="site.php?t=medicale" class="sidebarlink">MEDICALE</a></div>
 <div class="sidebarbutton sidebarbutton_decont"><a href="site.php?t=decont" class="sidebarlink">ALTE</a></div>
+<div class="sidebarbutton sidebarbutton_client"><a href="site.php?t=client" class="sidebarlink">CONT</a></div>
 </div>
 <div id="workloading" style="display:none;"><img src="images/ajax-loader.gif" border="0"> Se incarca...</div>
 <?php require_once("extensions/info_tarifar_js.php");?>

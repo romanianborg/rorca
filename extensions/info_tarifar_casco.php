@@ -124,7 +124,7 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 <div class="workstep"><div class="worklabel"> Nr. Usi</div><div class=workfields><select name="usi"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option></select>
 </div></div>
 
-<div class="workstep"><div class="worklabel">Numar inmatriculare:</div><div class="workfields"><input type="text" validate="uppercase~if.inmatriculare.inmatriculate.required.yes~if.inmatriculare.inregistrate.required.yes~if.inmatriculare.urmeazainmatriculate.required.no~if.inmatriculare.urmeazainregistrate.required.no~replace.-.. ../." class="validated validateatention" size="10" name="nrinm" value="" title="Talon nou: A, Talon vechi: 1">
+<div class="workstep"><div class="worklabel">Nr. inmatriculare:</div><div class="workfields"><input type="text" validate="uppercase~if.inmatriculare.inmatriculate.required.yes~if.inmatriculare.inregistrate.required.yes~if.inmatriculare.urmeazainmatriculate.required.no~if.inmatriculare.urmeazainregistrate.required.no~replace.-.. ../." class="validated validateatention" size="10" name="nrinm" value="" title="Talon nou: A, Talon vechi: 1">
 </div></div>
 
 <div id=spanciv style="display:none;">
@@ -323,7 +323,7 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 </div></div>
 </div>
 
-<div class="workstep"><div class="worklabel">Riscuri:</div><div class=workfields style="width:450px;">
+<div class="workstep"><div class="worklabel">Riscuri:</div><div class=workfields style="width:450px;height:auto;">
 	<table border=1 style="background-color:white;border:solid 1px #ccc;border-collapse:collapse;">
 		<tr>
 		<td><input type="checkbox" value="1" name="risc_01" id="risc_01" class="validated" validate="for.1.show.class.i_bifa_01" checked><input type="hidden" value="0" name="_risc_01"><td><label for="risc_01">avarii - ciocniri, coliziuni, rasturnari, incendiu, explozie, fen. naturale</label>
@@ -332,12 +332,12 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 	</table>
 </div></div>
 
-<div class="workstep"><div class="worklabel">Clauze:</div><div class=workfields style="width:450px;">
+<div class="workstep"><div class="worklabel">Clauze:</div><div class=workfields style="width:450px;height: auto;">
 	<table border=1 style="background-color:white;border:solid 1px #ccc;border-collapse:collapse;width:100%;">
 	<tr><td colspan=2>
 	<?php
 	$cols='';
-	$asiguratori=array("asirom","astra","generali","omniasig","euroins","allianz","platinum");
+	$asiguratori=array("uniqa","asirom","astra","generali","omniasig","euroins","allianz","platinum","carpatica");
 	foreach($asiguratori as $k=>$v)
 	{
 		?><td style="height:50px;width:20px;line-height:.9em;" align="center" valign=top><?php echo implode('<br>',str_split(strtoupper($v),1));
@@ -496,7 +496,7 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 </div></div>
 
 <div class="workstep"><div class="worklabel">Destinatie:</div><div class="workfields"><select class="validated" name="pf_destinatie">
-		<option value="">Uz personal</option>
+		<option value="uz">Uz personal</option>
 		<option value="taxi">Taxi</option>
 		<option value="rent">Rent a car</option>
 		<option value="paza">Paza</option>

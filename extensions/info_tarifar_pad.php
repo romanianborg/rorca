@@ -15,14 +15,14 @@
 <div class="workstep"><div class="biglabel"><img src="images/casa.png" border=0> DATE IMOBIL</div>
 </div>
 
-<div class="workstep"><div class=workfields style="text-align:center;"><textarea name="im_adresa" style="display:none;"></textarea>
-Strada: <input type="text" onchange="javascript:textareaImplode('im_adresa');" label="str" class="im_adresa_implode validated" validators="change.click" validate="required.yes" name="proimp_adresa_str" size="20" value="">
+<div class="workstep"><div class=workfields style="text-align:center;height:106px;"><textarea name="im_adresa" style="display:none;"></textarea>
+Strada: <input type="text" onchange="javascript:textareaImplode('im_adresa');" label="str" class="im_adresa_implode validated" validators="change.click" validate="required.yes" name="im_adresa_str" size="20" value="">
 <br>
 nr&nbsp;<input type="number" onchange="javascript:textareaImplode('im_adresa');" label="nr" class="im_adresa_implode validated" validators="change.click" validate="required.yes" name="im_adresa_nr" size="4" value="" style="width:50px;">
-,bl&nbsp;<input type="text" onchange="javascript:textareaImplode('im_adresa');" label="bl" class="im_adresa_implode" name="im_adresa_bl" size="1" value="">
-, sc&nbsp;<input type="text" onchange="javascript:textareaImplode('im_adresa');" label="sc" class="im_adresa_implode" name="im_adresa_sc" size="1" value="">
-, et&nbsp;<input type="text" onchange="javascript:textareaImplode('im_adresa');" label="et" class="im_adresa_implode" name="im_adresa_et" size="1" value="">
-<br>ap&nbsp;<input type="text" onchange="javascript:textareaImplode('im_adresa');" label="ap" class="im_adresa_implode" name="im_adresa_ap" size="1" value="">
+,bl&nbsp;<input type="text" onchange="javascript:textareaImplode('im_adresa');" label="bl" class="im_adresa_implode" name="im_adresa_bl" size="1" value="" style="width:30px;">
+, sc&nbsp;<input type="text" onchange="javascript:textareaImplode('im_adresa');" label="sc" class="im_adresa_implode" name="im_adresa_sc" size="1" value="" style="width:30px;">
+, et&nbsp;<input type="text" onchange="javascript:textareaImplode('im_adresa');" label="et" class="im_adresa_implode" name="im_adresa_et" size="1" value="" style="width:30px;">
+<br>ap&nbsp;<input type="text" onchange="javascript:textareaImplode('im_adresa');" label="ap" class="im_adresa_implode" name="im_adresa_ap" size="1" value="" style="width:30px;">
 cod postal&nbsp;<input type="number" onchange="javascript:textareaImplode('im_adresa');" label="zip" class="im_implode validated" name="im_adresa_zip" size="6" value="" validate="required.size.6" style="width:70px;">
 </div></div>
 
@@ -205,15 +205,15 @@ cod postal&nbsp;<input type="number" onchange="javascript:textareaImplode('im_ad
 </div></div>
 
 <div id="pf_adresaraw" style="display:none;">
-<div class="workstep"><div class=workfields style="text-align:right;"><textarea name="pf_adresa" style="display:none;"></textarea>
+<div class="workstep"><div class=workfields style="text-align:right;height:110px;"><textarea name="pf_adresa" style="display:none;"></textarea>
 Strada: <input type="text" onchange="javascript:textareaImplode('pf_adresa');" label="str" class="pf_adresa_implode validated" validators="change.click" validate="required.attention" name="pf_adresa_str" size="28" value="">
 <br>
 nr&nbsp;<input type="number" onchange="javascript:textareaImplode('pf_adresa');" label="nr" class="pf_adresa_implode validated" validators="change.click" validate="required.attention" name="pf_adresa_nr" size="1" value="" style="width:40px;">
-,bl&nbsp;<input type="text" onchange="javascript:textareaImplode('pf_adresa');" label="bl" class="pf_adresa_implode" name="pf_adresa_bl" size="1" value="">
-,sc&nbsp;<input type="text" onchange="javascript:textareaImplode('pf_adresa');" label="sc" class="pf_adresa_implode" name="pf_adresa_sc" size="1" value="">
-,et&nbsp;<input type="text" onchange="javascript:textareaImplode('pf_adresa');" label="et" class="pf_adresa_implode" name="pf_adresa_et" size="1" value="">
+,bl&nbsp;<input type="text" onchange="javascript:textareaImplode('pf_adresa');" label="bl" class="pf_adresa_implode" name="pf_adresa_bl" size="1" value="" style="width:30px;">
+,sc&nbsp;<input type="text" onchange="javascript:textareaImplode('pf_adresa');" label="sc" class="pf_adresa_implode" name="pf_adresa_sc" size="1" value="" style="width:30px;">
+,et&nbsp;<input type="text" onchange="javascript:textareaImplode('pf_adresa');" label="et" class="pf_adresa_implode" name="pf_adresa_et" size="1" value="" style="width:30px;">
 <br>
-ap&nbsp;<input type="text" onchange="javascript:textareaImplode('pf_adresa');" label="ap" class="pf_adresa_implode" name="pf_adresa_ap" size="1" value="">
+ap&nbsp;<input type="text" onchange="javascript:textareaImplode('pf_adresa');" label="ap" class="pf_adresa_implode" name="pf_adresa_ap" size="1" value="" style="width:30px;">
 , cod postal&nbsp;<input type="number" onchange="javascript:textareaImplode('pf_adresa');" label="zip" class="adresa_implode validated" name="pf_adresa_zip" size="3" value="" validate="if.p_soc.omniasig.required.size.6" style="width:70px;">
 </div></div>
 </div>
@@ -298,16 +298,16 @@ ap&nbsp;<input type="text" onchange="javascript:textareaImplode('pf_adresa');" l
 </div></div>
 
 <div id="pj_adresaraw" style="display:none;">
-<div class="workstep"><div class=workfields style="text-align:right;"><textarea name="pj_adresa" style="display:none;"></textarea>
+<div class="workstep"><div class=workfields style="text-align:right;height:110px;"><textarea name="pj_adresa" style="display:none;"></textarea>
 Strada: <input type="text" onchange="javascript:textareaImplode('pj_adresa');" label="str" class="pj_adresa_implode validated" validators="change.click" validate="required.attention" name="pj_adresa_str" size="28" value="">
 <br>
-nr&nbsp;<input type="text" onchange="javascript:textareaImplode('pj_adresa');" label="nr" class="pj_adresa_implode validated" validators="change.click" validate="required.attention" name="pj_adresa_nr" size="1" value="">
-,bl&nbsp;<input type="text" onchange="javascript:textareaImplode('pj_adresa');" label="bl" class="pj_adresa_implode" name="pj_adresa_bl" size="1" value="">
-,sc&nbsp;<input type="text" onchange="javascript:textareaImplode('pj_adresa');" label="sc" class="pj_adresa_implode" name="pj_adresa_sc" size="1" value="">
-,et&nbsp;<input type="text" onchange="javascript:textareaImplode('pj_adresa');" label="et" class="pj_adresa_implode" name="pj_adresa_et" size="1" value="">
+nr&nbsp;<input type="text" onchange="javascript:textareaImplode('pj_adresa');" label="nr" class="pj_adresa_implode validated" validators="change.click" validate="required.attention" name="pj_adresa_nr" size="1" value="" style="width:30px;">
+,bl&nbsp;<input type="text" onchange="javascript:textareaImplode('pj_adresa');" label="bl" class="pj_adresa_implode" name="pj_adresa_bl" size="1" value="" style="width:30px;">
+,sc&nbsp;<input type="text" onchange="javascript:textareaImplode('pj_adresa');" label="sc" class="pj_adresa_implode" name="pj_adresa_sc" size="1" value="" style="width:30px;">
+,et&nbsp;<input type="text" onchange="javascript:textareaImplode('pj_adresa');" label="et" class="pj_adresa_implode" name="pj_adresa_et" size="1" value="" style="width:30px;">
 <br>
-ap&nbsp;<input type="text" onchange="javascript:textareaImplode('pj_adresa');" label="ap" class="pj_adresa_implode" name="pj_adresa_ap" size="1" value="">
-, cod postal&nbsp;<input type="number" onchange="javascript:textareaImplode('pj_adresa');" label="zip" class="adresa_implode validated" name="pj_adresa_zip" size="3" value="" validate="if.p_soc.omniasig.required.size.6">
+ap&nbsp;<input type="text" onchange="javascript:textareaImplode('pj_adresa');" label="ap" class="pj_adresa_implode" name="pj_adresa_ap" size="1" value="" style="width:30px;">
+, cod postal&nbsp;<input type="number" onchange="javascript:textareaImplode('pj_adresa');" label="zip" class="adresa_implode validated" name="pj_adresa_zip" size="3" value="" validate="if.p_soc.omniasig.required.size.6"  style="width:40px;">
 </div></div>
 </div>
 

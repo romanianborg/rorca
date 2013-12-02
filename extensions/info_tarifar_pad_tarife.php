@@ -10,6 +10,12 @@
 <?php
 	require_once("extensions/process_offer_ws.php");
 	$date=ws_process("InfoOferta",intval($_GET['offid']));
+	$platacard='';
+	if(getUserConfig("unicredit")=="yes"){$platacard='unicredit';}
+	if(getUserConfig("platalibra")=="yes"){$platacard='libra';}
+	if(getUserConfig("euplatesc")=="yes"){$platacard='euplatesc';}
+	if(getUserConfig("mobilpay")=="yes"){$platacard='mobilpay';}
+
 ?>
 <div class="work_col1">
 <div class="biglabel"><img src="images/tarife.png" border=0> ALEGE UN PRET</div>
@@ -44,26 +50,12 @@
 
 
 <div class="workstep"><div class="worklabel">Mod Plata:</div><div class=workfields>
-<select name="tipplata" class="validated validateundo" validate="for.libra|ramburs|op.show.id.emiteredate~for.libra.set.textbutton.Plateste online~for.ramburs.set.textbutton.Comanda asigurarea~for.op.set.textbutton.Trimite decont~for.contact.set.textbutton.Trimite mail~for.libra.show.id.infolibrapay~required.yes">
+<select name="tipplata" class="validated validateundo" validate="for.libra|mobilpay|unicredit|euplatesc|ramburs|op.show.id.emiteredate~for.libra|euplatesc|unicredit|mobilpay.set.textbutton.Plateste online~for.ramburs.set.textbutton.Comanda asigurarea~for.op.set.textbutton.Trimite decont~for.contact.set.textbutton.Trimite mail~for.libra.show.id.infolibrapay~for.euplatesc.show.id.infoeuplatesc~for.unicredit.show.id.infounicredit~for.mobilpay.show.id.infomobilpay~required.yes">
 	<option value="contact" selected>Vreau sa fiu contactat</option>
 <?php
-	if(getUserConfig("platalibra")=="yes"){
+	if($platacard!=""){
 ?>
-	<option value="libra">Plata online cu cardul</option>
-<?php
-	}
-?>
-<?php
-	if(getUserConfig("unicredit")=="yes"){
-?>
-	<option value="unicredit">Plata online cu cardul</option>
-<?php
-	}
-?>
-<?php
-	if(getUserConfig("euplatesc")=="yes"){
-?>
-	<option value="euplatesc">Plata online cu cardul</option>
+	<option value="<?php echo $platacard;?>">Plata online cu cardul</option>
 <?php
 	}
 ?>
@@ -76,7 +68,7 @@
 	if(getUserConfig("unicredit")=="yes"){
 ?>
 <div id="infounicredit" style="display:none;">
-<div class="workstep"><div class=workfields style="width:295px;">
+<div class="workstep"><div class=workfields style="width:295px;height:auto;text-align:center;">
 	<img src="images/unicreditcl.jpeg" border="0">
 	<br>Dupa ce introduceti si emailul veti fi redirect pe site-ul bancii pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.
 </div></div>
@@ -88,9 +80,75 @@
 	if(getUserConfig("euplatesc")=="yes"){
 ?>
 <div id="infoeuplatesc" style="display:none;">
-<div class="workstep"><div class=workfields style="width:295px;">
+<div class="workstep"><div class=workfields style="width:295px;height:auto;text-align:center;">
 	<img src="images/euplatesc.gif" border="0">
+<br>
+Optiune plata in rate:<br>
+<select name="optrate">
+	<option value="" selected>Integral</option>
+<?php
+	if(getUserConfig("euplatesc_ratebcr")=="yes")
+	{?>
+<option value="bcr-2">BCR 2 rate fara dobanda</option>
+<option value="bcr-3">BCR 3 rate fara dobanda</option>
+<option value="bcr-4">BCR 4 rate fara dobanda</option>
+<option value="bcr-5">BCR 5 rate fara dobanda</option>
+<option value="bcr-6">BCR 6 rate fara dobanda</option>
+<option value="bcr-7">BCR 7 rate fara dobanda</option>
+<option value="bcr-8">BCR 8 rate fara dobanda</option>
+<option value="bcr-9">BCR 9 rate fara dobanda</option>
+<option value="bcr-10">BCR 10 rate fara dobanda</option>
+<option value="bcr-11">BCR 11 rate fara dobanda</option>
+<option selected value="bcr-12">BCR 12 rate fara dobanda</option>
+<?php
+	}
+	if(getUserConfig("euplatesc_rateapb")=="yes")
+	{?>
+<option value="apb-2">Alpa Bank 2 rate fara dobanda</option>
+<option value="apb-3">Alpa Bank 3 rate fara dobanda</option>
+<option value="apb-4">Alpa Bank 4 rate fara dobanda</option>
+<option value="apb-5">Alpa Bank 5 rate fara dobanda</option>
+<option value="apb-6">Alpa Bank 6 rate fara dobanda</option>
+<option value="apb-7">Alpa Bank 7 rate fara dobanda</option>
+<option value="apb-8">Alpa Bank 8 rate fara dobanda</option>
+<option value="apb-9">Alpa Bank 9 rate fara dobanda</option>
+<option value="apb-10">Alpa Bank 10 rate fara dobanda</option>
+<option value="apb-11">Alpa Bank 11 rate fara dobanda</option>
+<option selected value="apb-12">Alpa Bank 12 rate fara dobanda</option>
+<?php
+	}
+	if(getUserConfig("euplatesc_ratebtrl")=="yes")
+	{?>
+<option value="btrl-2">BTRL 2 rate fara dobanda</option>
+<option value="btrl-3">BTRL 3 rate fara dobanda</option>
+<option value="btrl-4">BTRL 4 rate fara dobanda</option>
+<option value="btrl-5">BTRL 5 rate fara dobanda</option>
+<option value="btrl-6">BTRL 6 rate fara dobanda</option>
+<option value="btrl-7">BTRL 7 rate fara dobanda</option>
+<option value="btrl-8">BTRL 8 rate fara dobanda</option>
+<option value="btrl-9">BTRL 9 rate fara dobanda</option>
+<option value="btrl-10">BTRL 10 rate fara dobanda</option>
+<option value="btrl-11">BTRL 11 rate fara dobanda</option>
+<option selected value="btrl-12">BTRL 12 rate fara dobanda</option>
+<?php
+	}
+?>
+</select>
+
+
 	<br>Dupa ce introduceti si emailul veti fi redirect pe site-ul bancii pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.
+</div></div>
+</div>
+<?php
+	}
+?>
+<?php
+	if(getUserConfig("mobilpay")=="yes"){
+?>
+<div id="infomobilpay" style="display:none;">
+<div class="workstep"><div class=workfields style="width:295px;height:auto;">
+	<img src="images/mobilpay.gif" border="0">
+	<br>Dupa ce introduceti si emailul veti fi redirect pe site-ul MobilPay.ro pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.
 </div></div>
 </div>
 <?php
@@ -100,7 +158,7 @@
 	if(getUserConfig("platalibra")=="yes"){
 ?>
 <div id="infolibrapay" style="display:none;">
-<div class="workstep"><div class=workfields style="width:295px;">
+<div class="workstep"><div class=workfields style="width:295px;height:auto;text-align:center;">
 	<img src="images/cards.jpg" border="0" height=29 width=295>
 	<img src="images/librapay.png" border="0" height=79 width=295>
 	<br>Dupa ce introduceti si emailul veti fi redirect pe site-ul bancii pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.
@@ -130,7 +188,7 @@
 
 
 <div id="adresalivrare" style="display:none;">
-<div class="workstep"><div class="worklabel">Adresa Livrare</div><div class=workfields><textarea name="obslivrare" cols=18 rows=2 class="validate" validate="require.yes"></textarea>
+<div class="workstep"><div class="worklabel">Adresa Livrare</div><div class=workfields style="height:56px;"><textarea name="obslivrare" cols=18 rows=2 class="validate" validate="require.yes"></textarea>
 </div></div>
 </div>
 

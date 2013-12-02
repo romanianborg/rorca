@@ -87,6 +87,7 @@ div.workfields td
 	color:<?php echo getUserConfig("tarif_color");?>;
 	text-align: right;
 	padding-right:2px;
+	line-height:40px;
 }
 span.tarifjos
 {
@@ -97,6 +98,7 @@ font-size: 8px;
 #work input[type="number"],
 #work input[type="tel"],
 #work input[type="email"],
+#work input[type="password"],
 #work textarea,
 #work select
 {
@@ -128,20 +130,20 @@ color:<?php echo $_CONFIG['tarifar_color']; ?>;
 display:none;
 position:fixed;
 right:0px;
-top:80px;
+top:50px;
 z-index:1000;
 }
 #sidebarload:hover
 {
 position:fixed;
 right:0px;
-top:80px;
+top:50px;
 }
 .workstep,#workstep
 {
 clear:both;
 display:block;
-padding:1px;
+padding:0px;
 border-top: solid 1px #eee;
 float:left;
 }
@@ -202,6 +204,7 @@ padding-top:4px;
 background-color:<?php echo $_CONFIG['tarifar_bg']; ?>;
 vertical-align:middle;
 text-align:left;
+height: 32px;
 }
 
 div.datepicker
@@ -219,7 +222,7 @@ div.biglabel
 	text-align:center;
 	font-weight:bold;
 	background-color:<?php echo $_CONFIG['tarifar_border']; ?>;
-	height:28px;
+	height:30px;
 	padding-top:6px;
 	display:inline-block;
 }
@@ -229,7 +232,11 @@ div.workstep a.biglink
 	padding:4px;
 	font-size: 1.2em;
 	color:black;
-	height:32px;
+	height:30px;
+}
+div.workstep a.bigselectedlink
+{
+background-color:<?php echo $_CONFIG['tarifar_border']; ?>;
 }
 div.workstep a.alegebroker
 {
@@ -324,6 +331,13 @@ div.biglabel,div.workstep
 width: 100%;
 }
 
+
+#worksteps div.workfields input
+{
+	width: 140px;
+	height: 20px;
+}
+
 </style>
 
 <style media="(max-device-width: 599px)">
@@ -357,6 +371,8 @@ div.work_col1,div.work_col2
 {
 width: 180px;
 }
+
+
 </style>
 
 <style media="(min-device-width: 600px)">
@@ -416,7 +432,6 @@ div.worklabel
 {
 width: 200px;
 }
-
 
 </style>
 

@@ -265,6 +265,62 @@ function slotLoadedUpdateWindow(slot){
 	reloadTips();
 	reloadSideLinks();
 }
+function initializeForElements(it)
+{
+	var d;
+	for(d in it)
+	{
+		if(document.forms['work'][''+d]==undefined) continue;
+		if(document.forms['work'][''+d].type && document.forms['work'][''+d].type.toLowerCase()=="checkbox")
+		{
+			if(it[''+d]=="1")
+			{
+				document.forms['work'][''+d].checked=true;
+			}
+			else
+			{
+				document.forms['work'][''+d].checked=false;
+			}
+		}
+		else
+		if(document.forms['work'][''+d].type==undefined)
+		{
+			var ii;
+			for(ii=0;ii<document.forms['work'][''+d].length;ii++)
+			{
+				
+				if(document.forms['work'][''+d][ii].value==it[''+d])
+				{
+					document.forms['work'][''+d][ii].checked=true;
+				}
+			}
+		}
+		else
+		if(document.forms['work'][''+d].type=="select-one")
+		{
+			var idx=select_findIndex($(document.forms['work'][''+d]),it[''+d]);
+			document.forms['work'][''+d].selectedIndex=idx;
+		}
+		else
+		{
+			$(document.forms['work'][''+d]).val(it[''+d]).change();
+		}
+	}
+}
+function correctHtmlDataForJS(s)
+{
+	return s.replace(/&amp;/gi, "&").replace(/&gt;/gi, ">").replace(/&lt;/gi, "<").replace(/&quot;/gi, "\"");
+}
+function reloadForDatas()
+{
+	$("div.formdata").each(function(){
+		if($(this).attr("loadedonce")!="yes")
+		{
+			$(this).attr("loadedonce","yes");
+				eval("initializeForElements("+correctHtmlDataForJS($(this).html())+")");
+		}
+	});
+}
 
 document.globalSlotLoading="slotLoadingCreateWindow";
 document.globalSlotReloaded="slotLoadedUpdateWindow";
@@ -278,6 +334,7 @@ $(document).ready(function(){
 	reloadAutocomplete();
 	reloadTips();
 	reloadSideLinks();
+	reloadForDatas();
 
 $.fn.extend({ 
 	showAndScroll: function() { 

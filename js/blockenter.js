@@ -1,11 +1,14 @@
-<!--
+
 var activeElement = null;
 var NexttimerID=0;
 var PrevtimerID=0;
 var SeltimerID=0;
+var IgnoreNextBlur=false;
 
-function blurAllHandler(evt) {
-	activeElement = null;
+function blurAllHandler(evt)
+{
+	if(!IgnoreNextBlur)
+		activeElement = null;
 }
 function focusAllHandler(evt) {
 	var e = evt ? evt : window.event;
@@ -33,121 +36,121 @@ function loadAllHandler() {
 		focusNextHandler();
 	}
 }
-function focusPrevHandler() {
-if(PrevtimerID)
+function focusPrevHandler()
 {
-clearTimeout(PrevtimerID);
-PrevtimerID=0;
-}
-var i, j;
-var last,last_j,last_i;
-
-for (i = 0; i < document.forms.length; i++)
-for (j = 0; j < document.forms[i].elements.length; j++) {
-
-if(activeElement && document.forms[i].elements[j]==activeElement && j)
-{
-j=last_j;
-while(j>=0)
-{
-try
-{
-	if(""+document.forms[i].elements[j+1].type=="submit")
+	if(PrevtimerID)
 	{
-		//document.forms[i].submit(); return;
+		clearTimeout(PrevtimerID);
+		PrevtimerID=0;
 	}
-	if(""+document.forms[i].elements[j+1].type!="undefined")
-	{
+	var i, j;
 
-		if(document.forms[i].elements[j].type=="text")
+	for (i = document.forms.length-1; i >=0 ; i--)
+	for (j = document.forms[i].elements.length-1; j >0 ; j--)
+	{
+		if(activeElement && document.forms[i].elements[j]==activeElement && j)
 		{
-			if(document.forms[i].elements[j].createTextRange)
+			while(j-1>=0)
 			{
-				rNew = document.forms[i].elements[j].createTextRange();
-				rNew.select();
+				try
+				{
+					if(""+document.forms[i].elements[j-1].type=="submit")
+					{
+						//document.forms[i].submit(); return;
+					}
+					var elgood=true;
+					if(typeof jQuery != 'undefined' && typeof isElementVisible!="undefined" && !isElementVisible($(document.forms[i].elements[j-1])))
+					{
+						elgood=false;
+					}
+					if(elgood && ""+document.forms[i].elements[j-1].type!="undefined" && ""+document.forms[i].elements[j-1].type!="hidden" && ""+document.forms[i].elements[j+1].type!="fieldset")
+					{
+
+						if(document.forms[i].elements[j-1].type=="text")
+						{
+							if(document.forms[i].elements[j-1].createTextRange)
+							{
+								var rNew = document.forms[i].elements[j-1].createTextRange();
+								rNew.select();
+							}
+							else
+							{
+								document.forms[i].elements[j-1].setSelectionRange( 0, 200);
+							}
+						}
+						IgnoreNextBlur=true;
+						document.forms[i].elements[j-1].focus();
+						IgnoreNextBlur=false;
+						if(activeElement)
+						{
+							return;
+						}
+					}
+				}
+				catch(e){}
+				j--;
 			}
-			else
+		}
+	}//end for j/j
+
+}
+function focusNextHandler()
+{
+	if(NexttimerID)
+	{
+		clearTimeout(NexttimerID);
+		NexttimerID=0;
+	}
+	var i, j;
+
+	for (i = 0; i < document.forms.length; i++)
+	for (j = 0; j < document.forms[i].elements.length; j++)
+	{
+		if(activeElement && document.forms[i].elements[j]==activeElement)
+		{
+			while(j+1 < document.forms[i].elements.length)
 			{
-				document.forms[i].elements[j].setSelectionRange( 0, 200);
+				try
+				{
+					if(""+document.forms[i].elements[j+1].type=="submit")
+					{
+						//document.forms[i].submit(); return;
+					}
+					var elgood=true;
+					if(typeof jQuery != 'undefined' && typeof isElementVisible!="undefined" && !isElementVisible($(document.forms[i].elements[j+1]).parent()))
+					{
+						elgood=false;
+					}
+					if(elgood && ""+document.forms[i].elements[j+1].type!="undefined" && ""+document.forms[i].elements[j+1].type!="hidden" && ""+document.forms[i].elements[j+1].type!="fieldset")
+					{
+						if(document.forms[i].elements[j+1].type=="text")
+						{
+							if(document.forms[i].elements[j+1].createTextRange)
+							{
+								var rNew = document.forms[i].elements[j+1].createTextRange();
+								rNew.select();
+							}
+							else
+							{
+								document.forms[i].elements[j+1].setSelectionRange( 0, 200);
+							}
+						}
+						IgnoreNextBlur=true;
+						document.forms[i].elements[j+1].focus();
+						IgnoreNextBlur=false;
+						if(activeElement)
+						{
+							return;
+						}
+					}
+				}
+				catch(e)
+				{}
+
+				j++;
 			}
 		}
-
-		document.forms[i].elements[j].focus();
-		if(activeElement)
-		{
-			return;
-		}
-	}
-}
-catch(e)
-{}
-
-if(j)
-j--;
-else
-return;
-}
-}
-
-last=document.forms[i].elements[j];
-last_i=i;
-last_j=j;
-}//end for j
-
-}
-function focusNextHandler() {
-if(NexttimerID)
-{
-clearTimeout(NexttimerID);
-NexttimerID=0;
-}
-var i, j;
-
-for (i = 0; i < document.forms.length; i++)
-for (j = 0; j < document.forms[i].elements.length; j++) {
-if(activeElement && document.forms[i].elements[j]==activeElement)
-{
-while(j < document.forms[i].elements.length)
-{
-if(j+1 < document.forms[i].elements.length)
-{
-try
-{
-	if(""+document.forms[i].elements[j+1].type=="submit")
-	{
-		//document.forms[i].submit(); return;
-	}
-	if(""+document.forms[i].elements[j+1].type!="undefined")
-	{
-	if(document.forms[i].elements[j+1].type=="text")
-	{
-		if(document.forms[i].elements[j+1].createTextRange)
-		{
-			rNew = document.forms[i].elements[j+1].createTextRange();
-			rNew.select();
-		}
-		else
-		{
-			document.forms[i].elements[j+1].setSelectionRange( 0, 200);
-		}
-	}
-	document.forms[i].elements[j+1].focus();
-	if(activeElement)
-	{
-		return;
-	}
-
-	}
-}
-catch(e)
-{
-
-}
-}
-j++;
-}
-}
-}//end for j
+	}//end for ji
 }
 function doKeyboardRemapEvents(event)
 {
@@ -182,10 +185,6 @@ function doKeyboardRemapEvents(event)
 		if(!NexttimerID)
 		{
 			NexttimerID=setTimeout("focusNextHandler()",1);
-		}
-		if(typeof jQuery != 'undefined' && (activeElement || activeElement.type))
-		{
-			$(activeElement).change();
 		}
 		return false;
 	}
@@ -232,4 +231,4 @@ else
 
 	document.onkeydown = doKeyboardRemapEvents;
 }
--->
+
