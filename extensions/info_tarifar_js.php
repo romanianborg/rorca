@@ -1,9 +1,11 @@
 <script>
 function reloadCalendar()
 {
-	$("a.calendarsel").unbind("click").click(function(){
-		global_cal.select($(this).prev()[0].form[$(this).attr("forelem")],$(this).attr("forelem"),'<?php echo getLT("dateformat");?>');
-		return false;
+	$("a.cdateselect").each(function(){
+		var link=$(this);
+		$(this).prev().one("click",function(){
+			link.click();
+		});
 	});
 }
 function calendar_finished(y,m,d)
@@ -12,6 +14,84 @@ function calendar_finished(y,m,d)
 	$(window.CP_targetInput).change();
 }
 var steper_lastid=1;
+function clickPlataInRate(tarif,btn)
+{
+	$("#tab_platainrate").click();
+	$("input[name=tarif]").val(tarif).change();
+
+	$("input[name=p_soc]").val($(btn).attr("soc"));
+	$("input[name=p_per]").val($(btn).attr("per"));
+	
+	$("#soctarife").hide(1000,function(){
+		$("input[name=tarif]").focus();
+	});
+	$("#tab_plataonline").parent().hide();
+	$("#tarifalesspan").html("Plata in rate");
+
+	$("option.fararate").hide();
+	$("option.doarrate").show();
+
+	if($("select[name=tipplata]").length) $("select[name=tipplata]")[0].selectedIndex=0;
+	$("select[name=tipplata]").change().focus();
+
+	if($("select[name=ce_rate]").length) $("select[name=ce_rate]")[0].selectedIndex=1;
+	if($("select[name=optrate]").length) $("select[name=optrate]")[0].selectedIndex=1;
+	if($("select[name=uni_rate]").length) $("select[name=uni_rate]")[0].selectedIndex=1;
+	$("input[name=tipplata]").focus();
+
+	if($(btn).attr("per")=="6")
+	{
+		$("option.doarintegral").hide();
+	}
+	else
+	{
+		$("option.doarintegral").show();
+	}
+
+
+	return false;
+}
+function clickPlataIntegral(tarif,btn)
+{
+	$("#tab_plataonline").click();
+
+	$("input[name=tarif]").val(tarif).change();
+
+	$("input[name=p_soc]").val($(btn).attr("soc"));
+	$("input[name=p_per]").val($(btn).attr("per"));
+
+	$("#soctarife").hide(1000,function(){
+		$("input[name=tarif]").focus();
+	});
+	$("#tab_platainrate").parent().hide();
+	$("#tarifalesspan").html("Plata cu reducere");
+
+	$("option.fararate").show();
+	$("option.doarrate").hide();
+
+	if($("select[name=tipplata]").length) $("select[name=tipplata]")[0].selectedIndex=0;
+	$("select[name=tipplata]").change();
+
+	if($("select[name=ce_rate]").length) $("select[name=ce_rate]")[0].selectedIndex=0;
+	if($("select[name=optrate]").length) $("select[name=optrate]")[0].selectedIndex=0;
+	if($("select[name=uni_rate]").length) $("select[name=uni_rate]")[0].selectedIndex=0;
+	
+
+	$("input[name=tipplata]").focus();
+
+	return false;
+}
+function alegeTarifIar()
+{
+	$("input[name=tarif]").val('').change();
+
+	$("#soctarife").show("fast");
+
+	$("#tab_platainrate").parent().show();
+	$("#tab_plataonline").parent().show();
+	$("#tarifalesspan").html("Tarif ales");
+}
+
 function reloadSteperTarife()
 {
 	if(!$("a.incarcatarife").length)
@@ -32,17 +112,6 @@ function reloadSteperTarife()
 		$("input[name=p_per]").val($(this).attr("per"));
 		return false;
 	})
-	<?php
-	if(getUserConfig("color_design")=="2")
-	{
-		?>
-		.each(function(){
-			$(this).prepend('<button class="btn btn-success" style="position:relative;left:-30px;top:+10px;">Alege Tarif '+$(this).attr("tarif")+'</button>');
-		})
-		<?php
-	}
-	?>
-	;
 }
 function reloadSteperPolita()
 {

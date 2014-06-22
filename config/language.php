@@ -1,7 +1,5 @@
 <?php
-// Copyright AI Software Ltd Bucharest, Romania 2001-2011
-if(!function_exists("getCurrentLang"))
-{
+// Copyright AI Software Ltd Bucharest, Romania 2001-2006
 function getCurrentLang()
 {
 	$lang=session_getvalue("current_language");
@@ -12,14 +10,14 @@ function getCurrentLang()
 			$lang=$_CONFIG['language'];
 
 	if($lang=='')
-		$lang='en';
+		$lang='ro';
 
 	if(!file_exists('config/language_'.$lang.'.php'))
 	{
 		if(isset($_CONFIG['language']))
 			$lang=$_CONFIG['language'];
 		if($lang=='')
-			$lang='en';
+			$lang='ro';
 	}
 
 	return $lang;
@@ -37,11 +35,16 @@ function getLT($key,$lang='',$namespace='')
 	}
 
 	global $_LANG_;
+	$toret=$key;
 
-	if($namespace!="" && isset($_LANG_[$namespace.'_'.$key])) return $_LANG_[$namespace.'_'.$key];
-	if(isset($_LANG_[$key])) return $_LANG_[$key];
+	if($namespace!="" && isset($_LANG_[$namespace.'_'.$key]))
+		$toret=$_LANG_[$namespace.'_'.$key];
+	if(isset($_LANG_[$key]))
+		$toret=$_LANG_[$key];
+	if(function_exists("my_getLT"))
+		$toret=my_getLT($toret);
 
-	return $key;
+	return $toret;
 }
 
 function getLTforjs($key,$lang='')
@@ -52,7 +55,6 @@ function getLTforjs($key,$lang='')
 function getLangTranslation($key,$lang='')
 {
 	return getLT($key,$lang);
-}
 }
 
 ?>

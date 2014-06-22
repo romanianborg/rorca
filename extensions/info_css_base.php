@@ -233,6 +233,7 @@ div.workstep a.biglink
 	font-size: 1.2em;
 	color:black;
 	height:30px;
+	text-align: left;
 }
 div.workstep a.bigselectedlink
 {
@@ -338,6 +339,11 @@ width: 100%;
 	height: 20px;
 }
 
+#worksteps div.linkstep a.biglink
+{
+	color:blue;
+}
+
 </style>
 
 <style media="(max-device-width: 599px)">
@@ -371,7 +377,6 @@ div.work_col1,div.work_col2
 {
 width: 180px;
 }
-
 
 </style>
 

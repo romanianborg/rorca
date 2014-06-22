@@ -15,10 +15,10 @@
 <div class="work_col2">
 <div class="workstep"><div class="biglabel"><img src="images/casa.png" border=0> OPTIUNI</div>
 </div>
-<div class="workstep">
+<div class="workstep linkstep">
 	<a href="site.php?t=clientnou" class="biglink"><img src="images/casa.png" border=0> Creaza-ti cont</a>
 </div>
-<div class="workstep">
+<div class="workstep linkstep">
 	<a href="site.php?t=client" class="biglink"><img src="images/casa.png" border=0> Intra in contul tau</a>
 </div>
 </div>

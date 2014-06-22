@@ -35,7 +35,7 @@
 <div class="workstep"><div class=worklabel>Verifica parola</div><div class=workfields><input type=password name=verifica value="">
 </div></div>
 
-<div class="workstep">
+<div class="workstep linkstep">
 	<a href="site.php?t=client" class="biglink"><img src="images/casa.png" border=0> Intra in contul tau</a>
 </div>
 

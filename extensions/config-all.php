@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('Europe/Bucharest');
+
 if(!function_exists("create_db_connection"))
 {
 function create_db_connection()
@@ -36,6 +38,7 @@ function addConfigUrlParas($slot,$url)
 global $_CONFIG;
 $_CONFIG['mesaj_multumire']='Multumim pentru plata. Un operator va verifica emiterea.';
 $_CONFIG['mesaj_eroare']='Multumim pentru comanda, un operator va prelua comanda imediat ce e posibil.';
+$_CONFIG['mesaj_plata']='Multumim pentru comanda, un operator va prelua comanda imediat ce e posibil.';
 
 $_CONFIG['nume_broker']='asiguram.ro';
 $_CONFIG['tarifarcomplet']='yes';

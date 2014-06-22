@@ -45,15 +45,20 @@ punemarcaje=function(ctrl,valid)
 
 };
 </script>
+<style>
+td.worktarif
+{
+height:80px;
+}
+span.tarifjos
+{
+font-size:14px;
+}
+</style>
 <?php
 	include("extensions/info_css_base2.php");
 	cache_addvalue("finalhead",ob_get_contents());ob_end_clean();
 
-	$platacard='';
-	if(getUserConfig("unicredit")=="yes"){$platacard='unicredit';}
-	if(getUserConfig("platalibra")=="yes"){$platacard='libra';}
-	if(getUserConfig("euplatesc")=="yes"){$platacard='euplatesc';}
-	if(getUserConfig("mobilpay")=="yes"){$platacard='mobilpay';}
 ?>
 
 <div class="container">
@@ -95,12 +100,57 @@ punemarcaje=function(ctrl,valid)
 </div>
 
 <div class="row">
-	<div class="span4 offset4">
+	<div class="span6 offset3">
 		<div class="input-prepend input-append">
-			<span class="add-on">Tarif ales</span>
-			<input name="tarif" value="" class="span1 validated" validate="required.yes" size="6" type="text" readonly=readonly>
+			<span class="add-on" id="tarifalesspan" style="width:160px;">Tarif ales</span>
+			<input name="tarif" value="" class="span1 validated" validate="required.yes" size="16" type="text" readonly=readonly style="width:77px;">
 			<span class="add-on">RON</span>
+			<button href="#" onclick="alegeTarifIar();return false;" class="btn btn-success">Alege alt tarif</button>
 		</div>
+		<div class="input-prepend input-append">
+			<span class="add-on" id="tarifalesspan" style="width:200px;">Mod plata</span>
+
+<select name="tipplata" class="validated validateundo" validate="for.euplatesc|mobilpay|unicredit|crediteurope|libra|ramburs|op.show.id.emiteredate~for.euplatesc|libra|crediteurope|unicredit|mobilpay.set.textbutton.Plateste online~for.ramburs.set.textbutton.Comanda asigurarea~for.op.set.textbutton.Trimite decont~for.contact.set.textbutton.Trimite mail~for.euplatesc.show.id.infoeuplatesc~for.crediteurope.show.id.infocrediteurope~for.unicredit.show.id.infounicredit~for.libra.show.id.infolibrapay~for.mobilpay.show.id.infomobilpay~required.yes" style="width:200px;">
+	<option value="" selected>-- Selectati mod plata</option>
+	<option value="contact" selected class="fararate">Vreau sa fiu contactat</option>
+<?php
+	if(getUserConfig("platalibra")=="yes") {
+?>
+	<option value="libra" class="fararate">Plata online prin LibraPay</option>
+<?php
+	}
+	if(getUserConfig("crediteurope")=="yes")
+	{
+	?>
+	<option value="crediteurope" class="doarrate">Plata in rate Card Avantaj</option>
+	<option value="crediteurope" class="fararate">Plata online prin Credit Europe</option>
+	<?php
+	}
+	if(getUserConfig("euplatesc")=="yes")
+	{
+	?>
+	<option value="euplatesc" class="doarrate">Plata in rate Card BCR prin euplatesc.ro</option>
+	<option value="euplatesc" class="fararate">Plata online prin euplatesc.ro</option>
+	<?php
+	}
+	if(getUserConfig("unicredit")=="yes")
+	{
+	?>
+	<option value="unicredit" class="doarrate">Plata in rate Banca Transilvania</option>
+	<option value="unicredit" class="fararate">Plata online prin Banca transilvania</option>
+	<?php
+	}
+?>
+	<option value="op" class="fararate">Plata cu Internet Banking/OP/Token</option>
+	<option value="ramburs" class="fararate">Plata ramburs</option>
+</select>
+		</div>
+
+	</div>
+	<div class="span6 offset3" style="font-size: 16px;">
+
+		Website-ul este certificat 3D Secure de catre VISA si MasterCard, prin Bancile Partenere, pentru tranzactii online cu orice card bancar emis de catre orice banca. Plata cu card bancar reprezinta o optiune simpla si sigura de efectuare a platilor online
+
 	</div>
 </div>
 			</div>
@@ -116,31 +166,6 @@ punemarcaje=function(ctrl,valid)
 
 			<div class="box" id="box-proprietar">
 				<div class="icon">&nbsp;</div>
-
-				<div class="row">
-					<div class="span10">
-<ul class="nav nav-tabs" id=proprietarmeniu>
-	<li class="span1">&nbsp;</li>
-	<li class="active"><a href="#" onclick="$('#proprietarmeniu li').removeClass('active');$(this).parent().addClass('active');$('select[name=tipplata]').val('contact').change();return false;">Vrea sa fiu contactat</a></li>
-	<li><a href="#" onclick="$('#proprietarmeniu li').removeClass('active');$(this).parent().addClass('active');$('select[name=tipplata]').val('ramburs').change();return false;">Plata ramburs</a></li>
-	<li><a href="#" onclick="$('#proprietarmeniu li').removeClass('active');$(this).parent().addClass('active');$('select[name=tipplata]').val('op').change();return false;">Plata cu op</a></li>
-	<li><a href="#" onclick="$('#proprietarmeniu li').removeClass('active');$(this).parent().addClass('active');$('select[name=tipplata]').val('<?php echo $platacard;?>').change();return false;">Plata online</a></li>
-</ul>
-<select name="tipplata" class="validated validateundo" validate="for.euplatesc|mobilpay|unicredit|libra|ramburs|op.show.id.emiteredate~for.euplatesc|libra|unicredit|mobilpay.set.textbutton.Plateste online~for.ramburs.set.textbutton.Comanda asigurarea~for.op.set.textbutton.Trimite decont~for.contact.set.textbutton.Trimite mail~for.euplatesc.show.id.infoeuplatesc~for.unicredit.show.id.infounicredit~for.libra.show.id.infolibrapay~for.mobilpay.show.id.infomobilpay~required.yes" style="position:absolute;left:-1500px;">
-	<option value="contact" selected>Vreau sa fiu contactat</option>
-<?php
-	if($platacard!=""){
-?>
-	<option value="<?php echo $platacard;?>">Plata online cu cardul</option>
-<?php
-	}
-?>
-	<option value="op">Plata cu OP</option>
-	<option value="ramburs">Plata ramburs</option>
-</select>
-					</div>
-				</div>
-
 
 <div id="infolibrapay" style="display:none;">
 	<div class="row">
@@ -167,57 +192,51 @@ punemarcaje=function(ctrl,valid)
 
 Optiune plata in rate:<br>
 <select name="optrate">
-	<option value="" selected>Integral</option>
+	<option value="" selected class="fararate">Fara rate</option>
 <?php
 	if(getUserConfig("euplatesc_ratebcr")=="yes")
 	{?>
-<option value="bcr-2">BCR 2 rate fara dobanda</option>
-<option value="bcr-3">BCR 3 rate fara dobanda</option>
-<option value="bcr-4">BCR 4 rate fara dobanda</option>
-<option value="bcr-5">BCR 5 rate fara dobanda</option>
-<option value="bcr-6">BCR 6 rate fara dobanda</option>
-<option value="bcr-7">BCR 7 rate fara dobanda</option>
-<option value="bcr-8">BCR 8 rate fara dobanda</option>
-<option value="bcr-9">BCR 9 rate fara dobanda</option>
-<option value="bcr-10">BCR 10 rate fara dobanda</option>
-<option value="bcr-11">BCR 11 rate fara dobanda</option>
-<option selected value="bcr-12">BCR 12 rate fara dobanda</option>
+<option value="bcr-2" class="doarrate">BCR 2 rate fara dobanda</option>
+<option value="bcr-3" class="doarrate">BCR 3 rate fara dobanda</option>
+<option value="bcr-4" class="doarrate">BCR 4 rate fara dobanda</option>
+<option value="bcr-5" class="doarrate">BCR 5 rate fara dobanda</option>
+<option value="bcr-6" class="doarrate">BCR 6 rate fara dobanda</option>
+<option value="bcr-7" class="doarrate doarintegral">BCR 7 rate fara dobanda</option>
+<option value="bcr-8" class="doarrate doarintegral">BCR 8 rate fara dobanda</option>
+<option value="bcr-9" class="doarrate doarintegral">BCR 9 rate fara dobanda</option>
+<option selected value="bcr-10" class="doarrate doarintegral">BCR 10 rate fara dobanda</option>
 <?php
 	}
 	if(getUserConfig("euplatesc_rateapb")=="yes")
 	{?>
-<option value="apb-2">Alpa Bank 2 rate fara dobanda</option>
-<option value="apb-3">Alpa Bank 3 rate fara dobanda</option>
-<option value="apb-4">Alpa Bank 4 rate fara dobanda</option>
-<option value="apb-5">Alpa Bank 5 rate fara dobanda</option>
-<option value="apb-6">Alpa Bank 6 rate fara dobanda</option>
-<option value="apb-7">Alpa Bank 7 rate fara dobanda</option>
-<option value="apb-8">Alpa Bank 8 rate fara dobanda</option>
-<option value="apb-9">Alpa Bank 9 rate fara dobanda</option>
-<option value="apb-10">Alpa Bank 10 rate fara dobanda</option>
-<option value="apb-11">Alpa Bank 11 rate fara dobanda</option>
-<option selected value="apb-12">Alpa Bank 12 rate fara dobanda</option>
+<option value="apb-2" class="doarrate">Alpa Bank 2 rate fara dobanda</option>
+<option value="apb-3" class="doarrate">Alpa Bank 3 rate fara dobanda</option>
+<option value="apb-4" class="doarrate">Alpa Bank 4 rate fara dobanda</option>
+<option value="apb-5" class="doarrate">Alpa Bank 5 rate fara dobanda</option>
+<option value="apb-6" class="doarrate">Alpa Bank 6 rate fara dobanda</option>
+<option value="apb-7" class="doarrate doarintegral">Alpa Bank 7 rate fara dobanda</option>
+<option value="apb-8" class="doarrate doarintegral">Alpa Bank 8 rate fara dobanda</option>
+<option value="apb-9" class="doarrate doarintegral">Alpa Bank 9 rate fara dobanda</option>
+<option selected value="apb-10" class="doarrate doarintegral">Alpa Bank 10 rate fara dobanda</option>
 <?php
 	}
 	if(getUserConfig("euplatesc_ratebtrl")=="yes")
 	{?>
-<option value="btrl-2">BTRL 2 rate fara dobanda</option>
-<option value="btrl-3">BTRL 3 rate fara dobanda</option>
-<option value="btrl-4">BTRL 4 rate fara dobanda</option>
-<option value="btrl-5">BTRL 5 rate fara dobanda</option>
-<option value="btrl-6">BTRL 6 rate fara dobanda</option>
-<option value="btrl-7">BTRL 7 rate fara dobanda</option>
-<option value="btrl-8">BTRL 8 rate fara dobanda</option>
-<option value="btrl-9">BTRL 9 rate fara dobanda</option>
-<option value="btrl-10">BTRL 10 rate fara dobanda</option>
-<option value="btrl-11">BTRL 11 rate fara dobanda</option>
-<option selected value="btrl-12">BTRL 12 rate fara dobanda</option>
+<option value="btrl-2" class="doarrate">BTRL 2 rate fara dobanda</option>
+<option value="btrl-3" class="doarrate">BTRL 3 rate fara dobanda</option>
+<option value="btrl-4" class="doarrate">BTRL 4 rate fara dobanda</option>
+<option value="btrl-5" class="doarrate">BTRL 5 rate fara dobanda</option>
+<option value="btrl-6" class="doarrate">BTRL 6 rate fara dobanda</option>
+<option value="btrl-7" class="doarrate doarintegral">BTRL 7 rate fara dobanda</option>
+<option value="btrl-8" class="doarrate doarintegral">BTRL 8 rate fara dobanda</option>
+<option value="btrl-9" class="doarrate doarintegral">BTRL 9 rate fara dobanda</option>
+<option selected value="btrl-10" class="doarrate doarintegral">BTRL 10 rate fara dobanda</option>
 <?php
 	}
 ?>
 </select>
-
-			<span class="text-info">Dupa ce introduceti si emailul veti fi redirect pe site-ul bancii pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.</span>
+<br>
+			<span class="text-info">Dupa ce introduceti si emailul veti fi redirect pe site-ul bancii pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.<br><br></span>
 		</div>
 	</div>
 </div>
@@ -225,10 +244,39 @@ Optiune plata in rate:<br>
 <div id="infounicredit" style="display:none;">
 	<div class="row">
 		<div class="span3 text-right">
-			<img src="images/unicreditcl.jpeg" border="0">
+			<!-- <img src="images/unicreditcl.jpeg" border="0">-->
 		</div>
 		<div class=span4>
-			<span class="text-info">Dupa ce introduceti si emailul veti fi redirect pe site-ul bancii pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.</span>
+<select name="uni_rate">
+	<option value=""  class="fararate">Fara rate</option>
+	<option value="2"  class="doarrate">2 rate fara dobanda</option>
+	<option value="3" class="doarrate">3 rate fara dobanda</option>
+	<option value="4" class="doarrate">4 rate fara dobanda</option>
+	<option value="6" class="doarrate">6 rate fara dobanda</option>
+	<option value="10" class="doarrate doarintegral">10 rate fara dobanda</option>
+</select><br>
+			<span class="text-info">Dupa ce introduceti si emailul veti fi redirect pe site-ul bancii pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.<br><br></span>
+		</div>
+	</div>
+</div>
+
+<div id="infocrediteurope" style="display:none;">
+	<div class="row">
+		<div class="span3 text-right">
+		<a href="credit-europe" class="option">
+			<img src="images/crediteuropecard.jpg" border="0"></a>
+		</div>
+		<div class=span4>
+Optiune plata in rate:<br>
+<select name="ce_rate">
+	<option value=""  class="fararate">Fara rate</option>
+	<option value="2"  class="doarrate">2 rate fara dobanda</option>
+	<option value="3" class="doarrate">3 rate fara dobanda</option>
+	<option value="4" class="doarrate">4 rate fara dobanda</option>
+	<option value="6" class="doarrate">6 rate fara dobanda</option>
+	<option value="10" class="doarrate doarintegral">10 rate fara dobanda</option>
+</select><br>
+			<span class="text-info">Dupa ce introduceti si emailul veti fi redirect pe site-ul bancii pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.<br><br></span>
 		</div>
 	</div>
 </div>
@@ -239,16 +287,22 @@ Optiune plata in rate:<br>
 			<img src="images/mobilpay.gif" border="0">
 		</div>
 		<div class=span4>
-			<span class="text-info">Dupa ce introduceti si emailul veti fi redirect pe site-ul MobilPay.ro pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.</span>
+			<span class="text-info">Dupa ce introduceti si emailul veti fi redirect pe site-ul MobilPay.ro pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.<br><br></span>
 		</div>
 	</div>
 </div>
 
 	<div class="row">
 		<div class="span6">
+		&nbsp;
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="span12">
 			<div class="input-prepend">
-				<span class="add-on"><?php if($date['tipproprietar']['VALUE']=="pj" || $date['tipproprietar']['VALUE']=="leasing" && $date['tiputilizator']['VALUE']=="pj") echo "Denumire firma"; else echo "Nume si Prenume";?></span>
-				<input name="client" value="" class="span4 validated" validate="required.yes" size="20" type="text">
+				<span class="add-on" style="width:200px;"><?php if($date['tipproprietar']['VALUE']=="pj" || $date['tipproprietar']['VALUE']=="leasing" && $date['tiputilizator']['VALUE']=="pj") echo "Denumire firma"; else echo "Nume si Prenume";?></span>
+				<input name="client" value="" class="span4 validated" validate="required.yes" size="40" type="text" style="width:425px;">
 			</div>
 		</div>
 	</div>
@@ -256,7 +310,7 @@ Optiune plata in rate:<br>
 	<div class="row">
 		<div class="span5">
 			<div class="input-prepend input-append">
-				<span class="add-on indicatie">Email sau Tel.</span>
+				<span class="add-on indicatie">Email</span>
 				<input name="emailclient" value="" class="span3 validated" validate="if.telclient..required.email" size="20" type="email">
 				<span class="add-on">@</span>
 			</div>
@@ -300,8 +354,8 @@ Strada: <input type="text" onchange="javascript:textareaImplode('prop_adresa');"
 	<div class="row">
 		<div class="span10">
 			<div class="input-prepend">
-				<span class="add-on indicatie">Serie CI/Buletin</span>
-				<input type="text" name="pf_ciserie" value="" size="2" class="text-mini">-<input type="number" name="pf_cinumar" value="" size="7" style="width:110px;" class="text-small">
+				<span class="add-on indicatie" style="width:200px;">Serie CI/Buletin</span>
+				<input type="text" name="pf_ciserie" value="" size="2" class="text-small" style="width:30px;">-<input type="number" name="pf_cinumar" value="" size="7" style="width:110px;" class="text-small">
 			</div>
 		</div>
 	</div>
@@ -312,7 +366,7 @@ Strada: <input type="text" onchange="javascript:textareaImplode('prop_adresa');"
 	<div class="row">
 		<div class="span10">
 			<div class="input-prepend">
-				<span class="add-on">Carte identitate vehicul</span>
+				<span class="add-on" style="width:200px;">Carte identitate vehicul</span>
 				<input type="text" class="span2 validated" name="serieciv" size=10 <?php if(getUserConfig("platalibra")=="yes") echo 'validate="require.yes"';?> title="Talon nou: X, Talon vechi: 4">
 			</div>
 		</div>
@@ -322,7 +376,7 @@ Strada: <input type="text" onchange="javascript:textareaImplode('prop_adresa');"
 	<div class="row">
 		<div class="span10">
 			<div class="input-prepend">
-				<span class="add-on">Adresa de Corespondenta</span>
+				<span class="add-on" style="width:200px;">Adresa de Corespondenta</span>
 				<select name="adresalivrare" class="span2 validated validateundo" validate="for.alta.show.id.adresalivrare">
 				<option value="prop">Aceeasi adresa</option>
 				<option value="alta">Alta adresa</option>
@@ -334,7 +388,7 @@ Strada: <input type="text" onchange="javascript:textareaImplode('prop_adresa');"
 <div id="adresalivrare" style="display:none;">
 	<div class="row">
 		<div class="span10">
-			<div class="input-prepend">
+			<div class="input-prepend" style="width:200px;">
 				<span class="add-on">Adresa Livrare</span>
 				<textarea name="obslivrare" cols=18 rows=1 class="span5 validate" validate="require.yes"></textarea>
 			</div>
@@ -346,7 +400,7 @@ Strada: <input type="text" onchange="javascript:textareaImplode('prop_adresa');"
 
 <div class="row">
 <div class="span8 offset1">
-<br>
+<br>% procent completare date
     <div class="progress">
     <div class="bar" style="width: 10%;"></div>
     </div>
@@ -363,12 +417,11 @@ Strada: <input type="text" onchange="javascript:textareaImplode('prop_adresa');"
 
 <div class="row">
 <div class="span4 offset5">
-			<button class="btn btn-large btn-primary" onclick="if(valideazaFormaPentruSalvare($('form[name=work]'),punemarcaje)) $('form[name=work]').submit();return false;"><i class="icon-ok icon-white">&nbsp;</i> Valideaza</button>
+			<button class="btn btn-large btn-primary" onclick="if(valideazaFormaPentruSalvare($('form[name=work]'),punemarcaje)) if(confirm('Atentie! Odata ce validati plata nu va mai puteti intoarce la meniul anterior, iar polita dumneavoastra se va emite in mod automat. Continuarea acestui proces reprezinta confirmarea datelor introduse de catre dumneavoastra. POLITELE EMISE NU MAI POT FI ANULATE, doar modificate partial! OK?')) $('form[name=work]').submit();return false;"><i class="icon-ok icon-white">&nbsp;</i> Valideaza</button>
 </div>
 </div>
 
 
 </div> <!-- container -->
-
 
 

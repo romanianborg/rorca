@@ -3,7 +3,7 @@
 ob_start();
 if(getUserConfig("datepicker")=="yes")
 {
-	?><script type="text/javascript" src="js/datepicker.js"></script>
+	?><script type="text/javascript" src="js/datepicker.js?1"></script>
 	<script>
 		var calendar_ret="calendar_finished";
 		var global_cal={};
@@ -27,7 +27,6 @@ if(getUserConfig("datepicker")=="yes")
 				format:format,
 				calendars:2,
 				locale: lang,
-				position:'nopos',
 				onChange:function(f,d){
 					$(val).DatePickerHide();
 					var ds=f.split(",");
@@ -62,7 +61,6 @@ if(getUserConfig("datepicker")=="yes")
 				format:format,
 				calendars:3,
 				locale: lang,
-				position:'nopos',
 				onChange:function(f,d){
 					$(val).DatePickerHide();
 					var ds=f.split(",");
@@ -85,7 +83,7 @@ if(getUserConfig("datepicker")=="yes")
 else
 {
 	require_once("layers.php");
-	?><SCRIPT LANGUAGE="JavaScript" SRC="js/CalendarPopup.js"></SCRIPT><?php
+	?><SCRIPT LANGUAGE="JavaScript" SRC="js/CalendarPopup.js?1"></SCRIPT><?php
 }
 ?>
 <script>
@@ -356,8 +354,7 @@ td.datepickerNotInMonth a {
 	color: <?php echo getUserConfig("theme_color3");?>;
 }
 tbody.datepickerDays td.datepickerSelected{
-	background: <?php echo getUserConfig("theme_color2");?>;
-	border: solid 1px green;
+	background: <?php echo getUserConfig("theme_color4");?>;
 }
 tbody.datepickerDays td.datepickerNotInMonth.datepickerSelected {
 	background:<?php echo getUserConfig("theme_color4");?>;
@@ -418,7 +415,6 @@ td.datepickerDisabled a:hover {
 }
 td.datepickerSpecial a {
 	background: <?php echo getUserConfig("theme_color1");?>;
-	border: solid 1px red;
 }
 td.datepickerSpecial.datepickerSelected a {
 	background: <?php echo getUserConfig("theme_color3");?>;

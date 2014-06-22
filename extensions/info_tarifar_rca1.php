@@ -15,6 +15,7 @@
 			<select validate="get.cod.categ" validators="change" class="validated" name="categorie" title="Talon nou: J, Talon vechi: 6">
 <option categ="autoturism" value="autoturism">autoturism</option>
 <option categ="autoturism" value="autoturism de teren">autoturism de teren</option>
+<option categ="autoutilitara" value="automobil mixt">automobil mixt</option>
 <option categ="autoutilitara" value="autoutilitara">autoutilitara</option>
 <option categ="remorca" value="atas">atas</option>
 <option categ="motociclu" value="atv">atv</option>
@@ -108,7 +109,7 @@
 </select>
 </div></div>
 
-<div class="workstep"><div class="worklabel">Rca valabil din</div><div class=workfields><input type="text" value="<?php echo date('d.m.Y',time()+60*60*24);?>" size="9" id="datavalabilitate" name="datavalabilitate" validate="required.date" validators="change" class="validated">&nbsp;<a href="#" onclick="global_cal.select(document.forms['work'].datavalabilitate,'datavalabilitate_sel','dd.MM.yyyy'); return false;" name="datavalabilitate_sel" id="datavalabilitate_sel"><img src="images/calendar.png" border="0" alt="Calendar"></a>
+<div class="workstep"><div class="worklabel">Rca valabil din</div><div class=workfields><input type="text" value="<?php echo date('d.m.Y',time()+60*60*24);?>" size="9" id="datavalabilitate" name="datavalabilitate" validate="required.date" validators="change" class="validated">&nbsp;<a class="cdateselect" href="#" onclick="global_cal.select(document.forms['work'].datavalabilitate,'datavalabilitate_sel','dd.MM.yyyy'); return false;" name="datavalabilitate_sel" id="datavalabilitate_sel"><img src="images/calendar.png" border="0" alt="Calendar"></a>
 </div></div>
 
 <div class="workstep"><div class="worklabel">Vehiculul este:</div><div class=workfields>

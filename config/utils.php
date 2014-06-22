@@ -1,10 +1,9 @@
 <?php
-if(!function_exists("process_sort_series"))
-{
 function process_sort_series($row1,$row2)
 {
 	if($row1['date']>$row2['date']) return 1;
 	if($row1['date']<$row2['date']) return -1;
+	if($row1['dir']>$row2['dir']) return -1;
 	return 0;
 }
 function process_series(&$series)
@@ -65,7 +64,7 @@ function process_series(&$series)
 						if($fromerrors)
 						{
 							$lasterrors--;
-							if(!$lasterrors)
+							if($lasterrors<=0)
 							{
 								if($ret) session_addvalue("error",getLT("serieserror").": ".$itemch['from']."-".$itemch['to'].".");
 								$ret=false;
@@ -89,7 +88,7 @@ function process_series(&$series)
 							}
 
 							$lasterrors=count($_checkssameday[$info]);
-							if($lasterrors==1)
+							if($lasterrors<=1)
 							{
 								//error
 								if($ret) session_addvalue("error",getLT("serieserror").": ".$itemch['from']."-".$itemch['to'].".");
@@ -105,7 +104,7 @@ function process_series(&$series)
 				{
 					array_push($_finals[$info],$itemch);
 					if($fromerrors)
-					{	
+					{
 						$lasterrors=count($_checkssameday[$info]);
 					}
 				}
@@ -201,12 +200,17 @@ function process_series(&$series)
 					}
 					else
 					{
+						if(isset($itemch['ignore']) && $itemch['ignore'])
+						{
+							//just ignore
+							continue;
+						}
 						array_push($_checkssameday[$info],$itemch);
 						//get all for that day
 						if($fromerrors)
 						{
 							$lasterrors--;
-							if(!$lasterrors)
+							if($lasterrors<=0)
 							{
 								$_checkssameday[$info]=array();
 								if($failfor!==false)
@@ -342,7 +346,6 @@ function getNextNumberFromSql($sql,$field,$starting='')
 	$maxvalue=$starting;
 	if(!$newconn->eof())
 
-
 	{
 		$maxvalue=$newconn->getvalue($field);
 		$newconn->close();
@@ -351,8 +354,21 @@ function getNextNumberFromSql($sql,$field,$starting='')
 	return getNextNumber($maxvalue);
 }
 
+function html_entity_decode2($str)
+{
+	$str=str_replace("&nbsp;",' ',$str);
+	if (version_compare(PHP_VERSION, '5.4.0') >= 0)
+	{
+		return html_entity_decode($str,ENT_COMPAT, 'WINDOWS-1252');
+	}
+
+	return html_entity_decode($str);
+}
+
 function parseAndReplaceAll($text,$slotback='')
 {
+	global $directdump;
+	$directdump=false;
 	//[sql.s1.field1.type]
 	//[var.name.type]
 	//[para.name]
@@ -387,7 +403,10 @@ function parseAndReplaceAll($text,$slotback='')
 			}
 			else
 			{
-				$newstring.=substr($text,$oldpos,$pos-$oldpos);
+				if($directdump)
+					echo substr($text,$oldpos,$pos-$oldpos);
+				else
+					$newstring.=substr($text,$oldpos,$pos-$oldpos);
 				$oldpos=$pos;
 				//we have a token.. anallys
 				$token=substr($text,$pos+1,$pos2-$pos-1);
@@ -432,11 +451,41 @@ function parseAndReplaceAll($text,$slotback='')
 						if(isset($arr[1]) && isset($GLOBALS[$arr[1].'_sql_conn']))
 						{
 							if(isset($arr[2])) $displayvalue=$GLOBALS[$arr[1].'_sql_conn']->getvalue($arr[2]);
+							if($displaytype=="fast" && isset($arr[2]))
+							{
+								$displayvalue=$GLOBALS[$arr[1].'_sql_conn']->getvaluefast($arr[2]);
+								if(isset($arr[4])) $displaytype=$arr[4];
+								if(isset($arr[5])) $displaypara=$arr[5];
+							}
+							if($displaytype=="mins")
+							{
+								$displaypara=$GLOBALS[$arr[1].'_sql_conn']->getvalue($arr[2]."_panala");
+								require_once("config/dateutils.php");
+								$diff=timediff($displayvalue,$displaypara,getLT("dateformat"));
+								$secs=intval(timediffsecs($diff)/60);
+								$displayvalue=$secs;
+								$displaypara=$arr[5];
+							}
 						}
 						else
 						if($arr[1]=="conn")
 						{
 							if(isset($arr[2])) $displayvalue=$GLOBALS[$arr[1]]->getvalue($arr[2]);
+							if($displaytype=="fast" && isset($arr[2]))
+							{
+								$displayvalue=$GLOBALS[$arr[1]]->getvaluefast($arr[2]);
+								if(isset($arr[4])) $displaytype=$arr[4];
+								if(isset($arr[5])) $displaypara=$arr[5];
+							}
+							if($displaytype=="mins")
+							{
+								$displaypara=$GLOBALS[$arr[1]]->getvalue($arr[2]."_panala");
+								require_once("config/dateutils.php");
+								$diff=timediff($displayvalue,$displaypara,getLT("dateformat"));
+								$secs=intval(timediffsecs($diff)/60);
+								$displayvalue=$secs;
+								$displaypara=$arr[5];
+							}
 						}
 						break;
 					case 'var':
@@ -529,6 +578,22 @@ function parseAndReplaceAll($text,$slotback='')
 							$displaypara='';
 						}
 						break;
+					case 'call':
+						//we have a callback
+						$oldpos=$pos2+1;
+						if(isset($arr[1])) $displayvalue=$arr[1];
+						if(isset($arr[2])) $displaytype=$arr[2];
+						if(isset($arr[3])) $displaypara=$arr[3];
+						$fn=$displayvalue;
+						if(function_exists($fn))
+						{
+							$displayvalue=$fn($displaytype,$displaypara);
+						}
+						else
+						{
+							$displayvalue='';
+						}
+						break;
 					}
 					$displaypara=str_replace('^','.',$displaypara);
 					if($iftest)
@@ -561,8 +626,16 @@ function parseAndReplaceAll($text,$slotback='')
 					}
 					else
 					{
+						$oldnewstring=$newstring;
+						if($directdump) $newstring='';
 						switch($displaytype)
 						{
+						case 'lb':
+							$newstring.='[';
+							break;
+						case 'rb':
+							$newstring.=']';
+							break;
 						case 'now':
 							require_once("config/dateutils.php");
 							if($displayvalue!="")
@@ -574,7 +647,8 @@ function parseAndReplaceAll($text,$slotback='')
 							require_once("config/dateutils.php");
 							if($displaypara!="")
 							{
-								$newstring.=date(str_replace("~",".",$displaypara),showDate($displayvalue,"time"));
+								if($displayvalue!="0000-00-00")
+									$newstring.=date(str_replace("~",".",$displaypara),showDate($displayvalue,"time"));
 							}
 							else
 							{
@@ -589,8 +663,17 @@ function parseAndReplaceAll($text,$slotback='')
 							require_once("config/dateutils.php");
 							$newstring.=showTime($displayvalue);
 							break;
+						case 'intval':
+							if($displaypara!="")
+								$newstring.=bcadd($displayvalue,'0');
+							else
+								$newstring.=intval($displayvalue);
+							break;
 						case 'number':
 							$newstring.=showNumber($displayvalue,$displaypara);
+							break;
+						case 'exnumber':
+							$newstring.=number_format(floatval($displayvalue),$displaypara,'.','');
 							break;
 						case 'zeronumber':
 							if(abs(round($displayvalue)-$displayvalue)<=0.01)
@@ -623,6 +706,18 @@ function parseAndReplaceAll($text,$slotback='')
 								$newstring.=$conn->escape($displayvalue);
 							}
 							break;
+						case 'sqlvalues':
+							global $conn;
+							$myvalues='';
+							$myarr=explode(",",$displayvalue);
+							foreach($myarr as $kkmk=>$kkmv)
+							{
+								if($myvalues!="") $myvalues.=",";
+								$myvalues.="'".$conn->escape($kkmv)."'";
+							}
+							if($myvalues=="") $myvalues="''";
+							$newstring.=$myvalues;
+							break;
 						case 'split':
 							$sparr=explode(".",trim($displayvalue));
 							$newstring.=$sparr[intval($displaypara)];
@@ -652,7 +747,7 @@ function parseAndReplaceAll($text,$slotback='')
 							$newstring.=str_replace("\n","<br>",$displayvalue);
 							break;
 						case 'nohtml':
-							$newstring.=strip_tags(html_entity_decode($displayvalue));
+							$newstring.=strip_tags(html_entity_decode2($displayvalue));
 							break;
 						case 'pin':
 							$newstring.=substr(md5($displayvalue),intval($displaypara));
@@ -663,12 +758,42 @@ function parseAndReplaceAll($text,$slotback='')
 						case 'upper':
 							$newstring.=strtoupper($displayvalue);
 							break;
+						case 'caps':
+							$newstring.=strtoupper(substr(getLT($displayvalue),0,1)).strtolower(substr(getLT($displayvalue),1));
+							break;
 						case 'lower':
 							$newstring.=strtolower($displayvalue);
+							break;
+						case 'adresa':
+							$newstring.=strtoupper(str_ireplace("zip","cod postal",$displayvalue));
+							break;
+						case 'full':
+							$newstring.=parseAndReplaceAll($displayvalue,$slotback);
+							break;
+						case 'easyread':
+							$newstring.=strrev(join(str_split(strrev($displayvalue),3),"."));
+							break;
+						case 'phone':
+							$displayvalue=str_replace("-","",$displayvalue);
+							$displayvalue=str_replace("/","",$displayvalue);
+							$displayvalue=str_replace(" ","",$displayvalue);
+							$displayvalue=str_replace(".","",$displayvalue);
+							$displayvalue=str_replace(",","",$displayvalue);
+							$displayvalue=str_replace(",","",$displayvalue);
+							$displayvalue=substr($displayvalue,0,10);
+							$newstring.=$displayvalue;
+							break;
+						case 'seo':
+							$newstring.=buildSeoLink($displayvalue);
 							break;
 						default:
 							$newstring.=$displayvalue;
 							break;
+						}
+						if($directdump)
+						{
+							echo $newstring;
+							$newstring=$oldnewstring;
 						}
 					}
 				}
@@ -692,7 +817,7 @@ function solveToken($texp)
 						$oexp.='$'.$texp;
 				else
 					if(substr($texp,0,2)=='s.')
-						$oexp.='$_SESSION["'.substr($texp,2).'"]';
+						$oexp.='session_getvalue("'.substr($texp,2).'")';
 					else
 					if(substr($texp,0,2)=='g.')
 					{
@@ -710,7 +835,7 @@ function solveToken($texp)
 					if(substr($texp,0,2)=='q.')
 					{
 						$arr=explode(".",substr($texp,2),2);
-						if($arr[0]=='conn' || !isset($GLOBALS["'.$arr[0].'_sql_conn"]))
+						if($arr[0]=='conn')
 						{
 							$oexp.='$GLOBALS["conn"]->getvalue(parseAndReplaceAll("'.$arr[1].'"))';
 						}
@@ -721,7 +846,9 @@ function solveToken($texp)
 					}
 					else
 					if(substr($texp,0,2)=='c.')
-						$oexp.='getUserConfig("'.substr($texp,2).'")';
+					{
+						$oexp.='$GLOBALS["_CONFIG"]["'.substr($texp,2).'"]';
+					}
 					else
 						$oexp.='$'.str_replace('.','->',$texp);
 			}
@@ -798,6 +925,7 @@ function evalPartOptimize(&$texp)
 				case ')':
 				case ',':
 				case '!':
+				case '%':
 					$oexp.=$texp[$i];
 					break;
 				case ';':
@@ -850,7 +978,7 @@ function evaluateSmartExpression($exp)
 	$texp=array();
 	$mexp=0;
 	$texpid=0;
-	$marks="=*-+/(),'\r\n\t ;:><{}!";
+	$marks="=*-+/(),'\r\n\t ;:><{}!%";
 	$fc=strcspn($exp,$marks);
 	while($fc>=0 && strlen($exp))
 	{
@@ -1019,7 +1147,7 @@ function parseForAddress($address,$toup=true)
 		default:
 			if(floatval($word)>0)
 			{
-				if($activ=='sector') $ret['sector']=$word;
+				if($activ!="") $ret[$activ]=$word;
 				else
 				if(strlen($word)==6 || $ret['nr']!="")
 					{$ret['zip']=$word;$activ="";}
@@ -1048,5 +1176,83 @@ function parseForAddress($address,$toup=true)
 	}
 	return $ret;
 }
+
+function unserialize_startparsing()
+{
+	global $unser_str;
+	if(substr($unser_str,0,1)=="N")
+	{
+		$unser_str=substr($unser_str,2);
+		return '';
+	}
+	$type=strtok($unser_str,":");
+	$ret=false;
+	switch($type)
+	{
+		case 'a':
+			$ret=array();
+			$count=intval(strtok(':'));
+			$unser_str=strtok('');
+			$unser_str=substr($unser_str,1);
+			for($i=0;$i<$count;$i++)
+			{
+				$t=unserialize_startparsing();
+				$v=unserialize_startparsing();
+				$ret[$t]=$v;
+			}
+		break;
+		case 's':
+			$ret='';
+			$count=intval(strtok(':'));
+			$unser_str=strtok('');
+			//check bounds
+			if(substr($unser_str,0,1)=='"' && substr($unser_str,$count+1,1)=='"')
+			{
+				//ok
+				$ret=substr($unser_str,1,$count);
+				$unser_str=substr($unser_str,$count+2);
+			}
+			else
+			{
+				//try to recover, search end
+				$sp=strpos($unser_str,'";');
+				if($sp!==false)
+				{
+					$ret=substr($unser_str,1,$sp-1);
+					$unser_str=substr($unser_str,$sp+1);
+				}
+				else
+				{
+				}
+			}
+		break;
+		case 'i':
+			$ret=0;
+			$ret=intval(strtok(';'));
+			$unser_str=strtok('');
+		break;
+		case 'd':
+			$ret=0;
+			$ret=floatval(strtok(';'));
+			$unser_str=strtok('');
+		break;
+		case 'N':
+			$ret='';
+			$unser_str=strtok('');
+			break;
+	}
+	if(substr($unser_str,0,1)==';')
+		$unser_str=substr($unser_str,1);
+	return $ret;
 }
+
+function unserialize_recover($str)
+{
+	global $unser_str;
+	if($str=="") return  false;
+	$unser_str=$str;
+	//start parsing
+	return unserialize_startparsing();
+}
+
 ?>

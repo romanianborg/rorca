@@ -1,6 +1,82 @@
 <?php
 
 //check post action
+if(isset($_GET['crediteuropeipn']) && $_GET['crediteuropeipn'])
+{
+	$storekey=getUserConfig("crediteurope_storekey");
+
+	$hashparams = $_POST["HASHPARAMS"];
+	$hashparamsval = $_POST["HASHPARAMSVAL"];
+	$hashparam = $_POST["HASH"];
+	$paramsval="";
+	$index1=0;
+	$index2=0;
+	$mdStatus=$_POST['mdStatus'];
+
+	while($index1 < strlen($hashparams))
+	{
+		$index2 = strpos($hashparams,":",$index1);
+		$vl = $_POST[substr($hashparams,$index1,$index2- $index1)];
+		if($vl == null)
+		$vl = "";
+		$paramsval = $paramsval . $vl; 
+		$index1 = $index2 + 1;
+	}
+	$hashval = $paramsval.$storekey;
+
+	$hash = base64_encode(pack('H*',sha1($hashval)));
+	$offid=intval($_POST['oid']);
+	if ($hashparams != null)
+	{
+		if($paramsval != $hashparamsval || $hashparam != $hash)
+		{
+			header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=error&offid=".$offid."&error=Security warning. Hash values mismatch.");
+		}
+		else
+		{
+			if($mdStatus =="1" || $mdStatus == "2" || $mdStatus == "3" || $mdStatus == "4")
+			{
+				//ok
+				require_once("extensions/process_offer_ws.php");
+				$offid=intval($_POST['oid']);
+				if(intval($offid))
+				{
+					//force approved
+					$_POST['offid']=intval($offid);
+					$_POST['ipnmessage']="Approved";
+					$_POST['ipnamount']=$_POST['amount'];
+					$_POST['ipnrrn']=$_POST["TransId"];
+					$_POST['ipnref']=$_POST["TransId"];
+					$off=ws_process('DateOferta');
+					if($off===false)
+					{
+						header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=error&offid=".$offid."&error=O eroare neastepta nu permite inreg platii. Va rugam sa incercati mai tarziu sau sa ne contactati. Un operator va face verificarile necesare.");
+					}
+					else
+					{
+						if($_POST['Response']=="Approved")
+						{
+							header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=thankyou&offid=".$offid);
+						}
+						else
+						{
+							header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=error&offid=".$offid."&error=".$_POST['Responde']);
+						}
+					}
+				}
+			}
+			else
+			{
+				header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=error&offid=".$offid."&error=3D authentication unsuccesful");
+			}
+		}
+	}
+	else
+	{
+		header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=error&offid=".$offid."&error=Hash values error. Please check parameters posted to 3D secure page");
+	}
+	die();
+}
 if(isset($_GET['unicreditipn']) && $_GET['unicreditipn'])
 {
 	function unicredit_mac($data, $key)
@@ -10,9 +86,9 @@ if(isset($_GET['unicreditipn']) && $_GET['unicreditipn'])
 		foreach($data as $d)
 		{
 			if($d === NULL || strlen($d) == 0)
-			$str .= '-'; // valorile nule sunt inlocuite cu -
+				$str .= '-'; // valorile nule sunt inlocuite cu -
 			else
-			$str .= strlen($d) . $d;
+				$str .= strlen($d) . $d;
 		}
 
 		return bin2hex (mhash(MHASH_SHA1, $str, pack('H*' , $key)));
@@ -21,7 +97,7 @@ if(isset($_GET['unicreditipn']) && $_GET['unicreditipn'])
 	$_POST=$_GET;
 
 	$dataAll = array(
-		'TERMINAL' => getUserConfig("ws_merch_terminal"),
+		'TERMINAL' => getUserConfig("uni_merch_terminal"),
 		'TRTYPE'  => addslashes(trim(@$_GET['TRTYPE'])),
 		'ORDER'    => addslashes(trim(@$_GET['ORDER'])),
 		'AMOUNT'    => addslashes(trim(@$_GET['AMOUNT'])),
@@ -38,7 +114,12 @@ if(isset($_GET['unicreditipn']) && $_GET['unicreditipn'])
 	); 
 
 	$P_SIGN=addslashes(trim(@$_GET['P_SIGN']));
-	$p_sign_calculat = strtoupper(unicredit_mac($dataAll,getUserConfig("ws_merch_key")));
+	$p_sign_calculat = strtoupper(unicredit_mac($dataAll,getUserConfig("uni_merch_key")));
+	if($_GET['TRTYPE']=="21" || $_GET['TRTYPE']=="24")
+	{
+		header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=error&offid=".$offid."&error=".$_GET['MESSAGE']);
+		die();
+	}
 
 	if($P_SIGN==$p_sign_calculat)
 	{
@@ -58,7 +139,7 @@ if(isset($_GET['unicreditipn']) && $_GET['unicreditipn'])
 				$off=ws_process('DateOferta');
 				if($off===false)
 				{
-					echo "O eroare neastepta nu permite inreg platii. Va rugam sa incercati mai tarziu sau sa ne contactati. Un operator va face verificarile necesare.";
+					header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=error&offid=".$offid."&error="."O eroare neastepta nu permite inreg platii. Va rugam sa incercati mai tarziu sau sa ne contactati. Un operator va face verificarile necesare.");
 				}
 				else
 				{
@@ -74,7 +155,7 @@ if(isset($_GET['unicreditipn']) && $_GET['unicreditipn'])
 			}
 		}
 		else {
-			echo "O eroare neastepta nu permite inreg platii ".$_GET['MESSAGE'];
+			header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=error&offid=".$offid."&error=".$_GET['MESSAGE']);
 		}
 	// end facem update in baza de date
 	}
@@ -167,7 +248,8 @@ if(isset($_GET['euplatescipn']) && $_GET['euplatescipn'])
 			}
 		}
 		else {
-			echo "O eroare neastepta nu permite inreg platii ".$zcrsp['message'];
+			//echo "O eroare neastepta nu permite inreg platii ".$zcrsp['message'];
+			header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=error&offid=".$offid."&error=".$zcrsp['message']);
 		}
 	// end facem update in baza de date
 	}
@@ -367,7 +449,7 @@ alert('O eroare neastepta nu permite salvarea. Va rugam sa incercati mai tarziu 
 		{
 			case 'unicredit':
 	?>
-<textarea>location.href='site.php?t=unicredit&offid=<?php echo intval($_POST['offid']);?>&pret=<?php echo floatval(number_format(getNumberFromPost($_POST['tarif'],2),2,'.',''));?>';</textarea>
+<textarea>location.href='site.php?t=unicredit&offid=<?php echo intval($_POST['offid']);?>&pret=<?php echo floatval(number_format(getNumberFromPost($_POST['tarif'],2),2,'.',''));?><?php if($_GET['aproba']=="yes") echo '&aproba=yes';?><?php if($_GET['anulare']=="yes") echo '&anulare=yes';?>';</textarea>
 	<?php
 			break;
 			case 'euplatesc':
@@ -378,6 +460,11 @@ alert('O eroare neastepta nu permite salvarea. Va rugam sa incercati mai tarziu 
 			case 'libra':
 	?>
 <textarea>location.href='site.php?t=librapay&offid=<?php echo intval($_POST['offid']);?>&pret=<?php echo floatval(number_format(getNumberFromPost($_POST['tarif'],2),2,'.',''));?>';</textarea>
+	<?php
+			break;
+			case 'crediteurope':
+	?>
+<textarea>location.href='site.php?t=crediteurope&offid=<?php echo intval($_POST['offid']);?>&pret=<?php echo floatval(number_format(getNumberFromPost($_POST['tarif'],2),2,'.',''));?>';</textarea>
 	<?php
 			break;
 			case 'mobilpay':
@@ -448,29 +535,51 @@ if($_GET['t']=="unicredit")
 		return bin2hex (mhash(MHASH_SHA1, $str, pack('H*' , $key)));
 	}
 
-	$dataAll = array(
-		'AMOUNT'      => number_format(getNumberFromPost($_GET['pret'],2),2,'.',''),
-		'CURRENCY'        => 'RON',
-		'ORDER'  => str_pad(intval($_GET['offid']),6,'0',STR_PAD_LEFT),
-		'DESC'  => 'Plata decont prima conform oferta '. intval($_GET['offid']),
-		'MERCH_NAME'    => getUserConfig("ws_merch_name"),
-		'MERCH_URL'    => getUserConfig("ws_merch_url"),
-		'MERCHANT'    => getUserConfig("ws_merchant"),
-		'TERMINAL' => getUserConfig("ws_merch_terminal"),
-		"EMAIL" => getUserConfig("ws_merch_email"),
-		"TRTYPE" => '0',
-		"COUNTRY" => '',
-		"MERCH_GMT" => '',
-		'TIMESTAMP'   => gmdate("YmdHis"),
-		'NONCE'       => md5(microtime() . mt_rand()),
-		'BACKREF'       => getUserConfig("ws_merch_backurl")
-	); 
+	if($off['ipnrrn']['VALUE']!="")
+	{
+		$dataAll = array(
+			'ORDER'  => str_pad(intval($_GET['offid']),6,'0',STR_PAD_LEFT),
+			'AMOUNT'      => number_format(getNumberFromPost($_GET['pret'],2),2,'.',''),
+			'CURRENCY'        => 'RON',
+			'RRN'  => $off['ipnrrn']['VALUE'],
+			'INT_REF'  => $off['ipnref']['VALUE'],
+			"TRTYPE" => ($_GET['anulare']=="yes"?'24':'21'),
+			'TERMINAL' => getUserConfig("uni_merch_terminal"),
+			'TIMESTAMP'   => gmdate("YmdHis"),
+			'NONCE'       => md5(microtime() . mt_rand()),
+			'BACKREF'       => getUserConfig("uni_merch_backurl"),
+		); 
+	}
+	else
+	{
+		$dataAll = array(
+			'AMOUNT'      => number_format(getNumberFromPost($_GET['pret'],2),2,'.',''),
+			'CURRENCY'        => 'RON',
+			'ORDER'  => str_pad(intval($_GET['offid']),6,'0',STR_PAD_LEFT),
+			'DESC'  => 'Plata decont prima conform oferta '. intval($_GET['offid']),
+			'MERCH_NAME'    => getUserConfig("uni_merch_name"),
+			'MERCH_URL'    => getUserConfig("uni_merch_url"),
+			'MERCHANT'    => getUserConfig("uni_merchant"),
+			'TERMINAL' => getUserConfig("uni_merch_terminal"),
+			"EMAIL" => getUserConfig("uni_merch_email"),
+			"TRTYPE" => ($_GET['aproba']=="yes"?'21':($_GET['anulare']=="yes"?'24':'0')),
+			"COUNTRY" => '',
+			"MERCH_GMT" => '',
+			'TIMESTAMP'   => gmdate("YmdHis"),
+			'NONCE'       => md5(microtime() . mt_rand()),
+			'BACKREF'       => getUserConfig("uni_merch_backurl"),
+		); 
+		if(intval($off['uni_rate'])>1)
+		{
+			$dataAll['RAMBURSARE']=intval($off['uni_rate']);
+		}
+	}
 
-	$p_sign = strtoupper(unicredit_mac($dataAll,getUserConfig("ws_merch_key")));
+	$p_sign = strtoupper(unicredit_mac($dataAll,getUserConfig("uni_merch_key")));
 
 ?>
 
-<form ACTION="<?php echo getUserConfig("ws_merch_action");?>" METHOD="POST" name="gateway" target="_self">
+<form ACTION="<?php echo getUserConfig("uni_merch_action");?>" METHOD="POST" name="gateway"  target="_parent">
 
 <?php
 foreach($dataAll as $k=>$v)
@@ -564,7 +673,7 @@ if($_GET['t']=="euplatesc")
 
 ?>
 
-<form ACTION="https://secure.euplatesc.ro/tdsprocess/tranzactd.php" METHOD="POST" name="gateway" target="_self">
+<form ACTION="https://secure.euplatesc.ro/tdsprocess/tranzactd.php" METHOD="POST" name="gateway"  target="_parent">
 
 <!-- begin billing details -->
     <input name="fname" type="hidden" value="<?php echo $dataBill['fname'];?>" />
@@ -601,7 +710,7 @@ if($_GET['t']=="euplatesc")
 <input TYPE="hidden" NAME="nonce" SIZE="35" VALUE="<?php echo  $dataAll['nonce'] ?>" />
 <input TYPE="hidden" NAME="fp_hash" SIZE="40" VALUE="<?php echo  $dataAll['fp_hash'] ?>" />
 
-<input type="hidden" name="ExtraData[rate]" value="<?php echo $off['optrate']?>">
+<input type="hidden" name="ExtraData[rate]" value="<?php echo $off['optrate']['VALUE']?>">
 
 <input type=submit value="Plateste">
 </form></body></html>
@@ -700,6 +809,50 @@ if($_GET['t']=="librapay")
 	?></body></html><?php
 	die();
 }
+if($_GET['t']=="crediteurope")
+{
+	$amount=getNumberFromPost($_GET['pret'],2);
+	$transactionType="Auth";
+	$rnd=microtime();
+	$oid=intval($_GET['offid']);
+	$instalment="";
+	//get offer info
+	 if(intval($off['ce_rate']['VALUE'])>1)
+	 	$instalment=intval($off['ce_rate']['VALUE']);
+	require_once("extensions/process_offer_ws.php");
+	$off=ws_process("InfoOferta",$oid);
+
+	$currencyVal = getUserConfig('crediteurope_currency');
+
+	$hashstr = getUserConfig("crediteurope_clientid") . $oid . $amount . $_CONFIG['crediteurope_ipn'] . $_CONFIG['crediteurope_ipn'] .$transactionType. $instalment .$rnd . getUserConfig('crediteurope_storekey');
+
+	$hash = base64_encode(pack('H*',sha1($hashstr)));
+
+	//prod https://paysafe.crediteurope.ro/fim/est3Dgate
+	//test https://testsanalpos.est.com.tr/servlet/est3Dgate
+	?><html><body onload="document.forms[0].submit();">
+	<form method="post" action="https://paysafe.crediteurope.ro/fim/est3Dgate" target="_parent">
+	<input type="hidden" name="clientid" value="<?php echo getUserConfig("crediteurope_clientid");?>" />
+	<input type="hidden" name="amount" value="<?php echo $amount; ?>" />
+	<input type="hidden" name="islemtipi" value="<?php echo $transactionType; ?>" />
+	<input type="hidden" name="taksit" value="<?php echo $instalment; ?>" />
+	<input type="hidden" name="oid" value="<?php echo $oid; ?>" />
+	<input type="hidden" name="okUrl" value="<?php echo getUserConfig('crediteurope_ipn'); ?>" />
+	<input type="hidden" name="failUrl" value="<?php echo getUserConfig('crediteurope_ipn'); ?>" />
+	<input type="hidden" name="rnd" value="<?php echo $rnd; ?>" />
+	<input type="hidden" name="hash" value="<?php echo $hash; ?>" />
+	<input type="hidden" name="storetype" value="<?php echo getUserConfig("crediteurope_type");?>" />
+	<input type="hidden" name="lang" value="ro" />
+	<input type="hidden" name="currency" value="<?php echo $currencyVal; ?>" />
+	<input type="hidden" name="refreshtime" value="10" />
+	<input type="hidden" name="BillToName" value="<?php echo $off['nume']['VALUE'].' '.$off['prenume']['VALUE'];?>">
+	<input type="hidden" name="BillToAddress1" value="<?php echo $off['adresa']['VALUE'].', '.$off['localitate']['VALUE'].', jud. '.$off['judet']['VALUE'];?>">
+	<input type="hidden" name="encoding" value="UTF-8">
+	</form>
+
+	</body></html><?php
+	die();
+}
 if($_GET['t']=="mobilpay")
 {
 	?><html><body onload="document.forms[0].submit();"><?php
@@ -760,7 +913,7 @@ if($_GET['t']=="mobilpay")
 	{
 	}
 	?>
-	<form name="frmPaymentRedirect" method="post" action="<?php echo $paymentUrl;?>">
+	<form name="frmPaymentRedirect" method="post" action="<?php echo $paymentUrl;?>"  target="_parent">
 	<input type="hidden" name="env_key" value="<?php echo $objPmReqCard->getEnvKey();?>"/>
 	<input type="hidden" name="data" value="<?php echo $objPmReqCard->getEncData();?>"/>
 	</form>
@@ -851,6 +1004,12 @@ case 'medicale':
 		include("extensions/info_tarifar_medicale_tarife.php");
 	else
 		include("extensions/info_tarifar_medicale.php");
+break;
+case 'rezervare':
+	if(isset($_GET['offid']) && intval($_GET['offid'])>0)
+		include("extensions/info_tarifar_rezervare_tarife.php");
+	else
+		include("extensions/info_tarifar_rezervare.php");
 break;
 case 'pad':
 	if(isset($_GET['offid']) && intval($_GET['offid'])>0)

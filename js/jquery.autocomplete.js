@@ -74,14 +74,14 @@ $.Autocompleter = function(input, options) {
 	var select = $.Autocompleter.Select(options, input, selectCurrent, config);
 	var blockSubmit;
 	// prevent form submit in opera when selecting with return key
-	$.browser.opera && $(input.form).bind("submit.autocomplete", function() {
+	$(input.form).bind("submit.autocomplete", function() {
 		if (blockSubmit) {
 			blockSubmit = false;
 			return false;
 		}
 	});
 	// only opera doesn't trigger keydown multiple times while pressed, others don't work with keypress at all
-	$input.bind(($.browser.opera ? "keypress" : "keydown") + ".autocomplete", function(event) {
+	$input.bind("keydown" + ".autocomplete", function(event) {
 		// a keypress means the input has focus
 		// avoids issue where input had focus before the autocomplete was applied
 		hasFocus = 1;
@@ -124,8 +124,7 @@ $.Autocompleter = function(input, options) {
 			case options.multiple && $.trim(options.multipleSeparator) == "," && KEY.COMMA:
 			case KEY.TAB:
 			case KEY.RETURN:
-				if(selectCurrent())
-				{
+				if( selectCurrent() ) {
 					// stop default to prevent a form submit, Opera needs special handling
 					event.preventDefault();
 					blockSubmit = true;
@@ -346,15 +345,7 @@ $.Autocompleter = function(input, options) {
 			}
 			$.getJSON($input.attr("lk")+'&lkvalue='+escape(term)+'&jsoncallback=?', function(data){
 				success(term, data.items);
-				if( data.items.length)
-				{
-					select.next();
-				}
-				else
-				{
-					select.emptyList();
-					failure(term);
-				}
+				select.next();
 			});
 		} else {
 			// if we have a failure, we need to empty the list -- this prevents the the [TAB] key from selecting the last successful match
@@ -546,19 +537,6 @@ $.Autocompleter.Select = function (options, input, select, config) {
 					maxHeight: options.scrollHeight,
 					overflow: 'auto'
 				});
-			                if($.browser.msie && typeof document.body.style.maxHeight === "undefined") {
-					var listHeight = 0;
-					listItems.each(function() {
-						listHeight += this.offsetHeight;
-					});
-					var scrollbarsVisible = listHeight > options.scrollHeight;
-                    list.css('height', scrollbarsVisible ? options.scrollHeight : listHeight );
-					if (!scrollbarsVisible) {
-						// IE doesn't recalculate width when scrollbar disappears
-						listItems.width( list.width() - parseInt(listItems.css("padding-left")) - parseInt(listItems.css("padding-right")) );
-					}
-                }
-                
             }
 		},
 		selected: function() {

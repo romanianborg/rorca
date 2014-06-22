@@ -4,7 +4,7 @@ $list=array();
 
 $list['autoturism']='autoturism/autoturism';
 $list['autoturism de teren']='autoturism de teren/autoturism';
-$list['automobil mixt']='automobil mixt/autoturism';
+$list['automobil mixt']='automobil mixt/autoutilitara';
 $list['autoutilitara']='autoutilitara/autoutilitara';
 $list['atas']='atas/remorca';
 $list['atv']='atv/motociclu';
@@ -32,7 +32,7 @@ $list['autotractor cu sa']='autotractor cu sa/alte';
 $list['buldozer']='buldozer/alte';
 $list['camion']='camion/alte';
 $list['cap tractor']='cap tractor/alte';
-$list['autovehicule transport in comun']='autovehicule transport in comun/tramvai';
+//$list['autovehicule transport in comun']='autovehicule transport in comun/tramvai';
 $list['autov.sau autosp. ptr tr. pers']='autovehicule sau autospecializate pentru transport persoane/alte';
 $list['combina']='combina/alte';
 $list['compactor']='compactor/alte';

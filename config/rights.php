@@ -89,7 +89,8 @@ function cache_getvalue($name)
 function session_setvalue($name,$value)
 {
 	global $_SESSION;
-	$name="asi".$name;
+	global $_CONFIG;
+	$name=(isset($_CONFIG['session_master'])?$_CONFIG['session_master']:'')."asi".$name;
 	$_SESSION[$name]=$value;
 	if($value=='') unset($_SESSION[$name]);
 
@@ -98,7 +99,8 @@ function session_setvalue($name,$value)
 function session_addvalue($name,$value,$nosep=false)
 {
 	global $_SESSION;
-	$name="asi".$name;
+	global $_CONFIG;
+	$name=(isset($_CONFIG['session_master'])?$_CONFIG['session_master']:'')."asi".$name;
 	if(!isset($_SESSION[$name]))
 		$_SESSION[$name]=$value;
 	else
@@ -112,7 +114,8 @@ function session_addvalue($name,$value,$nosep=false)
 function session_getvalue($name)
 {
 	global $_SESSION;
-	$name="asi".$name;
+	global $_CONFIG;
+	$name=(isset($_CONFIG['session_master'])?$_CONFIG['session_master']:'')."asi".$name;
 	if(isset($_SESSION[$name]))
 		return $_SESSION[$name];
 
@@ -327,6 +330,14 @@ function getDefaultValue($name,$control_name,$default,$reset=true)
 
 			return session_getvalue($sess);
 		}
+		if(strpos($default,"conn.")!==false)
+		{
+			global $conn;
+			strtok($default,".");
+			$sess=strtok(".");
+
+			return $conn->getvalue($sess);
+		}
 
 		$filename='extensions/defaults.php';
 		if(file_exists($filename))
@@ -349,6 +360,30 @@ function getDefaultValue($name,$control_name,$default,$reset=true)
 	$ret=html_entity_decode(session_getvalue($sess));
 	if($reset) session_setvalue($sess,'');
 	return $ret;
+}
+
+function correctPostHtmlEntites($string)
+{
+	if (! ereg("[\200-\237]", $string) and ! ereg("[\241-\377]", $string))
+		return $string;
+
+	$string = preg_replace("/([\340-\357])([\200-\277])([\200-\277])/e","'&#'.((ord('\\1')-224)*4096 + (ord('\\2')-128)*64 + (ord('\\3')-128)).';'",$string);
+	$string = preg_replace("/([\300-\337])([\200-\277])/e","'&#'.((ord('\\1')-192)*64+(ord('\\2')-128)).';'",$string);
+
+	return $string;
+
+}
+function correctPostRemoveEntites($string)
+{
+	if (! ereg("[\200-\237]", $string) and ! ereg("[\241-\377]", $string))
+		return $string;
+	$string = preg_replace("/([\340-\357])([\200-\277])([\200-\277])/e","'&#'.((ord('\\1')-224)*4096 + (ord('\\2')-128)*64 + (ord('\\3')-128)).';'",$string);
+	$string = preg_replace("/([\300-\337])([\200-\277])/e","'&#'.((ord('\\1')-192)*64+(ord('\\2')-128)).';'",$string);
+	$trans=array("&#258;"=>'A',"&#259;"=>'a',"&#350;"=>"S","&#351;"=>"s","&#354;"=>"T","&#355;"=>"t","&#160;"=>" ","&#537;"=>"s","&#539;"=>"t"
+		,"&#238;"=>"i","&#536;"=>"S","&#538;"=>"T","&#206;"=>"I","&#226;"=>"a","&#194;"=>"A","&nbsp;"=>" ","&amp;"=>"&","&amp;nbsp;"=>" ","&#8220;"=>"\"","&#8221;"=>"\"","&#214;"=>"O");
+	$string=strtr($string,$trans);
+	return $string;
+
 }
 function correctPostValue($value)
 {

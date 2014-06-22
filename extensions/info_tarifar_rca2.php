@@ -76,10 +76,10 @@ cache_addvalue("finalhead",ob_get_contents());ob_end_clean();
 				<div class="icon">&nbsp;</div>
 
 <div class="row">
-					<div class="span4">
+					<div class="span5">
 
 <div class="input-append input-prepend">
- <span class="add-on indicatie">Data valabilitate</span>
+ <span class="add-on indicatie" style="width:190px;">Data intrarii in valabilitate</span>
 <input class="span2 input-small"  type="text" value="<?php echo date('d.m.Y',time()+60*60*24);?>" size="9" id="datavalabilitate" name="datavalabilitate" validate="required.date" validators="change" class="validated">
 <span class="add-on"><a href="#" onclick="global_cal.select(document.forms['work'].datavalabilitate,'datavalabilitate_sel','dd.MM.yyyy'); return false;" name="datavalabilitate_sel" id="datavalabilitate_sel"><img src="images/calendar.png" border="0" alt="Calendar"></a></span>
 </div>
@@ -278,7 +278,7 @@ cache_addvalue("finalhead",ob_get_contents());ob_end_clean();
 					</div>
 
 <div class="row">
-<div class="span8 offset1">
+<div class="span8 offset1">% procent completare date
 	<br><div class="progress"><div class="bar" style="width: 10%;"></div></div>
 </div>
 </div>
@@ -299,8 +299,8 @@ cache_addvalue("finalhead",ob_get_contents());ob_end_clean();
 					<div class="span10">
 <ul class="nav nav-tabs" id=proprietarmeniu>
 	<li class="span1">&nbsp;</li>
-	<li class="active"><a href="#" onclick="$('#proprietarmeniu li').removeClass('active');$(this).parent().addClass('active');$('select[name=tipproprietar]').val('pf').change();return false;">Persoana Fizica</a></li>
-	<li><a href="#" onclick="$('#proprietarmeniu li').removeClass('active');$(this).parent().addClass('active');$('select[name=tipproprietar]').val('pj').change();return false;">Persoana Juridica</a></li>
+	<li class="active"><a href="#" onclick="$('#proprietarmeniu li').removeClass('active');$(this).parent().addClass('active');$('select[name=tipproprietar]').val('pf').change();return false;">Persoana Fizica (PF)</a></li>
+	<li><a href="#" onclick="$('#proprietarmeniu li').removeClass('active');$(this).parent().addClass('active');$('select[name=tipproprietar]').val('pj').change();return false;">Persoana Juridica (PJ)</a></li>
 	<li><a href="#" onclick="$('#proprietarmeniu li').removeClass('active');$(this).parent().addClass('active');$('select[name=tipproprietar]').val('leasing').change();$('#utilizatormeniu li').removeClass('active');return false;">Masina e in leasing</a></li>
 </ul>
 <select validate="for.leasing.show.id.tarifarofertaleasing~revalidate.tiputilizator~for.pf.show.id.tarifarofertapf~for.pj.show.id.tarifarofertapj~for.pf|pj.show.id.utilizatorvehicul~required.yes" validators="change" class="validated validateundo" name="tipproprietar" style="position:absolute;left:-1500px;">
@@ -760,7 +760,7 @@ cache_addvalue("finalhead",ob_get_contents());ob_end_clean();
 
 <div class="row">
 <div class="span4 offset5">
-			<button class="btn btn-large btn-primary" onclick="if(valideazaFormaPentruSalvare($('form[name=work]'),punemarcaje)) $('form[name=work]').submit();return false;"><i class="icon-ok icon-white">&nbsp;</i> Vezi tarifele</button>
+			<button class="btn btn-large btn-primary" onclick="if(valideazaFormaPentruSalvare($('form[name=work]'),punemarcaje)) if(confirm('Atentie! Pentru ca polita dumneavoastra sa fie valabila, toate datele introduse trebuie sa fie corecte si conform cu talonul sau cartea masinii. Va rugam verificati inca o data inainte de a trece la pasul urmator. OK?')) $('form[name=work]').submit();return false;"><i class="icon-ok icon-white">&nbsp;</i> Vezi tarifele</button>
 </div>
 </div>
 

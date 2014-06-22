@@ -10,7 +10,7 @@ body.backbody {background-color:white;}
 
 #steps .step-3 {float:left; background:url('design2/step-3.png') no-repeat; width:232px; height:58px; padding-left: 30px; padding-top:10px; margin-left:-16px;}
 
-.box {width:820px; padding-left:25px; padding-top:35px; background:url('design2/box.png') top no-repeat; margin:0 auto;}
+.box {width:820px; padding-left:25px; padding-top:35px; background:url('design2/box.png') top repeat-y; margin:0 auto;}
 
 .box-footer {width:845px; height:30px; background:url('design2/box-footer.png') bottom no-repeat; margin:0 auto; }
 
@@ -51,5 +51,9 @@ table.worktarife th
 {
 display:block;
 }
-
+.container span.add-on,.container span.indicatie
+{
+font-size: 15px;
+font-weight: bold;
+}
 </style>

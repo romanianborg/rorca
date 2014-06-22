@@ -6,6 +6,7 @@ require_once("config/blockenter.php");
 require_once("config/autocomplete.php");
 require_once("config/jquery.php");
 require_once("config/sheet.php");
+jQueryPluginRequired("jquery.form");
 ob_start();?><script>
 document.globalSlotReloaded="";
 document.globalSlotLoading="";
@@ -384,7 +385,7 @@ function iframeLoaded() {
 }
 function showGlobalError(error)
 {
-	if(alerterror) alerterror(error);
+	if(typeof(alerterror)!="undefined") alerterror(error);
 	else alert(error);
 }
 function redirectSubmits(fo)
@@ -400,16 +401,7 @@ function redirectSubmits(fo)
 	slot=getDivName(fo.attr("action"));
 	if(fo.attr("target")!=undefined && fo.attr("target")!='')
 	{
-		if($("iframe[name="+fo.attr("target")+"]").attr("class")=="loaditin")
-		{
-			//we need another iframe here
-		}
-		else
-		{
-			$("iframe[name="+fo.attr("target")+"]").attr("class","loaditin");
-			if(tinyMCE) tinyMCE.triggerSave();
-			return true;
-		}
+		return false;
 	}
 	if(slot!="")
 	{
@@ -417,33 +409,11 @@ function redirectSubmits(fo)
 		//loding progress
 		if(document.globalSlotLoading!="") eval(""+document.globalSlotLoading+"('"+slot+"');");
 		else $("div[id="+slot+"]").prepend('<img src="images/loading.gif">');
+
 		//create new target
 		if(tinyMCE) tinyMCE.triggerSave();
 		var newaction_=getUrlForSlotAndAjax(fo.attr("action"));
 		fo.attr("action",newaction_);
-
-		//check for a free iframe;
-		if($("iframe.freeloaditin").size()>0)
-		{
-			$("iframe.freeloaditin").slice(0,1).each(function(){
-				$(this).attr("class","loaditin");
-				fo.attr("target",$(this).attr("name"));
-			});
-		}
-		else{
-			ourDate = new Date();
-			id='iframehidden'+ourDate.getTime();
-			fo.attr("target",id);
-
-			//create iframe and get load event
-			var $io = $('<iframe slotname="'+slot+'" class="loaditin" id="' + id + '" name="' + id + '" />');
-			var io = $io[0];
-			var op8 = $.browser.opera && window.opera.version() < 9;
-			if ($.browser.msie || op8) io.src = 'javascript:false;document.write("");';
-			$io.css({ position: 'absolute', top: '-1000px', left: '-1000px' });
-			$io.appendTo('body');
-			io.attachEvent ? io.attachEvent('onload', iframeLoaded) : io.addEventListener('load', iframeLoaded, false);
-		};
 		return true;
 	}
 	if(tinyMCE) tinyMCE.triggerSave();
@@ -474,9 +444,29 @@ function reloadLinks(slot)
 					eval("funt=function(f){"+$(this).attr("onsubmit").substr(24)+"return true;}");
 					$(this).attr("onsubmit","");
 				}
-				$(this).unbind("submit").submit(function(){
-					if((funt==undefined) || funt($(this)[0]))
-						return redirectSubmits($(this));
+				else
+				if($(this).attr("onsubmit").substr(0,33)=="javascript:var f;f=this.elements;")
+				{
+					eval("funt=function(f){f=f.elements;"+$(this).attr("onsubmit").substr(33)+"return true;}");
+					$(this).attr("onsubmit","");
+				}
+				$("input[type=submit]",this).click(formSubmittingElement);
+				$(this).unbind("submit").submit(function(e){
+					if((typeof(funt)=="undefined") || funt($(this)[0]))
+					{
+						var ret=redirectSubmits($(this));
+						if(ret)
+						{
+							$(this).ajaxSubmit({success:function(d){
+								$("#evaluator").html(d);
+								eval($("#evaluator textarea").val());
+							}}); 
+							return false;
+						}
+						if(!$(this).attr("callmefirst")) return true;
+						if($(this).attr("target")) return true;
+						return false;
+					}
 					return false;
 				})
 			});
@@ -511,9 +501,29 @@ function reloadLinks(slot)
 					eval("funt=function(f){"+$(this).attr("onsubmit").substr(24)+"return true;}");
 					$(this).attr("onsubmit","");
 				}
-				$(this).unbind("submit").submit(function(){
-					if((funt==undefined) || funt($(this)[0]))
-						return redirectSubmits($(this));
+				else
+				if($(this).attr("onsubmit").substr(0,33)=="javascript:var f;f=this.elements;")
+				{
+					eval("funt=function(f){f=f.elements;"+$(this).attr("onsubmit").substr(33)+"return true;}");
+					$(this).attr("onsubmit","");
+				}
+				$("input[type=submit]",this).click(formSubmittingElement);
+				$(this).unbind("submit").submit(function(e){
+					if((typeof(funt)=="undefined") || funt($(this)[0]))
+					{
+						var ret=redirectSubmits($(this));
+						if(ret)
+						{
+							$(this).ajaxSubmit({success:function(d){
+								$("#evaluator").html(d);
+								eval($("#evaluator textarea").val());
+							}}); 
+							return false;
+						}
+						if(!$(this).attr("callmefirst")) return true;
+						if($(this).attr("target")) return true;
+						return false;
+					}
 					return false;
 				})
 			});
@@ -540,8 +550,13 @@ function reloadLinks(slot)
 		if(myNicEditor)
 		{
 			$("textarea[mce_editable=true]").each(function(){
-				myNicEditor.panelInstance($(this).attr("id"));
 				$(this).attr("mce_editable","false");
+				var instance=myNicEditor.panelInstance($(this).attr("id"));
+				instance.addEvent("blur",function(){
+					$.each(instance.nicInstances,function(idx,el){
+						el.saveContent();
+					});
+				});
 			});
 		}
 	}
@@ -567,12 +582,13 @@ function reloadAutocomplete()
 {
 	var mm="no";
 	$("input.autocompletefield").each(function(){
-		$(this).autocomplete("blank.php?lk=no", {
+		$(this).unautocomplete().autocomplete("blank.php?lk=no", {
 		minChars: $(this).attr("minChars")==""?1:$(this).attr("minChars"),
 		width: 310,
 		matchContains: "word",
 		autoFill: true,
 		selectFirst: false,
+		takeparas: $(this).attr("takeparas"),
 		mustMatch: $(this).attr("mustmatch")=="yes"?true:false,
 		formatItem: function(row, i, max) {
 			if(!row.faravaloare) row.showText=row.name.replace("&amp;","&");else row.showText='';
@@ -601,7 +617,7 @@ function reloadAutocomplete()
 						case 'unchecked': f[item.field].checked=false;
 						break;
 						default:
-							$(f[item.field]).val(item.value);
+							$(f[item.field]).val(item.value).change();
 							var nextdel=false;
 							$("input.autocompletecase").each(function(){
 								var rlk=$(this).attr("lk");
@@ -661,17 +677,56 @@ function reloadAutocomplete()
 					if(item.other) $(item.other).html(item.value);
 				});
 			}
+			if(cl && cl.niceditor)
+			{
+				$.each(cl.niceditor, function(i,item){
+					nicEditors.findEditor(item.field).setContent(item.value);
+				});
+			}
 			if(shouldBlank) {$(this).val('');}
 	});
 	});
 }
+function formSubmittingElement(e) {
+    /*jshint validthis:true */
+    var target = e.target;
+    var $el = $(target);
+    if (!($el.is("[type=submit],[type=image]"))) {
+        // is this a child element of the submit el?  (ex: a span within a button)
+        var t = $el.closest('[type=submit]');
+        if (t.length === 0) {
+            return;
+        }
+        target = t[0];
+    }
+    var form = e.target.form;
+    form.clk = target;
+    if (target.type == 'image') {
+        if (e.offsetX !== undefined) {
+            form.clk_x = e.offsetX;
+            form.clk_y = e.offsetY;
+        } else if (typeof $.fn.offset == 'function') {
+            var offset = $el.offset();
+            form.clk_x = e.pageX - offset.left;
+            form.clk_y = e.pageY - offset.top;
+        } else {
+            form.clk_x = e.pageX - target.offsetLeft;
+            form.clk_y = e.pageY - target.offsetTop;
+        }
+    }
+    // clear form vars
+    //setTimeout(function() { form.clk = form.clk_x = form.clk_y = null; }, 100);
+}
 function alerterror(err){
 alert(err);
 $("#loading").hide();
+$("#overlay").hide();
 }
 </script>
 <?php cache_addvalue("head",ob_get_contents());ob_end_clean();
 ob_start()
-?><img src='images/loading.gif' style="position:absolute;top:-500px;"><?php
+?><img src='images/loading.gif' style="position:absolute;top:-500px;">
+<div id=evaluator style="position:absolute;top:-500px;left:-500px;"></div>
+<?php
 cache_addvalue("afterbody",ob_get_contents());ob_end_clean();
 ?>

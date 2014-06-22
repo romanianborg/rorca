@@ -144,38 +144,46 @@ cod postal&nbsp;<input type="number" onchange="javascript:textareaImplode('im_ad
 <div class="workstep"><div class="biglabel"><img src="images/ok.png" border=0> CE ASIGURI</div>
 </div>
 
-<div class="workstep"><div class=worklabel>Suma asigurata</div><div class=workfields><input type="hidden" name="politasupliment" value="1"><input type="number" name="sumaasigurata" value="20000" size=6 class="validated" validate="call.valideazapad" style="width:100px;"> EURO
+<div class="workstep"><div class=worklabel>Tip asigurare</div><div class=workfields>
+<select name="produsdorit" class="validated" validate="for.pad+fac|fac.show.class.sumeasiguratefac">
+	<option value="pad+fac">Obligatorie + Facultativa</option>
+	<option value="pad">Obligatorie</option>
+	<option value="fac">Facultativa</option>
+</select>
 </div></div>
 
-<div class="workstep"><div class=worklabel>Rasp. Civila</div><div class=workfields><input type="number" name="sa_rc" value="" size=6 style="width:100px;"> EURO
+<div class="workstep sumeasiguratefac"><div class=worklabel>Suma asigurata</div><div class=workfields><input type="hidden" name="politasupliment" value="1"><input type="number" name="sumaasigurata" value="20000" size=6 class="validated" validate="call.valideazapad" style="width:100px;"> EURO
 </div></div>
 
-<div class="workstep"><div class=worklabel>Furt</div><div class=workfields><input type="number" name="sa_furt" value="" size=6 style="width:100px;"> EURO
+<div class="workstep sumeasiguratefac"><div class=worklabel>Rasp. Civila</div><div class=workfields><input type="number" name="sa_rc" value="" size=6 style="width:100px;"> EURO
 </div></div>
 
-<div class="workstep"><div class=worklabel>Centrala/Conducta</div><div class=workfields><input type="number" name="sa_apa" value="" size=6 style="width:100px;"> EURO
+<div class="workstep sumeasiguratefac"><div class=worklabel>Furt</div><div class=workfields><input type="number" name="sa_furt" value="" size=6 style="width:100px;"> EURO
 </div></div>
 
-<div class="workstep"><div class=worklabel>Bunuri</div><div class=workfields><input type="number" name="sa_bunuri" value="" size=6 style="width:100px;"> EURO
+<div class="workstep sumeasiguratefac"><div class=worklabel>Apa/Conducta</div><div class=workfields><input type="number" name="sa_apa" value="" size=6 style="width:100px;"> EURO
 </div></div>
 
-<div class="workstep"><div class=worklabel>Obiecte casabile</div><div class=workfields><input type="number" name="sa_bc" value="" size=6 style="width:100px;"> EURO
+<div class="workstep sumeasiguratefac"><div class=worklabel>Bunuri</div><div class=workfields><input type="number" name="sa_bunuri" value="" size=6 style="width:100px;"> EURO
 </div></div>
 
-<div class="workstep"><div class=worklabel>Accidente:</div><div class=workfields><input type="number" name="sa_acc" value="" size=6 style="width:100px;"> EURO
+<div class="workstep sumeasiguratefac"><div class=worklabel>Obiecte casabile</div><div class=workfields><input type="number" name="sa_bc" value="" size=6 style="width:100px;"> EURO
 </div></div>
 
-<div class="workstep"><div class=worklabel>Fenomene Electrice:</div><div class=workfields><input type="number" name="sa_fe" value="" size=6 style="width:100px;"> EURO
+<div class="workstep sumeasiguratefac"><div class=worklabel>Accidente:</div><div class=workfields><input type="number" name="sa_acc" value="" size=6 style="width:100px;"> EURO
 </div></div>
 
-<div class="workstep"><div class=worklabel>Nr rate</div><div class=workfields><select name="nrrate"><option value="1">1</option><option value="2">2</option><option value="4">4</option></select>
+<div class="workstep sumeasiguratefac"><div class=worklabel>Fenomene Electrice:</div><div class=workfields><input type="number" name="sa_fe" value="" size=6 style="width:100px;"> EURO
 </div></div>
 
-<div class="workstep"><div class=worklabel>Nr ani</div><div class=workfields><select name="nrani"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+<div class="workstep sumeasiguratefac"><div class=worklabel>Nr rate</div><div class=workfields><select name="nrrate"><option value="1">1</option><option value="2">2</option><option value="4">4</option></select>
+</div></div>
+
+<div class="workstep sumeasiguratefac"><div class=worklabel>Nr ani</div><div class=workfields><select name="nrani"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
 </div></div>
 
 <div class="workstep"><div class=worklabel>Valabil din</div><div class=workfields><input class="validated" validators="change" validate="revalidate.p_per~required.date" type=text name="datavalabilitate" id="datavalabilitate" size="9" value="<?php echo showDate(date("Y-m-d",time()+24*60*60));?>">
-	<a id="datavalabilitate_sel" name="datavalabilitate_sel" onclick="global_cal.select(document.forms['work'].datavalabilitate,'datavalabilitate_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
+	<a class="cdateselect" id="datavalabilitate_sel" name="datavalabilitate_sel" onclick="global_cal.select(document.forms['work'].datavalabilitate,'datavalabilitate_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
 </div></div>
 
 </div><div class="work_col2">
@@ -216,7 +224,7 @@ nr&nbsp;<input type="number" onchange="javascript:textareaImplode('pf_adresa');"
 ap&nbsp;<input type="text" onchange="javascript:textareaImplode('pf_adresa');" label="ap" class="pf_adresa_implode" name="pf_adresa_ap" size="1" value="" style="width:30px;">
 , cod postal&nbsp;<input type="number" onchange="javascript:textareaImplode('pf_adresa');" label="zip" class="adresa_implode validated" name="pf_adresa_zip" size="3" value="" validate="if.p_soc.omniasig.required.size.6" style="width:70px;">
 </div></div>
-</div>
+
 
 <div id="prop_adresa" style="display:none;">
 <div class="workstep"><div class=worklabel>Judet:</div><div class=workfields><select name="pf_judet" class="validated" validate="notfor.bucuresti.show.id.pf_locspan~for.bucuresti.show.id.pf_sectspan~call.pregatesteAutocomplete.pf_judet.pf_localitate.pf_sector~required.yes">
@@ -279,6 +287,7 @@ ap&nbsp;<input type="text" onchange="javascript:textareaImplode('pf_adresa');" l
 	</select>
 	</div></div>
 </div>
+</div>
 
 </div><!-- pf -->
 
@@ -309,7 +318,7 @@ nr&nbsp;<input type="text" onchange="javascript:textareaImplode('pj_adresa');" l
 ap&nbsp;<input type="text" onchange="javascript:textareaImplode('pj_adresa');" label="ap" class="pj_adresa_implode" name="pj_adresa_ap" size="1" value="" style="width:30px;">
 , cod postal&nbsp;<input type="number" onchange="javascript:textareaImplode('pj_adresa');" label="zip" class="adresa_implode validated" name="pj_adresa_zip" size="3" value="" validate="if.p_soc.omniasig.required.size.6"  style="width:40px;">
 </div></div>
-</div>
+
 
 <div id="prop_pj_adresa" style="display:none;">
 <div class="workstep"><div class=worklabel>Judet:</div><div class=workfields><select name="pj_judet" class="validated" validate="notfor.bucuresti.show.id.pj_locspan~for.bucuresti.show.id.pj_sectspan~call.pregatesteAutocomplete.pj_judet.pj_localitate.pj_sector~required.yes">
@@ -372,13 +381,13 @@ ap&nbsp;<input type="text" onchange="javascript:textareaImplode('pj_adresa');" l
 		</select>
 	</div></div>
 </div>
+</div>
 
 </div><!-- pj -->
 </div><!-- col2 -->
 
 <input type=hidden name="p_per" value="12" class="validated" validate="addmonths.panalavalabilitate.datavalabilitate">
 <input type=hidden name="panalavalabilitate" id="panalavalabilitate" value="">
-<input type=hidden name="emite"  value="bonus">
 
 </div>
 

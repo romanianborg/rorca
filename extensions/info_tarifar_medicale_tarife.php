@@ -10,11 +10,6 @@
 <?php
 	require_once("extensions/process_offer_ws.php");
 	$date=ws_process("InfoOferta",intval($_GET['offid']));
-	$platacard='';
-	if(getUserConfig("unicredit")=="yes"){$platacard='unicredit';}
-	if(getUserConfig("platalibra")=="yes"){$platacard='libra';}
-	if(getUserConfig("euplatesc")=="yes"){$platacard='euplatesc';}
-	if(getUserConfig("mobilpay")=="yes"){$platacard='mobilpay';}
 
 ?>
 <div class="work_col1">
@@ -33,7 +28,7 @@
 <div class="biglabel"><img src="images/ok.png" border=0> Asigurator ales</div>
 
 <div class="workstep"><div class="worklabel">Tarif ales:</div><div class=workfields>
-<input name="tarif" value="" class="validated" validate="required.yes" size="6" readonly=yes type="text"> RON
+<input name="tarif" value="" class="validated" validate="required.yes" size="6" type="text" readonly=readonly> RON
 </div></div>
 <div id="myremedy""></div>
 
@@ -50,16 +45,27 @@
 
 
 <div class="workstep"><div class="worklabel">Mod Plata:</div><div class=workfields>
-<select name="tipplata" class="validated validateundo" validate="for.libra|mobilpay|unicredit|euplatesc|ramburs|op.show.id.emiteredate~for.libra|euplatesc|unicredit|mobilpay.set.textbutton.Plateste online~for.ramburs.set.textbutton.Comanda asigurarea~for.op.set.textbutton.Trimite decont~for.contact.set.textbutton.Trimite mail~for.libra.show.id.infolibrapay~for.euplatesc.show.id.infoeuplatesc~for.unicredit.show.id.infounicredit~for.mobilpay.show.id.infomobilpay~required.yes">
+<select name="tipplata" class="validated validateundo" validate="for.libra|mobilpay|unicredit|euplatesc|crediteurope|ramburs|op.show.id.emiteredate~for.libra|euplatesc|unicredit|crediteurope|mobilpay.set.textbutton.Plateste online~for.ramburs.set.textbutton.Comanda asigurarea~for.op.set.textbutton.Trimite decont~for.contact.set.textbutton.Trimite mail~for.libra.show.id.infolibrapay~for.euplatesc.show.id.infoeuplatesc~for.unicredit.show.id.infounicredit~for.mobilpay.show.id.infomobilpay~for.crediteurope.show.id.infocrediteurope~required.yes">
 	<option value="contact" selected>Vreau sa fiu contactat</option>
 <?php
-	if($platacard!=""){
+	if(getUserConfig("unicredit")=="yes"){?>
+	<option value="unicredit">Plata Card prin Banca Transilvania</option>
+<?php	}
+	if(getUserConfig("platalibra")=="yes"){?>
+	<option value="libra">Plata Card prin LibraPay</option>
+<?php	}
+	if(getUserConfig("euplatesc")=="yes"){?>
+	<option value="euplatesc">Plata Card prin EuPlatesc.ro</option>
+<?php	}
+	if(getUserConfig("mobilpay")=="yes"){?>
+	<option value="mobilpay">Plata Card prin Mobilpay</option>
+<?php	}
+	if(getUserConfig("crediteurope")=="yes"){?>
+	<option value="crediteurope">Plata Card prin Credit Europe</option>
+<?php	}
+
 ?>
-	<option value="<?php echo $platacard;?>">Plata online cu cardul</option>
-<?php
-	}
-?>
-	<option value="op">Plata cu OP</option>
+	<option value="op">Plata pe site-ul bancii cu token</option>
 	<option value="ramburs">Plata ramburs</option>
 </select>
 </div></div>
@@ -68,9 +74,59 @@
 	if(getUserConfig("unicredit")=="yes"){
 ?>
 <div id="infounicredit" style="display:none;">
-<div class="workstep"><div class=workfields style="width:295px;height:auto;">
-	<img src="images/unicreditcl.jpeg" border="0">
+<div class="workstep"><div class=workfields style="width:295px;height:auto;text-align:center;">
+	<!--<img src="images/unicreditcl.jpeg" border="0">-->
 	<br>Dupa ce introduceti si emailul veti fi redirect pe site-ul bancii pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.
+</div></div>
+</div>
+<?php
+	}
+?>
+<?php
+	if(getUserConfig("platalibra")=="yes"){
+?>
+<div id="infolibrapay" style="display:none;">
+<div class="workstep"><div class=workfields style="width:295px;height:auto;text-align:center;">
+	<img src="images/cards.jpg" border="0" height=29 width=295>
+	<img src="images/librapay.png" border="0" height=79 width=295>
+	<br>Dupa ce introduceti si emailul veti fi redirect pe site-ul bancii pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.
+</div></div>
+</div>
+<?php
+	}
+?>
+<?php
+	if(getUserConfig("mobilpay")=="yes"){
+?>
+<div id="infomobilpay" style="display:none;">
+<div class="workstep"><div class=workfields style="width:295px;height:auto;">
+	<img src="images/mobilpay.gif" border="0">
+	<br>Dupa ce introduceti si emailul veti fi redirect pe site-ul MobilPay.ro pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.
+</div></div>
+</div>
+<?php
+	}
+?>
+<?php
+	if(getUserConfig("crediteurope")=="yes"){
+?>
+<div id="infocrediteurope" style="display:none;">
+<div class="workstep"><div class=workfields style="width:295px;height:auto;">
+
+<img src="images/crediteurope.png" border="0"><br>
+Optiune plata in rate: 
+<select name="ce_rate">
+	<option value="" selected>Integral</option>
+	<option value="2">2 rate fara dobanda</option>
+	<option value="3">3 rate fara dobanda</option>
+	<option value="4">4 rate fara dobanda</option>
+	<option value="6">6 rate fara dobanda</option>
+	<option value="12">12 rate fara dobanda</option>
+</select>
+<br>
+	Dupa ce introduceti si emailul veti fi redirect pe site-ul Credit Europe pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.<br>
+
+
 </div></div>
 </div>
 <?php
@@ -80,9 +136,8 @@
 	if(getUserConfig("euplatesc")=="yes"){
 ?>
 <div id="infoeuplatesc" style="display:none;">
-<div class="workstep"><div class=workfields style="width:295px;height:auto;">
+<div class="workstep"><div class=workfields style="width:295px;height:auto;text-align:center;">
 	<img src="images/euplatesc.gif" border="0">
-
 <br>
 Optiune plata in rate:<br>
 <select name="optrate">
@@ -142,48 +197,22 @@ Optiune plata in rate:<br>
 <?php
 	}
 ?>
-<?php
-	if(getUserConfig("mobilpay")=="yes"){
-?>
-<div id="infomobilpay" style="display:none;">
-<div class="workstep"><div class=workfields style="width:295px;height:auto;">
-	<img src="images/mobilpay.gif" border="0">
-	<br>Dupa ce introduceti si emailul veti fi redirect pe site-ul MobilPay.ro pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.
-</div></div>
-</div>
-<?php
-	}
-?>
-<?php
-	if(getUserConfig("platalibra")=="yes"){
-?>
-<div id="infolibrapay" style="display:none;">
-<div class="workstep"><div class=workfields style="width:295px;height:auto;">
-	<img src="images/cards.jpg" border="0" height=29 width=295>
-	<img src="images/librapay.png" border="0" height=79 width=295>
-	<br>Dupa ce introduceti si emailul veti fi redirect pe site-ul bancii pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.
-</div></div>
-</div>
-<?php
-	}
-?>
-
 <div id="emiteredate" style="display:none;">
 
-<div class="workstep"><div class=workfields style="text-align:right;height:120px;"><textarea name="prop_adresa" style="display:none;"></textarea>
+<div class="workstep"><div class=workfields style="text-align:right;height:110px;"><textarea name="prop_adresa" style="display:none;"></textarea>
 Strada: <input type="text" onchange="javascript:textareaImplode('prop_adresa');" label="str" class="prop_adresa_implode validated" validators="change.click" validate="required.yes" name="prop_adresa_str" size="28" value="" title="Asa cum apare in talon"><br>
 nr&nbsp;<input type="number" onchange="javascript:textareaImplode('prop_adresa');" label="nr" class="prop_adresa_implode validated" validators="change.click" validate="required.yes" name="prop_adresa_nr" size="3" value="" style="width:40px;">
 ,bl&nbsp;<input type="text" onchange="javascript:textareaImplode('prop_adresa');" label="bl" class="prop_adresa_implode" name="prop_adresa_bl" size="1" value="" style="width:30px;">
 ,sc&nbsp;<input type="text" onchange="javascript:textareaImplode('prop_adresa');" label="sc" class="prop_adresa_implode" name="prop_adresa_sc" size="1" value="" style="width:30px;">
 ,et&nbsp;<input type="text" onchange="javascript:textareaImplode('prop_adresa');" label="et" class="prop_adresa_implode" name="prop_adresa_et" size="1" value="" style="width:30px;">
 <br>ap&nbsp;<input type="text" onchange="javascript:textareaImplode('prop_adresa');" label="ap" class="prop_adresa_implode" name="prop_adresa_ap" size="1" value="" style="width:30px;">
-cod postal&nbsp;<input type="text" onchange="javascript:textareaImplode('prop_adresa');" label="zip" class="adresa_implode" name="prop_adresa_zip" size="6" value="" style="width:70px;">
+cod postal&nbsp;<input type="text" onchange="javascript:textareaImplode('prop_adresa');" label="zip" class="adresa_implode" name="prop_adresa_zip" size="6" value="" style="width:60px;">
 </div></div>
 
 <?php
 	if(getUserConfig("platalibra")=="yes"){
 ?>
-<div class="workstep"><div class="worklabel">Serie CI/Buletin</div><div class=workfields><input type="text" name="pf_ciserie" value="" size="2">-<input type="number" name="pf_cinumar" value="" size="7" style="width:110px;">
+<div class="workstep"><div class="worklabel">Serie CI/Buletin</div><div class=workfields><input type="text" name="pf_ciserie" value="" size="2" style="width:34px;">-<input type="number" name="pf_cinumar" value="" size="7" style="width:90px;">
 </div></div>
 
 <?php

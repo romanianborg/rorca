@@ -11,11 +11,11 @@
 </div>
 
 <div class="workstep"><div class="worklabel">Pleci in data de</div><div class=workfields><input class="validated" validators="change" validate="call.calculeazaNrZile~required.date" type=text name="datavalabilitate" id="datavalabilitate" size="9" value="<?php echo date('d.m.Y',time()+60*60*24);?>">
-	<a id="datavalabilitate_sel" name="datavalabilitate_sel" onclick="global_cal.select(document.forms['work'].datavalabilitate,'datavalabilitate_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
+	<a class="cdateselect" id="datavalabilitate_sel" name="datavalabilitate_sel" onclick="global_cal.select(document.forms['work'].datavalabilitate,'datavalabilitate_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
 </div></div>
 
 <div class="workstep"><div class="worklabel">Pana la</div><div class=workfields><input class="validated" validators="change" validate="call.calculeazaNrZile~required.date" type=text name="panalavalabilitate" id="panalavalabilitate" size="9" value="">
-	<a id="panalavalabilitate_sel" name="panalavalabilitate_sel" onclick="global_cal.select(document.forms['work'].panalavalabilitate,'panalavalabilitate_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
+	<a class="cdateselect" id="panalavalabilitate_sel" name="panalavalabilitate_sel" onclick="global_cal.select(document.forms['work'].panalavalabilitate,'panalavalabilitate_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
 </div></div>
 
 <div class="workstep"><div class="worklabel">Numar de zile</div><div class=workfields><input type="number" name="nrzile" value="" size=4 class="validated" validate="adddays.panalavalabilitate.datavalabilitate~required.yes">

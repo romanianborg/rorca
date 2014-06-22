@@ -1,7 +1,15 @@
 <?php ob_start();
-if(!function_exists("jQueryPluginRequired"))
+if(getUserConfig("use_locale_jquery")=="yes")
 {
-?><script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+?><script type="text/javascript" src="js/jquery.js?1"></script><?php
+}
+else
+{
+?>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<?php
+}
+?>
 <script type="text/javascript">
 function textareaImplode(name)
 {
@@ -30,7 +38,7 @@ function jQueryPluginRequired($plugin)
 	{
 		cache_addvalue("jquery_plugin_".$plugin,"loaded");
 		ob_start();?>
-		<script type="text/javascript" src="js/<?php echo $plugin;?>.js"></script>
+		<script type="text/javascript" src="js/<?php echo $plugin;?>.js?1"></script>
 		<?php
 		cache_addvalue("head",ob_get_contents());ob_end_clean();
 		if(file_exists("js/".$plugin.".css"))
@@ -41,6 +49,5 @@ function jQueryPluginRequired($plugin)
 			cache_addvalue("finalhead",ob_get_contents());ob_end_clean();
 		}
 	}
-}
 }
 ?>

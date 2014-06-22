@@ -3,7 +3,8 @@
 <html>
 <HEAD>
 <?php if(cache_getvalue("title")!=""){?><TITLE><?php echo cache_getvalue("title");cache_setvalue("title","");?></TITLE><?php }?>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<meta charset="UTF-8">
 <META NAME="Rating" CONTENT="<?php echo cache_getvalue("rating");cache_setvalue("rating","");?>" />
 <meta name="robots" content="all" />
 <meta name="AUTHOR" type="email" content="<?php echo cache_getvalue("author");cache_setvalue("author","");?>" />

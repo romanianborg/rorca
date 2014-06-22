@@ -74,6 +74,26 @@
 		  			continue;
 		  		}
 		  		else
+		  		if($wk=="produsdorit")
+		  		{
+		  			switch($wv)
+		  			{
+		  				case 'pad+fac':
+		  					$xml.='<emitepad>astrapaid</emitepad>';
+		  					$xml.='<emite>bonusold</emite>';
+		  				break;
+		  				case 'pad':
+		  					$xml.='<emitepad>astrapaid</emitepad>';
+		  					$xml.='<emite>fara</emite>';
+		  				break;
+		  				case 'fac':
+		  					$xml.='<emitepad>fara</emitepad>';
+		  					$xml.='<emite>doarbonus</emite>';
+		  				break;
+		  			}
+					$xml.='<'.$wk.'>'.correctPostValue($_POST[$wk]).'</'.$wk.'>';
+		  		}
+		  		else
 		  		if($wk=="panalavalabilitate")
 		  		{
 					$xml.='<'.$wk.'>'.getDateForMysql($_POST['panalavalabilitate'],getLT('dateformat')).'</'.$wk.'>';
@@ -139,6 +159,19 @@
 				<pretcalatorie>'.correctPostValue($_POST['pretcalatorie']).'</pretcalatorie>
 				<bagaje>'.correctPostValue($_POST['bagaje']).'</bagaje>
 ';
+		  break;
+		  case 'rezervare':
+		  	foreach($_POST as $wk=>$wv)
+		  	{
+		  		if($wk=="tipoferta" || $wk=="datavalabilitate"  || $wk=="emailclient")
+		  		{
+		  			continue;
+		  		}
+		  		else
+		  		{
+					$xml.='<'.$wk.'>'.correctPostValue($_POST[$wk]).'</'.$wk.'>';
+				}
+		  	}
 		  break;
 		  case 'rca':
 		  default:
@@ -405,6 +438,49 @@
 							case 'rca':
 							default:
 								//print_r($soc);
+								if(getUserConfig('color_design')=="2")
+								{
+								?><table class="worktarife" cellpadding=0 cellspacing=0 border="1">
+								<tr><th align=right style="font-size: 16px;color:black;" rowspan=2>Asigurator<th align=right style="font-size: 16px;color:black;" colspan=2>6 luni<th align=right style="font-size: 16px;color:black;"  colspan=2>1 an
+								<tr><th align=right style="font-size: 16px;color:black;">In rate
+									<th align=right style="font-size: 16px;color:black;">Integral
+									<th align=right style="font-size: 16px;color:black;border-left: solid 2px #eee;">In rate
+									<th align=right style="font-size: 16px;color:black;">Integral
+								<?php
+								foreach($soc as $k=>$v)
+								{
+									if($v['6']<2) continue;
+									if($v['12']<2) continue;
+
+									$oldtarif6='';
+									$oldtarif12='';
+									if(getUserConfig("reduceretarife")!="" || getUserConfig("reduceretarife_".$v['soc'])!="")
+									{
+										$red=getUserConfig("reduceretarife");
+										if(getUserConfig("reduceretarife_".$v['soc'])!="")
+										{
+											$red=getUserConfig("reduceretarife_".$v['soc']);
+										}
+										$oldv6=floatval($v[6]);
+										$oldv12=floatval($v[12]);
+										$v[6]=floatval($v[6])*(100-floatval($red))/100;
+										$v[12]=floatval($v[12])*(100-floatval($red))/100;
+										$oldtarif6='<span class="tarifjos"> * '.showNumber($oldv6,2).'</span>';
+										$oldtarif12='<span class="tarifjos"> * '.showNumber($oldv12,2).'</span>';
+									}
+									?>
+									<tr><td align=center style="text-align:center;"><?php echo getLT($v['soc']);?>
+										<td align=center class="worktarif"><button socid="<?php echo $v['soc'];?>" per="6" onclick="return clickPlataInRate('<?php echo showNumber($oldv6,2);?>',this);" class="btn btn-success">In rate <?php echo showNumber($oldv6,2);?></button><br>&nbsp;
+										<td align=center class="worktarif"><button socid="<?php echo $v['soc'];?>" per="6" onclick="return clickPlataIntegral('<?php echo showNumber($v[6],2);?>',this);" class="btn btn-success">Cu reducere <?php echo showNumber($v[6],2);?></button><br><?php echo $oldtarif6;?>
+										<td align=center class="worktarif" style="border-left: solid 2px #eee;"><button socid="<?php echo $v['soc'];?>" per="12" onclick="return clickPlataInRate('<?php echo showNumber($oldv12,2);?>',this);" class="btn btn-success">In rate <?php echo showNumber($oldv12,2);?></button><br>&nbsp;
+										<td align=center class="worktarif"><button socid="<?php echo $v['soc'];?>" per="12" onclick="return clickPlataIntegral('<?php echo showNumber($v[12],2);?>',this);" class="btn btn-success">Cu reducere <?php echo showNumber($v[12],2);?></button><br><?php echo $oldtarif12;?>
+									<?php
+								}
+								?><tr><td colspan=5> * Tarife oferite de asigurator fara reducere</table>
+								<?php
+								}
+								else
+								{
 								?><table class="worktarife" cellpadding=0 cellspacing=0 border="1">
 								<tr><th align=right>Asigurator<th align=right>6 luni<th align=right>1 an
 								<?php
@@ -435,6 +511,7 @@
 								}
 								?></table>
 								<?php
+								}
 								if(!isset($r['TarifeOfertaResponse']['ofertafinalizata']) || $r['TarifeOfertaResponse']['ofertafinalizata']['VALUE']=="false")
 								{
 									?>
