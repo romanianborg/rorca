@@ -709,6 +709,7 @@ function valideazaFormaPentruSalvare(f,valideaza)
 	}
 	else
 	{
+		$("option").prop('disabled', false);
 		//$("#savebutton").attr("disabled","yes");
 	}
 	return ret;
