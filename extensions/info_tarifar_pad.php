@@ -152,28 +152,28 @@ cod postal&nbsp;<input type="number" onchange="javascript:textareaImplode('im_ad
 </select>
 </div></div>
 
-<div class="workstep sumeasiguratefac"><div class=worklabel>Suma asigurata</div><div class=workfields><input type="hidden" name="politasupliment" value="1"><input type="number" name="sumaasigurata" value="20000" size=6 class="validated" validate="call.valideazapad" style="width:100px;"> EURO
+<div class="workstep sumeasiguratefac"><div class=worklabel>Suma asigurata</div><div class=workfields><input type="hidden" name="politasupliment" value="1"><input type="number" name="sumaasigurata" value="20000" size=6 class="validated" validate="call.valideazapad" style="width:100px;"> &euro;
 </div></div>
 
-<div class="workstep sumeasiguratefac"><div class=worklabel>Rasp. Civila</div><div class=workfields><input type="number" name="sa_rc" value="" size=6 style="width:100px;"> EURO
+<div class="workstep sumeasiguratefac"><div class=worklabel>Rasp. Civila</div><div class=workfields><input type="number" name="sa_rc" value="" size=6 style="width:100px;"> &euro;
 </div></div>
 
-<div class="workstep sumeasiguratefac"><div class=worklabel>Furt</div><div class=workfields><input type="number" name="sa_furt" value="" size=6 style="width:100px;"> EURO
+<div class="workstep sumeasiguratefac"><div class=worklabel>Furt</div><div class=workfields><input type="number" name="sa_furt" value="" size=6 style="width:100px;"> &euro;
 </div></div>
 
-<div class="workstep sumeasiguratefac"><div class=worklabel>Apa/Conducta</div><div class=workfields><input type="number" name="sa_apa" value="" size=6 style="width:100px;"> EURO
+<div class="workstep sumeasiguratefac"><div class=worklabel>Apa/Conducta</div><div class=workfields><input type="number" name="sa_apa" value="" size=6 style="width:100px;"> &euro;
 </div></div>
 
-<div class="workstep sumeasiguratefac"><div class=worklabel>Bunuri</div><div class=workfields><input type="number" name="sa_bunuri" value="" size=6 style="width:100px;"> EURO
+<div class="workstep sumeasiguratefac"><div class=worklabel>Bunuri</div><div class=workfields><input type="number" name="sa_bunuri" value="" size=6 style="width:100px;"> &euro;
 </div></div>
 
-<div class="workstep sumeasiguratefac"><div class=worklabel>Obiecte casabile</div><div class=workfields><input type="number" name="sa_bc" value="" size=6 style="width:100px;"> EURO
+<div class="workstep sumeasiguratefac"><div class=worklabel>Obiecte casabile</div><div class=workfields><input type="number" name="sa_bc" value="" size=6 style="width:100px;"> &euro;
 </div></div>
 
-<div class="workstep sumeasiguratefac"><div class=worklabel>Accidente:</div><div class=workfields><input type="number" name="sa_acc" value="" size=6 style="width:100px;"> EURO
+<div class="workstep sumeasiguratefac"><div class=worklabel>Accidente:</div><div class=workfields><input type="number" name="sa_acc" value="" size=6 style="width:100px;"> &euro;
 </div></div>
 
-<div class="workstep sumeasiguratefac"><div class=worklabel>Fenomene Electrice:</div><div class=workfields><input type="number" name="sa_fe" value="" size=6 style="width:100px;"> EURO
+<div class="workstep sumeasiguratefac"><div class=worklabel>Fenomene Electrice:</div><div class=workfields><input type="number" name="sa_fe" value="" size=6 style="width:100px;"> &euro;
 </div></div>
 
 <div class="workstep sumeasiguratefac"><div class=worklabel>Nr rate</div><div class=workfields><select name="nrrate"><option value="1">1</option><option value="2">2</option><option value="4">4</option></select>

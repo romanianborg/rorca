@@ -18,13 +18,31 @@
 <div class="workstep">
 	<a href="site.php?t=medicale" class="biglink"><img src="images/globe.png" border=0> Medicale de calatorie</a>
 </div>
+
+<div class="workstep">
+	<a href="site.php?t=sanatate" class="biglink"><img src="images/ochelari.png" border=0> Asigurare de sanatate</a>
 </div>
+
+<div class="workstep">
+	<a href="site.php?t=malpraxis" class="biglink"><img src="images/ochelari.png" border=0> Malpraxis</a>
+</div>
+
+<div class="workstep">
+	<a href="site.php?t=rotr" class="biglink"><img src="images/masina.png" border=0> Rotr/Cmr</a>
+</div>
+
+</div>
+
 <div class="work_col2">
 <div class="workstep"><div class="biglabel"><img src="images/x.png" border=0> Alte polite</div>
 </div>
 
 <div class="workstep">
 	<a href="site.php?t=decont" class="biglink"><img src="images/x.png" border=0> Expirari polite</a>
+</div>
+
+<div class="workstep">
+	<a href="site.php?t=petitie" class="biglink"><img src="images/x.png" border=0> Adauga petitie</a>
 </div>
 
 <div class="workstep">

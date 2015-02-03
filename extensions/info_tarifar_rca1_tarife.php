@@ -219,7 +219,7 @@ cod postal&nbsp;<input type="text" onchange="javascript:textareaImplode('prop_ad
 	}
 ?>
 
-<div class="workstep"><div class="worklabel">Carte identitate vehicul</div><div class="workfields"><input type="text" class="validated" name="serieciv" size=10 <?php if(getUserConfig("platalibra")=="yes") echo 'validate="require.yes"';?> title="Talon nou: X, Talon vechi: 4">
+<div class="workstep"><div class="worklabel">Carte identitate vehicul</div><div class="workfields"><input type="text" class="validated" name="serieciv" size=10 <?php if(getUserConfig("platalibra")=="yes") echo 'validate="required.yes"';?> title="Talon nou: X, Talon vechi: 4">
 </div></div>
 
 

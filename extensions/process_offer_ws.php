@@ -27,7 +27,7 @@
 
 		// Do the POST and then close the session
 		$response = curl_exec($session);
-		//echo $response;
+		//echo $response;die();
 		if (curl_errno($session)) {
 			//echo curl_errno($session);die();
 			return false;
@@ -135,6 +135,21 @@
 				}
 		  	}
 		  break;
+		  case 'sanatate':
+		  case 'malpraxis':
+		  case 'rotr':
+		  	foreach($_POST as $wk=>$wv)
+		  	{
+		  		if($wk=="tipoferta" || $wk=="datavalabilitate")
+		  		{
+		  			continue;
+		  		}
+		  		else
+		  		{
+					$xml.='<'.$wk.'>'.correctPostValue($_POST[$wk]).'</'.$wk.'>';
+				}
+		  	}
+		  break;
 		  case 'medicale':
 		  $xml.='
 				<nrzile>'.correctPostValue($_POST['nrzile']).'</nrzile>
@@ -161,6 +176,7 @@
 ';
 		  break;
 		  case 'rezervare':
+		  case 'petitie':
 		  	foreach($_POST as $wk=>$wv)
 		  	{
 		  		if($wk=="tipoferta" || $wk=="datavalabilitate"  || $wk=="emailclient")
@@ -255,6 +271,8 @@
 				}
 			break;
 			}
+
+		$codpromo=correctPostValue($_POST['codpromotional']);
 		   $xml.='
 		   <vehicul>
 		     <inmatriculare>'.correctPostValue($_POST['inmatriculare']).'</inmatriculare>
@@ -271,6 +289,7 @@
 		     <kg>'.intval($_POST['kg']).'</kg>
 		     <locuri>'.intval($_POST['locuri']).'</locuri>
 		     <parcauto>0</parcauto>
+		     <codpromotional>'.$codpromo.'</codpromotional>
 		   </vehicul>';
 		   break;
 		 }
@@ -388,6 +407,7 @@
 								$soc[$v['societate']['VALUE']]['12']=floatval($v['tarif12']['VALUE']);
 								$soc[$v['societate']['VALUE']]['1']=floatval($v['tarif1']['VALUE']);
 								$soc[$v['societate']['VALUE']]['bm']=floatval($v['bm12']['VALUE']);
+								$soc[$v['societate']['VALUE']]['com']=floatval($v['com']['VALUE']);
 							}
 						}
 						usort($soc,sort12luni);
@@ -406,15 +426,13 @@
 						$_LANG_['uniqa']='<img src="images/uniqa.png" alt="'.getLT('uniqa').'">';
 						$_LANG_['euroins']='<img src="images/euroins.png" alt="'.getLT('euroins').'">';
 						$_LANG_['asirom']='<img src="images/asirom.png" alt="'.getLT('asirom').'">';
-						$_LANG_['crediteurope']='<img src="images/asirom.png" alt="'.getLT('crediteurope').'">';
+						$_LANG_['crediteurope']='<img src="images/crediteurope.png" alt="'.getLT('crediteurope').'">';
 						$_LANG_['platinum']='<img src="images/gothaer.png" alt="Gothaer">';
 						$_LANG_['mondial']='<img src="images/mondial.png" alt="Mondial">';
 
 						switch($tipoferta)
 						{
 							case 'medicale':
-							case 'pad':
-							case 'casco':
 								//print_r($soc);
 								?><table class="worktarife" cellpadding=0 cellspacing=0 border="1">
 								<tr><th align=right>Asigurator<th align=right>Prima RON
@@ -435,8 +453,34 @@
 									<?php
 								}
 							break;
+							case 'pad':
+							case 'casco':
+							case 'sanatate':
+							case 'malpraxis':
+							case 'rotr':
+								//print_r($soc);
+								?><table class="worktarife" cellpadding=0 cellspacing=0 border="1">
+								<tr><th align=right>Asigurator<th align=right>Prima EURO
+								<?php
+								foreach($soc as $k=>$v)
+								{
+									if($v['12']<2) continue;
+									?>
+									<tr><td align=center><?php echo getLT($v['soc']);?><td align=right class="worktarif"><a href="#" per="12" socid="<?php echo $v['soc'];?>" tarif="<?php echo showNumber($v['12'],2);?>"><?php $tt=showNumber($v['12'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';?></a>
+									<?php
+								}
+								?></table>
+								<?php
+								if(!isset($r['TarifeOfertaResponse']['ofertafinalizata']) || $r['TarifeOfertaResponse']['ofertafinalizata']['VALUE']=="false")
+								{
+									?>
+									<a class="incarcatarife" href="site.php?TarifeOferta=<?php echo intval($_GET['TarifeOferta']);?>"></a>
+									<?php
+								}
+							break;
 							case 'rca':
 							default:
+
 								//print_r($soc);
 								if(getUserConfig('color_design')=="2")
 								{
@@ -454,7 +498,7 @@
 
 									$oldtarif6='';
 									$oldtarif12='';
-									if(getUserConfig("reduceretarife")!="" || getUserConfig("reduceretarife_".$v['soc'])!="")
+									if(false && (getUserConfig("reduceretarife")!="" || getUserConfig("reduceretarife_".$v['soc'])!=""))
 									{
 										$red=getUserConfig("reduceretarife");
 										if(getUserConfig("reduceretarife_".$v['soc'])!="")
@@ -476,11 +520,23 @@
 										<td align=center class="worktarif"><button socid="<?php echo $v['soc'];?>" per="12" onclick="return clickPlataIntegral('<?php echo showNumber($v[12],2);?>',this);" class="btn btn-success">Cu reducere <?php echo showNumber($v[12],2);?></button><br><?php echo $oldtarif12;?>
 									<?php
 								}
-								?><tr><td colspan=5> * Tarife oferite de asigurator fara reducere</table>
+								?><tr><td colspan=5> * Comisionul platit brokerului, calculat ca procent din prima totala afisata in tabel, inclus in prima totala.</table>
 								<?php
 								}
 								else
 								{
+
+								if(false && getUserConfig('codpromotional')=="Card Cheque")
+								{
+									//validate cod promo
+									if(strlen(trim($v['codpromotional']['VALUE']))==13 && intval(substr(trim($v['codpromotional']['VALUE']),0,7))==6426174)
+									{
+										//ok
+										global $_CONFIG;
+										//$_CONFIG['reduceretarife']=10;
+									}
+								}
+
 								?><table class="worktarife" cellpadding=0 cellspacing=0 border="1">
 								<tr><th align=right>Asigurator<th align=right>6 luni<th align=right>1 an
 								<?php
@@ -491,7 +547,7 @@
 
 									$oldtarif6='';
 									$oldtarif12='';
-									if(getUserConfig("reduceretarife")!="" || getUserConfig("reduceretarife_".$v['soc'])!="")
+									if(false && (getUserConfig("reduceretarife")!="" || getUserConfig("reduceretarife_".$v['soc'])!=""))
 									{
 										$red=getUserConfig("reduceretarife");
 										if(getUserConfig("reduceretarife_".$v['soc'])!="")
@@ -505,11 +561,16 @@
 										$oldtarif6='<del><span class="tarifjos">'.showNumber($oldv6,2).'</span></del><br>';
 										$oldtarif12='<del><span class="tarifjos">'.showNumber($oldv12,2).'</span></del><br>';
 									}
+									$oldtarif6='<br><span class="tarifjos" style="color:gray">*'.$v['com'].'% '.showNumber($v[6]*$v['com']/100,2).'</span>';
+									$oldtarif12='<br><span class="tarifjos" style="color:gray">*'.$v['com'].'% '.showNumber($v[12]*$v['com']/100,2).'</span>';
 									?>
-									<tr><td align=center style="text-align:center;"><?php echo getLT($v['soc']);?><td align=right class="worktarif"><a href="#" socid="<?php echo $v['soc'];?>" per="6" tarif="<?php echo showNumber($v['6'],2);?>"><?php echo$oldtarif6; $tt=showNumber($v['6'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';?></a><td align=right class="worktarif"><a href="#"  socid="<?php echo $v['soc'];?>" per="12" tarif="<?php echo showNumber($v['12'],2);?>"><?php echo $oldtarif12;$tt=showNumber($v['12'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';?></a>
+									<tr><td align=center style="text-align:center;"><?php echo getLT($v['soc']);?><td align=right class="worktarif">
+									<a href="#" socid="<?php echo $v['soc'];?>" per="6" tarif="<?php echo showNumber($v['6'],2);?>"><?php $tt=showNumber($v['6'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>'; echo $oldtarif6;?></a><td align=right class="worktarif"><a href="#"  socid="<?php echo $v['soc'];?>" per="12" tarif="<?php echo showNumber($v['12'],2);?>"><?php $tt=showNumber($v['12'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';echo $oldtarif12;?></a>
 									<?php
 								}
-								?></table>
+								?>
+								<tr><td colspan=3 style="color:gray;font-size:0.3em;">* Comisionul platit brokerului, inclus in prima totala, calculat ca procent din prima totala afisata in tabel.
+								</table>
 								<?php
 								}
 								if(!isset($r['TarifeOfertaResponse']['ofertafinalizata']) || $r['TarifeOfertaResponse']['ofertafinalizata']['VALUE']=="false")

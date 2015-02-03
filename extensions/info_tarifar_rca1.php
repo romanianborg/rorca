@@ -459,6 +459,11 @@
 </div></div>
 <?php }?>
 
+<?php if(getUserConfig("codpromotional")!="") {?>
+<div class="workstep"><div class="worklabel"><?php echo getUserConfig("codpromotional");?>:</div><div class=workfields><input name="codpromotional" value="" size="20" type="text">
+</div></div>
+<?php }?>
+
 </div>
 
 <!-- worksteps--></div>

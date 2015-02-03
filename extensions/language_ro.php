@@ -121,6 +121,7 @@ $_LANG_['generali']="GENERALI";
 $_LANG_['ardaf']="GENERALI ARDAF";
 $_LANG_['abc']="ABC ASIGURARI";
 $_LANG_['city']="CITY INSURANCE";
+$_LANG_['crediteurope']="CREDIT EUROPE";
 
 if(file_exists("cache/language_".getUserConfig('projectid').".php"))
 {

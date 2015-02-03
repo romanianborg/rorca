@@ -367,7 +367,7 @@ Strada: <input type="text" onchange="javascript:textareaImplode('prop_adresa');"
 		<div class="span10">
 			<div class="input-prepend">
 				<span class="add-on" style="width:200px;">Carte identitate vehicul</span>
-				<input type="text" class="span2 validated" name="serieciv" size=10 <?php if(getUserConfig("platalibra")=="yes") echo 'validate="require.yes"';?> title="Talon nou: X, Talon vechi: 4">
+				<input type="text" class="span2 validated" name="serieciv" size=10 <?php if(getUserConfig("platalibra")=="yes") echo 'validate="required.yes"';?> title="Talon nou: X, Talon vechi: 4">
 			</div>
 		</div>
 	</div>
@@ -423,5 +423,3 @@ Strada: <input type="text" onchange="javascript:textareaImplode('prop_adresa');"
 
 
 </div> <!-- container -->
-
-

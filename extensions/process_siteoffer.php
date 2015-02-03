@@ -1,6 +1,117 @@
 <?php
-
+// Copyright AI Software Ltd Bucharest, Romania 2001-2014
 //check post action
+if(isset($_GET['plationlineipn']) && $_GET['plationlineipn'])
+{
+	require_once("extern/clspo.php");
+
+	$my_class = new PO3();
+	$my_class->LoginID = $lid;
+	$my_class->KeyEnc = $ke;
+	$my_class->KeyMod = $km;
+
+	// If you select ITSN POST Method in merchant secure interface
+	$vF_Message=$_POST["F_MESSAGE_ITSN"];
+	$vF_Crypt_Message= $_POST["F_CRYPT_MESSAGE_ITSN"];
+	$vF_ORDER_NUMBER = $_POST["F_ORDER_NUMBER"];
+	$vF_Amount= $_POST["F_AMOUNT"];
+	$vF_Currency= $_POST["F_CURRENCY"];
+	$vX_Trans_ID = $_POST["X_TRANS_ID"];
+	$vMy_F_Message=strtoupper($my_class->VerifyFRM(strval($vF_Message)));
+
+	if($vF_Crypt_Message!=$vMy_F_Message)
+		die("ERROR!!!<hr>hacking attempt.[Relay Message]");
+
+	$vA= explode("^", $vF_Message);
+
+	$vCurrencyMessage= $vA[4];
+
+	if($vCurrencyMessage!=$vF_Currency)
+		die("ERROR!!!<hr>Hacking attempt.[Currency Relay Message]");
+
+	$vAmountMessage= $vA[3];
+	if($vAmountMessage!=$vF_Amount)	
+		die("ERROR!!!<hr>Hacking attempt.[Amount Relay Message]");
+
+	$vX_Trans_ID_Message= $vA[5];
+
+	if($vX_Trans_ID!=$vX_Trans_ID_Message)
+		die("ERROR!!!<hr>Hacking attempt.[Response Code Relay Message]");
+
+	$vReponseStamp= $vA[2];
+
+	$my_class->OrderNumber = $vF_ORDER_NUMBER;
+	$my_class->TransID = $vX_Trans_ID;		
+	$my_class->action = "0"; //interogare
+
+	$rez = $my_class->InsertHash_Interog();	
+
+	//pentru fiecare case actualizati statusul comenzii in magazinul dvs.
+
+	/* Verify X_STARE_FIN1 status */		
+	$stare1='<f_response_code>1</f_response_code>';
+		switch ($rez["X_STARE_FIN1"])
+		{
+			case '13':
+				$starefin = 'In proces de verificare';
+				break;		
+			case '2':
+				$starefin = 'Autorizata';
+				break;
+			case '8':
+				$starefin = 'Refuzata';
+				break;
+			case '3':
+				$starefin = 'In curs de incasare';
+				break;
+			case '5':
+				/* Verify X_STARE_FIN2 status*/
+				switch ($rez["X_STARE_FIN2"]){
+					case '1':
+						$starefin='In curs de creditare';
+						break;
+					case '2':
+						$starefin='Creditata';
+						break;
+					case '3':
+						$starefin='Refuz la plata';
+						break;
+					case '4':
+						$starefin='Incasata';
+						break;
+				}
+				break;
+			case '6':
+				$starefin= 'In curs de anulare';
+				break;
+			case '7':
+				$starefin='Anulata';
+				break;
+			case '9':
+				$starefin='Expirata 30 zile';
+				break;
+			case '10':
+				$starefin='Eroare';
+				break;
+			case '1':
+				$starefin='In curs de autorizare';
+				break;
+			default:
+				$stare1='<f_response_code>0</f_response_code>';			
+		}
+
+
+/* trimit raspuns */		
+	$raspuns_xml = '<?xml version="1.0" encoding="UTF-8" ?>';
+	$raspuns_xml .= '<itsn>';
+	$raspuns_xml .= '<x_trans_id>'.$vX_Trans_ID.'</x_trans_id>';
+	$raspuns_xml .= '<merchServerStamp>'.date("Y-m-d H:m:s").'</merchServerStamp>';
+	$raspuns_xml .= $stare1;
+	$raspuns_xml .= '</itsn>';
+
+	echo $raspuns_xml;
+	die();
+}
 if(isset($_GET['crediteuropeipn']) && $_GET['crediteuropeipn'])
 {
 	$storekey=getUserConfig("crediteurope_storekey");
@@ -596,6 +707,108 @@ foreach($dataAll as $k=>$v)
 <?php
 	die();
 }
+if($_GET['t']=="plationline")
+{
+	require_once("extern/clspo.php");
+	$my_class = new PO3();
+
+	$my_class->LoginID = $lid;
+	$my_class->KeyEnc = $ke;
+	$my_class->KeyMod = $km;
+
+	$my_class->amount = "1.00";
+	$my_class->currency = "RON";
+	$my_class->OrderNumber = "1";
+	$my_class->action = "2";
+	$ret = $my_class->InsertHash_Auth();
+
+	$_CONFIG['plationline']="yes";
+$_CONFIG['plationline_loginid']="44840979095";
+$_CONFIG['plationline_key']="C4B43BB7B7627F93DB0A89CF69D053CA7D16D03D";
+$_CONFIG['plationline_mod']="C4B43BB7B7627F93DB0A89CF69D053CA7D16D03D";
+$_CONFIG['']="yes";
+$_CONFIG['plationline_ratebt']="yes";
+
+	
+	//Pt. Rate RZB
+	if(getUserConfig("plationline_raterz")=="yes")
+	{
+		$my_class->rate = "6";
+		$my_class->action = "10";
+		$ret = $my_class->InsertHash_AuthRate_RZB();
+	}
+
+	//Pt. Rate BT
+	if(getUserConfig("plationline_ratebt")=="yes")
+	{
+		$my_class->rate = "6";
+		$my_class->action = "16";
+		$ret = $my_class->InsertHash_AuthRate_RZB();
+	}
+
+	$vOrderString= "<start_string>"; 
+	$vOrderString.= "<item>";
+	$vOrderString.= "<ProdID>1</ProdID>";
+	$vOrderString.= "<qty>1</qty>";
+	$vOrderString.= "<itemprice>0.81</itemprice>";
+	$vOrderString.= "<name>Produs de test 1</name>";
+	$vOrderString.= "<period></period><rec_id>0</rec_id>";
+	$vOrderString.= "<description>Descriere produs</description>";
+	$vOrderString.= "<pimg></pimg><rec_price>0</rec_price>";
+	$vOrderString.= "<vat>0.19</vat>";
+	$vOrderString.= "<lang_id></lang_id><stamp>".htmlspecialchars(date("F j, Y, g:i a")). "</stamp><on_stoc>1</on_stoc>";
+	$vOrderString.= "<prodtype_id></prodtype_id><categ_id>0</categ_id><merchLoginID>0</merchLoginID>";
+	$vOrderString.= "</item>";
+
+	//cupon
+	//$vOrderString .= "<coupon><key>cod</key><value>".abs(round(0.05,2))."</value><percent>1</percent><workingname>Nume cupon</workingname><type>0</type><scop>0</scop><vat>0</vat></coupon>";
+
+	//shipping
+	$vOrderString .= "<shipping><type>Denumire shipping</type><price>1.00</price><pimg></pimg><vat>0</vat></shipping>";
+	$vOrderString .= "</start_string>";
+
+?>
+
+	<form id="registerForm" autocomplete="off" method="post" action="https://secure2.plationline.ro/">
+		<?php echo $ret;?>
+		<input type="hidden" name="f_login" value="<?php echo $my_class->LoginID;?>">
+		<input type="hidden" name="f_show_form" value="1">
+		<input type="hidden" name="f_amount" value="<?php echo $my_class->amount;?>">
+		<input type="hidden" name="f_currency" value="<?php echo $my_class->currency;?>">
+		<input type="hidden" name="f_order_number" value="<?php echo $my_class->OrderNumber;?>">
+		<input type="hidden" name="F_Language" value="ro" >
+		<input type="hidden" name="F_Lang" value="ro">
+		<input type="hidden" name="f_order_string" value="<?php echo $vOrderString ?>">
+		<input type="hidden" name="f_first_name" id="f_first_name" value="Prenume">
+		<input type="hidden" name="f_last_name" id="f_last_name" value="Nume">
+		<input type="hidden" name="f_cnp" value="-">
+		<input type="hidden" name="f_address" id="f_address" value="Adresa facturare">
+		<input type="hidden" name="f_city" id="f_city" value="Bucuresti">
+		<input type="hidden" name="f_state" id="f_state" value="Bucuresti">
+		<input type="hidden" name="f_zip" id="f_zip" value="800000">
+		<input type="hidden" name="f_country" id="f_country" value="RO">
+		<input type="hidden" name="f_phone" id="f_phone" value="0700000000">
+		<input type="hidden" name="f_email" id="f_email" value="adrian@plationline.eu">
+		<input type="hidden" name="f_company" value="-">
+		<input type="hidden" name="f_reg_com" value="-">
+		<input type="hidden" name="f_cui" value="-">
+		<input type="hidden" name="f_ship_to_first_name" value="Prenume livrare" />
+		<input type="hidden" name="f_ship_to_last_name" value="Nume livrare" />
+		<input type="hidden" name="f_ship_to_phone" value="0700000001" />
+		<input type="hidden" name="f_ship_to_address" value="Adresa livrare" />
+		<input type="hidden" name="f_ship_to_city" value="Bucuresti" />
+		<input type="hidden" name="f_ship_to_state" value="Bucuresti" />
+		<input type="hidden" name="f_ship_to_zipcode" value="800001" />
+		<input type="hidden" name="f_ship_to_country" value="RO" />
+
+<!-- daca e test mode START here -->
+		<input type="hidden" name="f_Test_Request" value="1">
+<!-- daca e test mode END here -->
+		<input type="submit" value="Plateste" />
+	</form>
+<?php
+	die();
+}
 if($_GET['t']=="euplatesc")
 {
 	?><html><body onload="document.forms[0].submit();"><?php
@@ -1005,6 +1218,30 @@ case 'medicale':
 	else
 		include("extensions/info_tarifar_medicale.php");
 break;
+case 'petitie':
+	if(isset($_GET['offid']) && intval($_GET['offid'])>0)
+		include("extensions/info_tarifar_petitie.php");
+	else
+		include("extensions/info_tarifar_petitie.php");
+break;
+case 'sanatate':
+	if(isset($_GET['offid']) && intval($_GET['offid'])>0)
+		include("extensions/info_tarifar_sanatate_tarife.php");
+	else
+		include("extensions/info_tarifar_sanatate.php");
+break;
+case 'malpraxis':
+	if(isset($_GET['offid']) && intval($_GET['offid'])>0)
+		include("extensions/info_tarifar_sanatate_tarife.php");
+	else
+		include("extensions/info_tarifar_malpraxis.php");
+break;
+case 'rotr':
+	if(isset($_GET['offid']) && intval($_GET['offid'])>0)
+		include("extensions/info_tarifar_sanatate_tarife.php");
+	else
+		include("extensions/info_tarifar_rotr.php");
+break;
 case 'rezervare':
 	if(isset($_GET['offid']) && intval($_GET['offid'])>0)
 		include("extensions/info_tarifar_rezervare_tarife.php");
@@ -1072,6 +1309,9 @@ cache_addvalue("afterbody",ob_get_contents());ob_end_clean();
 <div class="sidebarbutton sidebarbutton_casco"><a href="site.php?t=casco" class="sidebarlink">CASCO</a></div>
 <div class="sidebarbutton sidebarbutton_pad"><a href="site.php?t=pad" class="sidebarlink">LOCUINTE</a></div>
 <div class="sidebarbutton sidebarbutton_medicale"><a href="site.php?t=medicale" class="sidebarlink">MEDICALE</a></div>
+<div class="sidebarbutton sidebarbutton_sanatate"><a href="site.php?t=sanatate" class="sidebarlink">SANATATE</a></div>
+<div class="sidebarbutton sidebarbutton_malpraxis"><a href="site.php?t=malpraxis" class="sidebarlink">MALPRAXIS</a></div>
+<div class="sidebarbutton sidebarbutton_rotr"><a href="site.php?t=rotr" class="sidebarlink">ROTR/CMR</a></div>
 <div class="sidebarbutton sidebarbutton_decont"><a href="site.php?t=decont" class="sidebarlink">ALTE</a></div>
 <div class="sidebarbutton sidebarbutton_client"><a href="site.php?t=client" class="sidebarlink">CONT</a></div>
 </div>

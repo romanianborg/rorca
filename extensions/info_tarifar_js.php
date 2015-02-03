@@ -19,7 +19,7 @@ function clickPlataInRate(tarif,btn)
 	$("#tab_platainrate").click();
 	$("input[name=tarif]").val(tarif).change();
 
-	$("input[name=p_soc]").val($(btn).attr("soc"));
+	$("input[name=p_soc]").val($(btn).attr("socid"));
 	$("input[name=p_per]").val($(btn).attr("per"));
 	
 	$("#soctarife").hide(1000,function(){
@@ -57,7 +57,7 @@ function clickPlataIntegral(tarif,btn)
 
 	$("input[name=tarif]").val(tarif).change();
 
-	$("input[name=p_soc]").val($(btn).attr("soc"));
+	$("input[name=p_soc]").val($(btn).attr("socid"));
 	$("input[name=p_per]").val($(btn).attr("per"));
 
 	$("#soctarife").hide(1000,function(){
@@ -314,16 +314,30 @@ function reloadSideLinks()
 		var a;
 		for(a in localStorage)
 		{
-			if(a.substr(0,4)=="link")
+			if(a.substr(0,4)=="link" && localStorage[a]!='no')
 			{
 				var arr=a.split("_");
 				var mya;
 				mya="site.php?t="+arr[1]+"&offid="+arr[2];
-				$("div.sidebarbutton_"+arr[1]).append('<a href="'+localStorage[a]+'">'+arr[2]+'&nbsp;</a><br>');
+				$("div.sidebarbutton_"+arr[1]).append('<a href="'+localStorage[a]+'">'+arr[2]+'&nbsp;</a><a href="#" onclick="localStorage['+"'"+a+"'"+']='+"'"+'no'+"'"+';$(this).prev().remove();$(this).next().remove();$(this).remove();return false;"><img width=12 src="images/x.png" border=0></a><br>');
+				//localStorage[a]='no';
 			}
 		}
 	}
-
+}
+function remoteAllLinks()
+{
+	if(typeof(Storage)!=="undefined")
+	{
+		var a;
+		for(a in localStorage)
+		{
+			if(a.substr(0,4)=="link" && localStorage[a]!='no')
+			{
+				localStorage[a]='no';
+			}
+		}
+	}
 }
 
 function slotLoadedUpdateWindow(slot){

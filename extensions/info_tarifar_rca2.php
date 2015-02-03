@@ -750,6 +750,16 @@ cache_addvalue("finalhead",ob_get_contents());ob_end_clean();
 				</div>
 			</div>
 <?php }?>
+<?php if(getUserConfig("codpromotional")!="") {?>
+			<div class="row">
+				<div class="span3">
+					<div class="input-prepend">
+					<span class="add-on indicatie"><?php echo getUserConfig("codpromotional");?></span>
+<input name="codpromotional" value="" class="span3 validated" size="20" type="number" validate="required.attention">
+					</div>
+				</div>
+			</div>
+<?php }?>
 
 			</div><!-- box -->
 			<div class="box-footer"  style="margin-bottom:50px;">&nbsp;</div>

@@ -10,16 +10,16 @@
 </div>
 
 <div class="workstep"><div class="worklabel">Expira RCA-ul?</div><div class=workfields><input type=text name="datarca" id="datarca" size="9" value="">
-	<a id="datarca_sel" name="datarca_sel" onclick="global_cal.select(document.forms['work'].datarca,'datarca_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
+	<a id="datarca_sel" class=cdateselect name="datarca_sel" onclick="global_cal.select(document.forms['work'].datarca,'datarca_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
 </div></div>
 
 <div class="workstep"><div class="worklabel">Asigurarea locuintei?</div><div class=workfields><input type=text name="datapad" id="datapad" size="9" value="">
-	<a id="datapad_sel" name="datapad_sel" onclick="global_cal.select(document.forms['work'].datapad,'datapad_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
+	<a id="datapad_sel" class=cdateselect name="datapad_sel" onclick="global_cal.select(document.forms['work'].datapad,'datapad_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
 </div></div>
 
 
 <div class="workstep"><div class="worklabel">Expira CASCO-ul?</div><div class=workfields><input type=text name="datacasco" id="datacasco" size="9" value="">
-	<a id="datacasco_sel" name="datacasco_sel" onclick="global_cal.select(document.forms['work'].datacasco,'datacasco_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
+	<a id="datacasco_sel" class=cdateselect name="datacasco_sel" onclick="global_cal.select(document.forms['work'].datacasco,'datacasco_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
 </div></div>
 
 <div class="workstep"><div class="worklabel">Alta asigurare?</div><div class=workfields><input type="text" name="numealta1" value="" size=20>

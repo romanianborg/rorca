@@ -117,11 +117,13 @@
 Optiune plata in rate: 
 <select name="ce_rate">
 	<option value="" selected>Integral</option>
+<!--
 	<option value="2">2 rate fara dobanda</option>
 	<option value="3">3 rate fara dobanda</option>
 	<option value="4">4 rate fara dobanda</option>
 	<option value="6">6 rate fara dobanda</option>
 	<option value="12">12 rate fara dobanda</option>
+-->
 </select>
 <br>
 	Dupa ce introduceti si emailul veti fi redirect pe site-ul Credit Europe pentru a face plata cu cardul. Comisioanele sunt suportate de broker. Platiti doar pretul asigurarii.<br>
@@ -145,6 +147,7 @@ Optiune plata in rate:<br>
 <?php
 	if(getUserConfig("euplatesc_ratebcr")=="yes")
 	{?>
+<!--
 <option value="bcr-2">BCR 2 rate fara dobanda</option>
 <option value="bcr-3">BCR 3 rate fara dobanda</option>
 <option value="bcr-4">BCR 4 rate fara dobanda</option>
@@ -156,10 +159,12 @@ Optiune plata in rate:<br>
 <option value="bcr-10">BCR 10 rate fara dobanda</option>
 <option value="bcr-11">BCR 11 rate fara dobanda</option>
 <option selected value="bcr-12">BCR 12 rate fara dobanda</option>
+-->
 <?php
 	}
 	if(getUserConfig("euplatesc_rateapb")=="yes")
 	{?>
+<!--
 <option value="apb-2">Alpa Bank 2 rate fara dobanda</option>
 <option value="apb-3">Alpa Bank 3 rate fara dobanda</option>
 <option value="apb-4">Alpa Bank 4 rate fara dobanda</option>
@@ -171,10 +176,12 @@ Optiune plata in rate:<br>
 <option value="apb-10">Alpa Bank 10 rate fara dobanda</option>
 <option value="apb-11">Alpa Bank 11 rate fara dobanda</option>
 <option selected value="apb-12">Alpa Bank 12 rate fara dobanda</option>
+-->
 <?php
 	}
 	if(getUserConfig("euplatesc_ratebtrl")=="yes")
 	{?>
+<!--
 <option value="btrl-2">BTRL 2 rate fara dobanda</option>
 <option value="btrl-3">BTRL 3 rate fara dobanda</option>
 <option value="btrl-4">BTRL 4 rate fara dobanda</option>
@@ -186,6 +193,7 @@ Optiune plata in rate:<br>
 <option value="btrl-10">BTRL 10 rate fara dobanda</option>
 <option value="btrl-11">BTRL 11 rate fara dobanda</option>
 <option selected value="btrl-12">BTRL 12 rate fara dobanda</option>
+-->
 <?php
 	}
 ?>
