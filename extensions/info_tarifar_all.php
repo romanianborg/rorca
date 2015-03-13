@@ -8,7 +8,7 @@
 </div>
 
 <div class="workstep">
-	<a href="site.php?t=casco" class="biglink"><img src="images/masina.png" border=0> Asigurare CASCO</a>
+	<a href="site.php?t=casco" class="biglink"><img src="images/masina.png" border=0> Cerere CASCO</a>
 </div>
 
 <div class="workstep">

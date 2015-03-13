@@ -315,7 +315,7 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 		?>
 		<tr>
 			<td><label for="sig_<?php echo $v;?>"><?php echo $k;?></label>
-			<td><input type="checkbox" value="1" name="siguranta_<?php echo $v;?>" id="sig_<?php echo $v;?>"><input type="hidden" value="0" name="_siguranta_<?php echo $v;?>">
+			<td><input type="checkbox" value="1" name="siguranta_<?php echo $v;?>" id="sig_<?php echo $v;?>" style="width:20px;"><input type="hidden" value="0" name="_siguranta_<?php echo $v;?>">
 		<?php
 	}
 	?>
@@ -326,23 +326,26 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 <div class="workstep"><div class="worklabel">Riscuri:</div><div class=workfields style="width:450px;height:auto;">
 	<table border=1 style="background-color:white;border:solid 1px #ccc;border-collapse:collapse;">
 		<tr>
-		<td><input type="checkbox" value="1" name="risc_01" id="risc_01" class="validated" validate="for.1.show.class.i_bifa_01" checked><input type="hidden" value="0" name="_risc_01"><td><label for="risc_01">avarii - ciocniri, coliziuni, rasturnari, incendiu, explozie, fen. naturale</label>
+		<td><input type="checkbox" value="1" name="risc_01" id="risc_01" class="validated" validate="for.1.show.class.i_bifa_01" checked style="width:20px;"><input type="hidden" value="0" name="_risc_01"><td><label for="risc_01">avarii - ciocniri, coliziuni, rasturnari, incendiu, explozie, fen. naturale</label>
 		<tr>
-		<td><input type="checkbox" value="1" name="risc_02" id="risc_02" class="validated" validate="for.1.show.class.i_bifa_02" checked><input type="hidden" value="0" name="_risc_02"><td><label for="risc_02">furt - total si partial, avarii ca urmare a tentativei de furt</label>
+		<td><input type="checkbox" value="1" name="risc_02" id="risc_02" class="validated" validate="for.1.show.class.i_bifa_02" checked style="width:20px;"><input type="hidden" value="0" name="_risc_02"><td><label for="risc_02">furt - total si partial, avarii ca urmare a tentativei de furt</label>
 	</table>
 </div></div>
 
 <div class="workstep"><div class="worklabel">Clauze:</div><div class=workfields style="width:450px;height: auto;">
 	<table border=1 style="background-color:white;border:solid 1px #ccc;border-collapse:collapse;width:100%;">
-	<tr><td colspan=2>
+	<!-- <tr><td colspan=2>
 	<?php
 	$cols='';
-	$asiguratori=array("uniqa","asirom","astra","generali","omniasig","euroins","allianz","platinum","carpatica");
+	$asiguratori=array("uniqa","asirom","astra","generali","omniasig","euroins");
 	foreach($asiguratori as $k=>$v)
 	{
 		?><td style="height:50px;width:20px;line-height:.9em;" align="center" valign=top><?php echo implode('<br>',str_split(strtoupper($v),1));
 		$cols.="<td>";
 	}
+	?>
+	-->
+	<?php
 	echo "<tr>";
 	global $def;
 	global $legs;
@@ -364,7 +367,7 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 		{
 			$aditclass="aratadoarpf";
 		}
-		?><tr class="<?php echo $aditclass;?>"><td align="right"><label for="<?php echo $k;?>"><?php echo $v;?></label><td><input type="checkbox" value="1" name="risc_<?php echo $k;?>" id="risc_<?php echo $k;?>" class="validated" validate="for.1.show.class.i_bifa_<?php echo $k;?>" <?php echo $adit;?>><input type="hidden" value="0" name="_risc_<?php echo $k;?>">
+		?><tr class="<?php echo $aditclass;?>"><td align="right"><label for="<?php echo $k;?>"><?php echo $v;?></label><td><input type="checkbox" value="1" name="risc_<?php echo $k;?>" id="risc_<?php echo $k;?>" class="validated" validate="for.1.show.class.i_bifa_<?php echo $k;?>" <?php echo $adit;?> style="width:20px;"><input type="hidden" value="0" name="_risc_<?php echo $k;?>">
 		<?php
 		$cols='';
 		foreach($asiguratori as $kk=>$vv)
@@ -388,10 +391,6 @@ for($i=date('Y')+1;$i>(intval(date('Y'))-9);$i--){
 
 <div class="workstep"><div class="worklabel">Fransiza pe eveniment</div><div class=workfields style="width:450px;">
 	<select name="franciza_01"><option value="">Nu</option><option value="">Da</option></select>
-</div></div>
-
-<div class="workstep"><div class="worklabel">Fransiza furt total</div><div class=workfields style="width:450px;">
-	<select name="franciza_04"><option value="">Nu</option><option value="">Da</option></select>
 </div></div>
 
 <div class="workstep"><div class="worklabel">Fransiza dauna totala</div><div class=workfields style="width:450px;">

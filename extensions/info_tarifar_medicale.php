@@ -46,6 +46,8 @@
 	</select>
 </div></div>
 
+
+
 </div>
 
 <div class="work_col2">
@@ -139,6 +141,18 @@
 		<option value="10000">10000 EUR</option><option value="30000">30000 EUR</option><option value="50000">50000 EUR</option>
 	</select>
 </div></div>
+
+<div class="workstep"><div class="worklabel">Vrei storno?:</div><div class=workfields>
+	<select name="storno" class="validated" validate="for.1.show.id.pretcalatoriediv">
+		<option value="0">Nu</option>
+		<option value="1">Da</option>
+	</select>
+</div></div>
+
+<div id=pretcalatoriediv>
+<div class="workstep" style="display:none;"><div class="worklabel">Pret calatorie: &euro;</div><div class=workfields>
+	<input name="pretcalatorie" value="" type=text class=validated validate="required.yes">
+</div></div></div>
 
 
 </div>

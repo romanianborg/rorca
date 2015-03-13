@@ -173,6 +173,7 @@
 				<acoperire>'.correctPostValue($_POST['acoperire']).'</acoperire>
 				<pretcalatorie>'.correctPostValue($_POST['pretcalatorie']).'</pretcalatorie>
 				<bagaje>'.correctPostValue($_POST['bagaje']).'</bagaje>
+				<storno>'.correctPostValue($_POST['storno']).'</storno>
 ';
 		  break;
 		  case 'rezervare':
@@ -498,6 +499,8 @@
 
 									$oldtarif6='';
 									$oldtarif12='';
+										$oldv6=floatval($v[6]);
+										$oldv12=floatval($v[12]);
 									if(false && (getUserConfig("reduceretarife")!="" || getUserConfig("reduceretarife_".$v['soc'])!=""))
 									{
 										$red=getUserConfig("reduceretarife");
@@ -515,9 +518,9 @@
 									?>
 									<tr><td align=center style="text-align:center;"><?php echo getLT($v['soc']);?>
 										<td align=center class="worktarif"><button socid="<?php echo $v['soc'];?>" per="6" onclick="return clickPlataInRate('<?php echo showNumber($oldv6,2);?>',this);" class="btn btn-success">In rate <?php echo showNumber($oldv6,2);?></button><br>&nbsp;
-										<td align=center class="worktarif"><button socid="<?php echo $v['soc'];?>" per="6" onclick="return clickPlataIntegral('<?php echo showNumber($v[6],2);?>',this);" class="btn btn-success">Cu reducere <?php echo showNumber($v[6],2);?></button><br><?php echo $oldtarif6;?>
+										<td align=center class="worktarif"><button socid="<?php echo $v['soc'];?>" per="6" onclick="return clickPlataIntegral('<?php echo showNumber($v[6],2);?>',this);" class="btn btn-success">Integral <?php echo showNumber($v[6],2);?></button><br><?php echo $oldtarif6;?>
 										<td align=center class="worktarif" style="border-left: solid 2px #eee;"><button socid="<?php echo $v['soc'];?>" per="12" onclick="return clickPlataInRate('<?php echo showNumber($oldv12,2);?>',this);" class="btn btn-success">In rate <?php echo showNumber($oldv12,2);?></button><br>&nbsp;
-										<td align=center class="worktarif"><button socid="<?php echo $v['soc'];?>" per="12" onclick="return clickPlataIntegral('<?php echo showNumber($v[12],2);?>',this);" class="btn btn-success">Cu reducere <?php echo showNumber($v[12],2);?></button><br><?php echo $oldtarif12;?>
+										<td align=center class="worktarif"><button socid="<?php echo $v['soc'];?>" per="12" onclick="return clickPlataIntegral('<?php echo showNumber($v[12],2);?>',this);" class="btn btn-success">Integral <?php echo showNumber($v[12],2);?></button><br><?php echo $oldtarif12;?>
 									<?php
 								}
 								?><tr><td colspan=5> * Comisionul platit brokerului, calculat ca procent din prima totala afisata in tabel, inclus in prima totala.</table>
