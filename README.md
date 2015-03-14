@@ -24,7 +24,7 @@
 
 - integrati tarifarul in site printr-un iframe si configurati thema de culor pe care o gasiti in config sau 'extensions'
 
-`` <iframe src="http://[adresa site]/tarifar/site.php?t=rca" width="680" height="1200" border="0></iframe"> ``
+    `` <iframe src="http://[adresa site]/tarifar/site.php?t=rca" width="680" height="1200" border="0></iframe"> ``
 
 - integrarea prin iframe nu este suportata de noi, si va asumati riscurile folosirii ei, noi va recomandam integrarea prin design (vezi mai jos)
 
