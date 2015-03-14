@@ -1,7 +1,6 @@
-Instructiuni integrarea in site
-Details
+Instructiuni integrarea in site:
 
-Instructiuni: - copiati kit-ul dezarhivat pe server intr-u folder in root-ul site-ului numit 'tarifar' (sau cum vreti)
+- copiati kit-ul dezarhivat pe server intr-u folder in root-ul site-ului numit 'tarifar' (sau cum vreti)
 
 - copiati config.demo.php in folderul 'tarifar' si redenumiti-l in config.php
 
@@ -35,7 +34,9 @@ Integrare prin design: - se creaza un fisier template in care se introduce codul
 
     cache_setvalue("load_in_template","../temp2.php"); cache_setvalue("load_in_css","../css.php"); 
 
-Alte setari: - pentru tema de culori
+Alte setari:
+
+- pentru tema de culori
 
     $CONFIG['color_profile']="1"; 
 
