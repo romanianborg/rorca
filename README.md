@@ -31,7 +31,7 @@
 Desigur se poate face si o integrare mult mai precisa doar ca trebuie sa va chinuiti pentru ea, kit-ul fiind doar un punct de plecare.
 
 ## Integrare prin design:
-- se creaza un fisier template in care se introduce codul php :
+- se creaza un fisier template in care se introduce codul php:
     `` echo cache_getvalue("body");cache_setvalue("body",""); ``
 - se creaza un fisier css care o sa fie folosit in kit
 - se modificata config-ul pentru fisierele template:
