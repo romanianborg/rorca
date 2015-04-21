@@ -32,7 +32,7 @@ Desigur se poate face si o integrare mult mai precisa doar ca trebuie sa va chin
 
 ## Integrare prin design:
 
-- se creaza un fisier template in care se introduce codul php:
+- se creaza un fisier template (doar continut body fara header) in care se introduce codul php:
 
     > `` echo cache_getvalue("body");cache_setvalue("body",""); ``
 
