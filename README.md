@@ -31,17 +31,28 @@
 Desigur se poate face si o integrare mult mai precisa doar ca trebuie sa va chinuiti pentru ea, kit-ul fiind doar un punct de plecare.
 
 ## Integrare prin design:
-- se creaza un fisier template in care se introduce codul php:
-    `` echo cache_getvalue("body");cache_setvalue("body",""); ``
+
+- se creaza un fisier template (doar continut body fara header) in care se introduce codul php:
+
+    > `` echo cache_getvalue("body");cache_setvalue("body",""); ``
+
 - se creaza un fisier css care o sa fie folosit in kit
+
 - se modificata config-ul pentru fisierele template:
-    `` cache_setvalue("load_in_template","../temp2.php"); cache_setvalue("load_in_css","../css.php"); ``
+
+    > `` cache_setvalue("load_in_template","../temp2.php"); cache_setvalue("load_in_css","../css.php"); ``
+
 
 ## Alte setari:
 - pentru tema de culori
-    `` $CONFIG['color_profile']="1"; ``
-- pentru layout
-    `` $CONFIG['color_design']="2"; ``
+
+    > `` $CONFIG['color_profile']="1"; ``
+
+- pentru layout:
+
+    > `` $CONFIG['color_design']="2"; ``
+
 - pentru a cere mailul pe primul ecran se seteaza in config:
-    `` $CONFIG['emaildinprima']="yes"; ``
+
+    > `` $CONFIG['emaildinprima']="yes"; ``
 
