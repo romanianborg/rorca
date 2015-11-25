@@ -196,6 +196,9 @@ $gi=1;
 </div></div>
 <?php }?>
 
+<div class="workstep"><div class="worklabel" style="width:215px;">Declar ca: am citit si sunt de acord cu termenele si conditiile de folosire a acestui site, am peste 18 ani, datele si informatiile furnizate sunt reale la momentul completarii cererii.</div><div class="workfields"  style="width:55px;"><select  style="width:50px;" class=validated validate="required.yes" name="acord" title="Acord termene si conditii"><option value=''>?</option><option value=''>Nu</option><option value='da'>Da</option></select>
+</div></div>
+
 </div>
 
 <!-- worksteps--></div>

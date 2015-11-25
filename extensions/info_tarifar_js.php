@@ -324,6 +324,19 @@ function reloadSideLinks()
 			}
 		}
 	}
+	<?php if(getUserConfig("notificare_plecare")!="")
+	{?>
+		$("body").mouseleave(function(){
+			$("#notificare_plecare").show();
+			var pos=$("#work").position();
+			$("#notificare_plecare").css("left",""+pos.left+"px");
+		});
+		$("body").mouseenter(function(){
+			$("#notificare_plecare").hide();
+		});
+		<?php
+	}
+	?>
 }
 function remoteAllLinks()
 {

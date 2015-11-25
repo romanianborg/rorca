@@ -42,6 +42,30 @@
 		if($a['12']==$b['12']) return 0;
 		return -1;
 	}
+	function getBM6($bm)
+	{
+		return $bm;
+	}
+	function getBM12($bm)
+	{
+		if(intval(substr($bm,1))!=0)
+		{
+			if(substr($bm,0,1)=="B")
+			{
+				if(intval(substr($bm,1))+1<15)
+				{
+					return substr($bm,0,1).(intval(substr($bm,1))+1);
+				}
+			}
+			if(substr($bm,0,1)=="M")
+			{
+				if(intval(substr($bm,1))-1==0)
+					return 'B0';
+				return substr($bm,0,1).(intval(substr($bm,1))-1);
+			}
+		}
+		return $bm;
+	}
 	function ws_process($action,$para='')
 	{
 		switch($action)
@@ -69,7 +93,7 @@
 		  case 'pad':
 		  	foreach($_POST as $wk=>$wv)
 		  	{
-		  		if($wk=="tipoferta" || $wk=="datavalabilitate")
+		  		if($wk=="tipoferta" || $wk=="datavalabilitate"  || $wk=="emailclient")
 		  		{
 		  			continue;
 		  		}
@@ -107,7 +131,7 @@
 		  case 'casco':
 		  	foreach($_POST as $wk=>$wv)
 		  	{
-		  		if($wk=="tipoferta" || $wk=="datavalabilitate")
+		  		if($wk=="tipoferta" || $wk=="datavalabilitate"  || $wk=="emailclient")
 		  		{
 		  			continue;
 		  		}
@@ -125,7 +149,7 @@
 		  case 'decont':
 		  	foreach($_POST as $wk=>$wv)
 		  	{
-		  		if($wk=="tipoferta" || $wk=="datavalabilitate")
+		  		if($wk=="tipoferta" || $wk=="datavalabilitate"  || $wk=="emailclient")
 		  		{
 		  			continue;
 		  		}
@@ -140,7 +164,7 @@
 		  case 'rotr':
 		  	foreach($_POST as $wk=>$wv)
 		  	{
-		  		if($wk=="tipoferta" || $wk=="datavalabilitate")
+		  		if($wk=="tipoferta" || $wk=="datavalabilitate"  || $wk=="emailclient")
 		  		{
 		  			continue;
 		  		}
@@ -352,6 +376,8 @@
 			if($action=='PolitaOferta') $_GET['TarifeOferta']=$_GET['PolitaOferta'];
 		case 'PDFOferta':
 			if($action=='PDFOferta') $_GET['TarifeOferta']=$_GET['offid'];
+		case 'OfertaPDF':
+			if($action=='OfertaPDF') $_GET['TarifeOferta']=$_GET['offid'];
 		case 'TarifeOferta':
 			$xml='<?xml version="1.0" encoding="utf-8"?>
 	<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -367,6 +393,7 @@
 	 <TarifeOferta xmlns="http://asiguram.ro/ws">
 		   <idoferta>'.intval($_GET['TarifeOferta']).'</idoferta>
 		   '.($action=='PDFOferta'?'<politaPDF>true</politaPDF>':'').'
+		   '.($action=='OfertaPDF'?'<ofertaPDF>true</ofertaPDF>':'').'
 		 </TarifeOferta>
 	  </soap:Body>
 	</soap:Envelope>';
@@ -395,7 +422,7 @@
 							$soc[$v['societate']['VALUE']]['6']=floatval($v['tarif6']['VALUE']);
 							$soc[$v['societate']['VALUE']]['12']=floatval($v['tarif12']['VALUE']);
 							$soc[$v['societate']['VALUE']]['1']=floatval($v['tarif1']['VALUE']);
-							$soc[$v['societate']['VALUE']]['bm']=floatval($v['bm12']['VALUE']);
+							$soc[$v['societate']['VALUE']]['bm']=$v['bm12']['VALUE'];
 						}
 						else
 						if(isset($r['TarifeOfertaResponse']['tarif']))
@@ -407,7 +434,7 @@
 								$soc[$v['societate']['VALUE']]['6']=floatval($v['tarif6']['VALUE']);
 								$soc[$v['societate']['VALUE']]['12']=floatval($v['tarif12']['VALUE']);
 								$soc[$v['societate']['VALUE']]['1']=floatval($v['tarif1']['VALUE']);
-								$soc[$v['societate']['VALUE']]['bm']=floatval($v['bm12']['VALUE']);
+								$soc[$v['societate']['VALUE']]['bm']=$v['bm12']['VALUE'];
 								$soc[$v['societate']['VALUE']]['com']=floatval($v['com']['VALUE']);
 							}
 						}
@@ -461,7 +488,7 @@
 							case 'rotr':
 								//print_r($soc);
 								?><table class="worktarife" cellpadding=0 cellspacing=0 border="1">
-								<tr><th align=right>Asigurator<th align=right>Prima EURO
+								<tr><th align=right>Asigurator<th align=right>Prima RON
 								<?php
 								foreach($soc as $k=>$v)
 								{
@@ -523,7 +550,9 @@
 										<td align=center class="worktarif"><button socid="<?php echo $v['soc'];?>" per="12" onclick="return clickPlataIntegral('<?php echo showNumber($v[12],2);?>',this);" class="btn btn-success">Integral <?php echo showNumber($v[12],2);?></button><br><?php echo $oldtarif12;?>
 									<?php
 								}
-								?><tr><td colspan=5> * Comisionul platit brokerului, calculat ca procent din prima totala afisata in tabel, inclus in prima totala.</table>
+								?>
+								<tr><td colspan=5> * Comisionul platit brokerului, calculat ca procent din prima totala afisata in tabel, inclus in prima totala.
+								</table>
 								<?php
 								}
 								else
@@ -564,8 +593,8 @@
 										$oldtarif6='<del><span class="tarifjos">'.showNumber($oldv6,2).'</span></del><br>';
 										$oldtarif12='<del><span class="tarifjos">'.showNumber($oldv12,2).'</span></del><br>';
 									}
-									$oldtarif6='<br><span class="tarifjos" style="color:gray">*'.$v['com'].'% '.showNumber($v[6]*$v['com']/100,2).'</span>';
-									$oldtarif12='<br><span class="tarifjos" style="color:gray">*'.$v['com'].'% '.showNumber($v[12]*$v['com']/100,2).'</span>';
+									$oldtarif6='<br><span class="tarifjos" style="color:gray">*'.$v['com'].'% '.showNumber($v[6]*$v['com']/100,2).'<br>**'.getBM6($v['bm']).' </span>';
+									$oldtarif12='<br><span class="tarifjos" style="color:gray">*'.$v['com'].'% '.showNumber($v[12]*$v['com']/100,2).'<br>**'.getBM12($v['bm']).' </span>';
 									?>
 									<tr><td align=center style="text-align:center;"><?php echo getLT($v['soc']);?><td align=right class="worktarif">
 									<a href="#" socid="<?php echo $v['soc'];?>" per="6" tarif="<?php echo showNumber($v['6'],2);?>"><?php $tt=showNumber($v['6'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>'; echo $oldtarif6;?></a><td align=right class="worktarif"><a href="#"  socid="<?php echo $v['soc'];?>" per="12" tarif="<?php echo showNumber($v['12'],2);?>"><?php $tt=showNumber($v['12'],2);$tt=explode(",",$tt);echo $tt[0].'<span class="tarifjos">,'.$tt[1].'</span>';echo $oldtarif12;?></a>
@@ -573,6 +602,8 @@
 								}
 								?>
 								<tr><td colspan=3 style="color:gray;font-size:0.3em;">* Comisionul platit brokerului, inclus in prima totala, calculat ca procent din prima totala afisata in tabel.
+								<br> ** Clasa de Bonus Malus extrasa din Cedam pentru 6 sau 12 luni
+								<tr><td colspan=3> Descarca oferta <a href="?t=oferta&offid=<?php echo $r['TarifeOfertaResponse']['idoferta']['VALUE'];?>"> aici <img src="images/ebook.png" border=0></a>.<br>
 								</table>
 								<?php
 								}
@@ -605,6 +636,11 @@
 					{
 						header('Content-Disposition: attachment; filename="Polita-'.intval($_GET['offid']).'.pdf";');
 						return base64_decode($r['TarifeOfertaResponse']['politaPDF']['VALUE']);
+					}
+					if($action=="OfertaPDF")
+					{
+						header('Content-Disposition: attachment; filename="Oferta-'.intval($_GET['offid']).'.pdf";');
+						return base64_decode($r['TarifeOfertaResponse']['ofertaPDF']['VALUE']);
 					}
 				}
 			}

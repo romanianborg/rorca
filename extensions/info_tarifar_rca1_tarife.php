@@ -143,50 +143,39 @@ Optiune plata in rate:<br>
 <select name="optrate">
 	<option value="" selected>Integral</option>
 <?php
+	global $_CONFIG;
 	if(getUserConfig("euplatesc_ratebcr")=="yes")
-	{?>
-<option value="bcr-2">BCR 2 rate fara dobanda</option>
-<option value="bcr-3">BCR 3 rate fara dobanda</option>
-<option value="bcr-4">BCR 4 rate fara dobanda</option>
-<option value="bcr-5">BCR 5 rate fara dobanda</option>
-<option value="bcr-6">BCR 6 rate fara dobanda</option>
-<option value="bcr-7">BCR 7 rate fara dobanda</option>
-<option value="bcr-8">BCR 8 rate fara dobanda</option>
-<option value="bcr-9">BCR 9 rate fara dobanda</option>
-<option value="bcr-10">BCR 10 rate fara dobanda</option>
-<option value="bcr-11">BCR 11 rate fara dobanda</option>
-<option selected value="bcr-12">BCR 12 rate fara dobanda</option>
-<?php
+		$_CONFIG["euplatesc_ratebcr"]=12;
+	if(intval(getUserConfig("euplatesc_ratebcr")))
+	{
+		for($ratai=2;$ratai<=intval(getUserConfig("euplatesc_ratebcr"));$ratai++)
+		{
+			?>
+<option value="bcr-<?php echo $ratai;?>">BCR <?php echo $ratai;?> rate fara dobanda</option>
+			<?php
+		}
 	}
 	if(getUserConfig("euplatesc_rateapb")=="yes")
-	{?>
-<option value="apb-2">Alpa Bank 2 rate fara dobanda</option>
-<option value="apb-3">Alpa Bank 3 rate fara dobanda</option>
-<option value="apb-4">Alpa Bank 4 rate fara dobanda</option>
-<option value="apb-5">Alpa Bank 5 rate fara dobanda</option>
-<option value="apb-6">Alpa Bank 6 rate fara dobanda</option>
-<option value="apb-7">Alpa Bank 7 rate fara dobanda</option>
-<option value="apb-8">Alpa Bank 8 rate fara dobanda</option>
-<option value="apb-9">Alpa Bank 9 rate fara dobanda</option>
-<option value="apb-10">Alpa Bank 10 rate fara dobanda</option>
-<option value="apb-11">Alpa Bank 11 rate fara dobanda</option>
-<option selected value="apb-12">Alpa Bank 12 rate fara dobanda</option>
-<?php
+		$_CONFIG["euplatesc_rateapb"]=12;
+	if(intval(getUserConfig("euplatesc_rateapb")))
+	{
+		for($ratai=2;$ratai<=intval(getUserConfig("euplatesc_rateapb"));$ratai++)
+		{
+			?>
+<option value="apb-<?php echo $ratai;?>">Alpha Bank <?php echo $ratai;?> rate fara dobanda</option>
+			<?php
+		}
 	}
 	if(getUserConfig("euplatesc_ratebtrl")=="yes")
-	{?>
-<option value="btrl-2">BTRL 2 rate fara dobanda</option>
-<option value="btrl-3">BTRL 3 rate fara dobanda</option>
-<option value="btrl-4">BTRL 4 rate fara dobanda</option>
-<option value="btrl-5">BTRL 5 rate fara dobanda</option>
-<option value="btrl-6">BTRL 6 rate fara dobanda</option>
-<option value="btrl-7">BTRL 7 rate fara dobanda</option>
-<option value="btrl-8">BTRL 8 rate fara dobanda</option>
-<option value="btrl-9">BTRL 9 rate fara dobanda</option>
-<option value="btrl-10">BTRL 10 rate fara dobanda</option>
-<option value="btrl-11">BTRL 11 rate fara dobanda</option>
-<option selected value="btrl-12">BTRL 12 rate fara dobanda</option>
-<?php
+			$_CONFIG["euplatesc_ratebtrl"]=12;
+	if(intval(getUserConfig("euplatesc_ratebtrl")))
+	{
+		for($ratai=2;$ratai<=intval(getUserConfig("euplatesc_ratebtrl"));$ratai++)
+		{
+			?>
+<option value="btrl-<?php echo $ratai;?>">BTRL <?php echo $ratai;?> rate fara dobanda</option>
+			<?php
+		}
 	}
 ?>
 </select>

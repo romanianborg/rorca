@@ -145,9 +145,9 @@ cod postal&nbsp;<input type="number" onchange="javascript:textareaImplode('im_ad
 </div>
 
 <div class="workstep"><div class=worklabel>Tip asigurare</div><div class=workfields>
-<select name="produsdorit" class="validated" validate="for.pad+fac|fac.show.class.sumeasiguratefac">
+<select name="produsdorit" class="validated" validate="for.pad+fac|fac.show.class.sumeasiguratefac~required.yes">
 	<option value="pad+fac">Obligatorie + Facultativa</option>
-	<option value="pad">Obligatorie</option>
+	<option value="pad" selected>Obligatorie</option>
 	<option value="fac">Facultativa</option>
 </select>
 </div></div>
@@ -384,6 +384,11 @@ ap&nbsp;<input type="text" onchange="javascript:textareaImplode('pj_adresa');" l
 </div>
 
 </div><!-- pj -->
+
+<div class="workstep"><div class="worklabel" style="width:215px;">Declar ca: am citit si sunt de acord cu termenele si conditiile de folosire a acestui site, am peste 18 ani, datele si informatiile furnizate sunt reale la momentul completarii cererii.</div><div class="workfields"  style="width:55px;"><select  style="width:50px;" class=validated validate="required.yes" name="acord" title="Acord termene si conditii"><option value=''>?</option><option value=''>Nu</option><option value='da'>Da</option></select>
+</div></div>
+
+
 </div><!-- col2 -->
 
 <input type=hidden name="p_per" value="12" class="validated" validate="addmonths.panalavalabilitate.datavalabilitate">

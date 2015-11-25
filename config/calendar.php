@@ -1,6 +1,21 @@
 <?php
-// Copyright AI Software Ltd Bucharest, Romania 2001
+// Copyright AI Software Ltd Bucharest, Romania 2001-2016
 ob_start();
+if(getUserConfig("datepicker")=="pick")
+{
+?>
+	<script>
+		var calendar_ret="calendar_finished";
+		var global_cal={};
+		global_cal.setReturnFunction=function(n){calendar_ret=n;};
+		global_cal.select=function(val,camp,format)
+		{
+			$(val).pickadate();
+		};
+		</script>
+<?php
+}
+else
 if(getUserConfig("datepicker")=="yes")
 {
 	?><script type="text/javascript" src="js/datepicker.js?1"></script>
@@ -34,8 +49,11 @@ if(getUserConfig("datepicker")=="yes")
 				},
 				onRender: function(date) {
 					var n=new Date();
+					var nm=new Date();
+					var validatedays=$(val).attr("justdays");
+					if(validatedays) nm.setDate(n.getDate()+parseInt(validatedays,10));
 					return {
-						//disabled: (date.valueOf() < now.valueOf()),
+						disabled: validatedays?(date.valueOf() < n.valueOf() || date.valueOf() > nm.valueOf()):0,
 						className: date.getDate()==n.getDate() && date.getMonth()==n.getMonth() && date.getFullYear()==n.getFullYear() ? 'datepickerSpecial' : false
 					}
 				}
@@ -69,8 +87,11 @@ if(getUserConfig("datepicker")=="yes")
 				},
 				onRender: function(date) {
 					var n=new Date();
+					var nm=new Date();
+					var validatedays=$(val).attr("justdays");
+					if(validatedays) nm.setDate(n.getDate()+parseInt(validatedays,10));
 					return {
-						//disabled: (date.valueOf() < now.valueOf()),
+						disabled: validatedays?(date.valueOf() < n.valueOf() || date.valueOf() > nm.valueOf()):0,
 						className: date.getDate()==n.getDate() && date.getMonth()==n.getMonth() && date.getFullYear()==n.getFullYear() ? 'datepickerSpecial' : false
 					}
 				}
@@ -408,10 +429,10 @@ table.datepickerViewYears tr.datepickerDoW {
 }
 td.datepickerDisabled a,
 td.datepickerDisabled.datepickerNotInMonth a{
-	color: #444;
+	color: #ccc;
 }
 td.datepickerDisabled a:hover {
-	color: <?php echo getUserConfig("theme_color2");?>;
+	color: #ccc;
 }
 td.datepickerSpecial a {
 	background: <?php echo getUserConfig("theme_color1");?>;

@@ -1,3 +1,8 @@
+<?php
+if(!intval($_GET['offid']))
+{
+?>
+
 <div id="worksteps">
 
 <input type="hidden" name="action" value="AdaugaOferta">
@@ -6,6 +11,24 @@
 <input type="hidden" name="tipoferta" value="decont">
 
 <div class="work_col1">
+
+
+<div class="workstep"><div class="biglabel"><img src="images/individ.png" border=0> DATE PROPRIETAR</div></div>
+
+
+<div class="workstep"><div class="worklabel">Email:</div><div class=workfields><input name="emailclient" value="" class="validated" validate="if.telclient..required.email" size="20" type="email">
+</div></div>
+
+<div class="workstep"><div class="worklabel">Telefon:</div><div class=workfields><input name="telclient" value="" class="validated" validate="if.emailclient..required.phone" size="20" type="tel">
+</div></div>
+
+
+<div class="workstep"><div class="worklabel">Nume</div><div class=workfields><input name="client" value="" class="validated" validate="required.yes" size="20" type="text">
+</div></div>
+
+
+</div><div class="work_col2">
+
 <div class="workstep"><div class="biglabel"><img src="images/x.png" border=0> EXPIRARI</div>
 </div>
 
@@ -28,22 +51,32 @@
 <div class="workstep"><div class="worklabel">In ce data?</div><div class=workfields><input type=text name="dataalta1" id="dataalta1" size="9" value=""> <a id="dataalta1_sel" name="dataalta1_sel" onclick="global_cal.select(document.forms['work'].dataalta1,'dataalta1_sel','dd.MM.yyyy'); return false;" href="#"><img src="images/calendar.png" border="0" alt="Calendar"></a>
 </div></div>
 
+</div>
+</div>
 
-</div><div class="work_col2">
-<div class="workstep"><div class="biglabel"><img src="images/individ.png" border=0> DATE PROPRIETAR</div></div>
+<?php
+}
+else
+{
+?>
+<div id="worksteps">
 
+<input type="hidden" name="action" value="PlataOk">
+<input type="hidden" name="textbutton" value="Multumim!">
+<input type="hidden" name="automaticsubmit" value="false">
+<input type="hidden" name="offid" value="<?php echo intval($_GET['offid']);?>">
+<input type="hidden" name="tipoferta" value="decont">
 
-<div class="workstep"><div class="worklabel">Email:</div><div class=workfields><input name="emailclient" value="" class="validated" validate="if.telclient..required.email" size="20" type="email">
-</div></div>
+<div class="biglabel"><img src="images/ok.png" border=0> Expirari</div>
 
-<div class="workstep"><div class="worklabel">Telefon:</div><div class=workfields><input name="telclient" value="" class="validated" validate="if.emailclient..required.phone" size="20" type="tel">
-</div></div>
-
-
-<div class="workstep"><div class="worklabel">Nume</div><div class=workfields><input name="client" value="" class="validated" validate="required.yes" size="20" type="text">
+<div class="workstep"><div class=workfields style="width:295px;height:120px;">
+Informarea catre broker a fost inregistrata
+<br><br>
+Numar inregistrare: <b><?php echo intval($_GET['offid']);?></b><br>
 </div></div>
 
 </div>
 
-</div>
-
+<?php
+}
+?>

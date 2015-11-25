@@ -12,6 +12,11 @@
 	$date=ws_process("InfoOferta",intval($_GET['offid']));
 ?>
 
+<div class="workstep"><div class="biglabel"><img src="images/ochelari.png" border=0> DATE CONTACT OFERTA</div>
+</div>
+
+<div class="workstep"><div class="biglabel">Oferta de casco este foarte complexa si necesita atentia unui operator uman specializat pentru a putea si finalizata. Datele de contact sunt necesare pentru a trimite oferta.
+</div></div>
 
 <div class="workstep"><div class="worklabel">Email:</div><div class=workfields><input name="emailclient" value="" class="validated" validate="if.telclient..required.email" size="20" type="email">
 </div></div>

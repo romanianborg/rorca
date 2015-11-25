@@ -57,6 +57,9 @@
 	<a href="site.php?t=clientforgot" class="biglink"><img src="images/x.png" border=0> Am uitat parola</a>
 </div>
 
+<div class="workstep">
+	<a href="site.php?t=contact" class="biglink"><img src="images/ochelari.png" border=0> Contact</a>
+</div>
 </div>
 </div>
 

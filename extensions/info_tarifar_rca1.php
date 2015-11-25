@@ -109,7 +109,7 @@
 </select>
 </div></div>
 
-<div class="workstep"><div class="worklabel">Rca valabil din</div><div class=workfields><input type="text" value="<?php echo date('d.m.Y',time()+60*60*24);?>" size="9" id="datavalabilitate" name="datavalabilitate" validate="required.date" validators="change" class="validated">&nbsp;<a class="cdateselect" href="#" onclick="global_cal.select(document.forms['work'].datavalabilitate,'datavalabilitate_sel','dd.MM.yyyy'); return false;" name="datavalabilitate_sel" id="datavalabilitate_sel"><img src="images/calendar.png" border="0" alt="Calendar"></a>
+<div class="workstep"><div class="worklabel">Rca valabil din</div><div class=workfields><input type="text" value="<?php echo date('d.m.Y',time()+60*60*24);?>" size="9" id="datavalabilitate" name="datavalabilitate" validate="required.date" justdays=31 validators="change" class="validated">&nbsp;<a class="cdateselect" href="#" onclick="global_cal.select(document.forms['work'].datavalabilitate,'datavalabilitate_sel','dd.MM.yyyy'); return false;" name="datavalabilitate_sel" id="datavalabilitate_sel"><img src="images/calendar.png" border="0" alt="Calendar"></a>
 </div></div>
 
 <div class="workstep"><div class="worklabel">Vehiculul este:</div><div class=workfields>
@@ -452,6 +452,9 @@
 <div class="workstep"><div class="worklabel">Parc auto:</div><div class="workfields"><input type="number" class="validated" value="" size="4" name="parcauto"><input type=hidden name="pj_rate" value="1">
 </div></div>
 
+<div class="workstep"><div class="worklabel">CAEN:</div><div class="workfields"><input type="number" value="" size="2" name="caen" title="Primele 2 cifre din caen">
+</div></div>
+
 <!-- tarifarofertapj --></div>
 
 <?php if(getUserConfig("emaildinprima")=="yes") {?>
@@ -463,6 +466,10 @@
 <div class="workstep"><div class="worklabel"><?php echo getUserConfig("codpromotional");?>:</div><div class=workfields><input name="codpromotional" value="" size="20" type="text">
 </div></div>
 <?php }?>
+
+<div class="workstep"><div class="worklabel" style="width:215px;">Declar ca: am citit si sunt de acord cu termenele si conditiile de folosire a acestui site, am peste 18 ani, datele si informatiile furnizate sunt reale la momentul completarii cererii.</div><div class="workfields"  style="width:55px;"><select  style="width:50px;" class=validated validate="required.yes" name="acord" title="Acord termene si conditii"><option value=''>?</option><option value=''>Nu</option><option value='da'>Da</option></select>
+</div></div>
+
 
 </div>
 

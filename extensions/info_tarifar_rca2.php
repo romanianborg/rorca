@@ -80,7 +80,7 @@ cache_addvalue("finalhead",ob_get_contents());ob_end_clean();
 
 <div class="input-append input-prepend">
  <span class="add-on indicatie" style="width:190px;">Data intrarii in valabilitate</span>
-<input class="span2 input-small"  type="text" value="<?php echo date('d.m.Y',time()+60*60*24);?>" size="9" id="datavalabilitate" name="datavalabilitate" validate="required.date" validators="change" class="validated">
+<input class="span2 input-small"  type="text" value="<?php echo date('d.m.Y',time()+60*60*24);?>" size="9" id="datavalabilitate" name="datavalabilitate" validate="required.date" justdays=30 validators="change" class="validated">
 <span class="add-on"><a href="#" onclick="global_cal.select(document.forms['work'].datavalabilitate,'datavalabilitate_sel','dd.MM.yyyy'); return false;" name="datavalabilitate_sel" id="datavalabilitate_sel"><img src="images/calendar.png" border="0" alt="Calendar"></a></span>
 </div>
 

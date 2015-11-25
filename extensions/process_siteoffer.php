@@ -1,5 +1,5 @@
 <?php
-// Copyright AI Software Ltd Bucharest, Romania 2001-2014
+// Copyright AI Software Ltd Bucharest, Romania 2001-2015
 //check post action
 if(isset($_GET['plationlineipn']) && $_GET['plationlineipn'])
 {
@@ -308,7 +308,8 @@ if(isset($_GET['euplatescipn']) && $_GET['euplatescipn'])
 
 		return hmacsha1($key, $str);
 	}
-	$_GET=$_POST;
+	if(isset($_GET['message']))
+		$_POST=array_merge($_POST,$_GET);
 	$key=getUserConfig("euplatesc_key");
 	$zcrsp =  array (
 	'amount'     => addslashes(trim(@$_POST['amount'])),  //original amount
@@ -328,46 +329,61 @@ if(isset($_GET['euplatescipn']) && $_GET['euplatescipn'])
 	if($zcrsp['fp_hash']===$fp_hash)
 	{
 		// start facem update in baza de date
-		if($zcrsp['action']=="0")
+		if(true || $zcrsp['action']=="0")
 		{
 			require_once("extensions/process_offer_ws.php");
-			$offid=intval($_GET['invoice_id']);
+			$offid=intval($_POST['invoice_id']);
 			if(intval($offid))
 			{
 				//force approved
 				$_POST['offid']=intval($offid);
-				$_POST['ipnmessage']=$_GET['message'];
-				$_POST['ipnamount']=$_GET["amount"];
-				$_POST['ipnrrn']=$_GET["ep_id"];
-				$_POST['ipnref']=$_GET["ep_id"];
+				$_POST['ipnmessage']=$_POST['message'];
+				$_POST['ipnamount']=$_POST["amount"];
+				$_POST['ipnrrn']=$_POST["ep_id"];
+				$_POST['ipnref']=$_POST["ep_id"];
 				$off=ws_process('DateOferta');
+				if($_GET['euplatescipn_post']==true)
+				{
+					echo "ok";
+					die();
+				}
 				if($off===false)
 				{
 					echo "O eroare neastepta nu permite inreg platii. Va rugam sa incercati mai tarziu sau sa ne contactati. Un operator va face verificarile necesare.";
 				}
 				else
 				{
-					if($_GET['message']=="Approved")
+					if($_GET['euplatescipn_post']==true)
+					{
+						echo "ok";
+						die();
+					}
+					if($_POST['message']=="Approved")
 					{
 						header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=thankyou&offid=".$offid);
 					}
 					else
 					{
-						header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=error&offid=".$offid."&error=".$_GET['MESSAGE']);
+						header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=error&offid=".$offid."&error=".$_POST['message']);
 					}
 				}
 			}
 		}
 		else {
+			if($_GET['euplatescipn_post']==true)
+			{
+				echo "ok";
+				die();
+			}
 			//echo "O eroare neastepta nu permite inreg platii ".$zcrsp['message'];
-			header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=error&offid=".$offid."&error=".$zcrsp['message']);
+			header("Location: ".getUserConfig('ws_merch_kiturl')."site.php?t=error&offid=".$offid."&error=".$_POST['message']);
 		}
 	// end facem update in baza de date
 	}
 	else {
 		echo "Nu am putut calcula ultima zecimala a lui PI.";
 	}
-
+	echo "ok";
 	die();
 }
 if(isset($_GET['librapayipn']) && $_GET['librapayipn'])
@@ -1152,6 +1168,25 @@ if($_GET['t']=="polita")
 	}
 	die();
 }
+if($_GET['t']=="oferta")
+{
+	//call ws
+	require_once("extensions/process_offer_ws.php");
+	$off=ws_process('OfertaPDF');
+
+	//return a PDF from ws
+	if($off!='')
+	{
+		header("Content-type: application/pdf");
+		header("Content-length: ".strlen($off));
+		echo $off;
+	}
+	else
+	{
+		echo "Oferta PDF nu a putut fi gasita. Un operator o va trimite pe mail sau o sa fiti contactat.";
+	}
+	die();
+}
 
 //require_once("config/textarea.php");
 require_once("config/ajaxify.php");
@@ -1166,6 +1201,17 @@ require_once("extensions/info_css.php");
 	<link rel="stylesheet" href="js/jquery.tipsy.css" type="text/css" />
 	<script src="js/jquery.scrollTo.js"></script>
 <?php
+if(getUserConfig("datepicker")=="pick")
+{
+?>
+<script src="js/pickadate/picker.js"></script>
+<script src="js/pickadate/picker.date.js"></script>
+<script src="js/pickadate/legacy.js"></script>
+<link rel="stylesheet" href="js/pickadate/themes/default.css" id="theme_base">
+<link rel="stylesheet" href="js/pickadate/themes/default.date.css" id="theme_date">
+<?php
+}
+
 cache_addvalue("finalhead",ob_get_contents());ob_end_clean();
 
 //body
@@ -1185,6 +1231,9 @@ if($_GET['t']=="brokers")
 ?>
 <form enctype="multipart/form-data" method="post" action="?s=work" name="work">
 <input type="hidden" name="frandom" value="<?php echo time();?>">
+<?php if(isset($_GET['affiliateid'])) {?>
+<input type="hidden" name="affiliateid" value="<?php echo str_replace(" ","",$_GET['affiliateid']);?>">
+<?php } ?>
 <div id=work>
 <?php
 $loadsteper=true;
@@ -1219,10 +1268,10 @@ case 'medicale':
 		include("extensions/info_tarifar_medicale.php");
 break;
 case 'petitie':
-	if(isset($_GET['offid']) && intval($_GET['offid'])>0)
-		include("extensions/info_tarifar_petitie.php");
-	else
-		include("extensions/info_tarifar_petitie.php");
+	include("extensions/info_tarifar_petitie.php");
+break;
+case 'contact':
+	include("extensions/info_tarifar_contact.php");
 break;
 case 'sanatate':
 	if(isset($_GET['offid']) && intval($_GET['offid'])>0)
@@ -1261,10 +1310,7 @@ case 'casco':
 		include("extensions/info_tarifar_casco.php");
 break;
 case 'decont':
-	if(isset($_GET['offid']) && intval($_GET['offid'])>0)
-		include("extensions/info_tarifar_rca1_thanks.php");
-	else
-		include("extensions/info_tarifar_decont.php");
+	include("extensions/info_tarifar_decont.php");
 break;
 case 'thankyou':
 	if(getUserConfig("color_design")=="2" && file_exists("extensions/info_tarifar_rca2_thanks.php"))
@@ -1294,7 +1340,9 @@ ob_start();?>
 <script>
 $(document).bind('slotReloaded',function(event,data){reloadSteper(true);});
 $(document).ready(function(){reloadSteper(true);});
-</script><?php
+</script>
+<div id="notificare_plecare"><?php echo getUserConfig("notificare_plecare");?></div>
+<?php
 cache_addvalue("afterbody",ob_get_contents());ob_end_clean();
 
 	if($loadsteper) {

@@ -87,12 +87,13 @@ div.workfields td
 	color:<?php echo getUserConfig("tarif_color");?>;
 	text-align: right;
 	padding-right:2px;
-	line-height:40px;
+	line-height:20px;
 }
 span.tarifjos
 {
 font-size: 8px;
 }
+
 
 #work input[type="text"],
 #work input[type="number"],
@@ -344,6 +345,21 @@ width: 100%;
 	color:blue;
 }
 
+
+#notificare_plecare
+{
+	position:fixed;
+	top:0px;
+	left: 30%;
+	width: 500px;
+	height: 50px;
+	display: none;
+	border: solid 1px <?php echo $_CONFIG['tarifar_border']; ?>;;
+	background-color:<?php echo $_CONFIG['tarifar_bg']; ?>;
+	box-shadow: 5px 5px 3px #aaa;
+	padding: 50px;
+}
+
 </style>
 
 <style media="(max-device-width: 599px)">
@@ -438,7 +454,10 @@ div.worklabel
 width: 200px;
 }
 
+
+
 </style>
+
 
 <?php if(getUserConfig("nosidebar")=="yes"){?>
 <style>
